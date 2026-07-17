@@ -501,6 +501,137 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-top: 1px solid var(--border);
 }
 
+/* ===== Le produit ===== */
+.product-section { overflow: hidden; }
+.product-grid {
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: 56px;
+  align-items: center;
+}
+.product-text { max-width: 540px; }
+.product-tag {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cyan-deep);
+  background: var(--cyan-soft);
+  border-radius: 999px;
+  padding: 5px 13px;
+  margin-bottom: 16px;
+}
+.product-text h2 { margin-bottom: 16px; }
+.product-features {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 28px 0 32px;
+}
+.product-features li { display: flex; gap: 14px; align-items: flex-start; }
+.feat-ico {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  background: var(--cyan-soft);
+  color: var(--cyan-deep);
+  margin-top: 1px;
+}
+.feat-ico svg { width: 15px; height: 15px; }
+.product-features h3 { font-size: 1.02rem; margin: 0 0 3px; }
+.product-features p { font-size: 0.92rem; margin: 0; }
+.product-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.product-free { font-size: 0.85rem; color: var(--text-faint); }
+
+.product-visual { display: flex; justify-content: center; }
+.canvas-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(158deg, #0d2247 0%, var(--navy-deep) 100%);
+  border: 1px solid rgba(14, 234, 246, 0.18);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: 0 44px 80px -44px rgba(6, 15, 34, 0.65);
+}
+.canvas-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(245, 247, 250, 0.09);
+}
+.canvas-dots { display: flex; gap: 6px; }
+.canvas-dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(242, 245, 249, 0.18); }
+.canvas-score {
+  margin-left: auto;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 249, 0.6);
+}
+.canvas-grade {
+  display: grid;
+  place-items: center;
+  width: 24px; height: 24px;
+  border-radius: 7px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #6fe3ee;
+  background: rgba(14, 234, 246, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(14, 234, 246, 0.3);
+}
+.pipe { display: flex; flex-direction: column; }
+.pipe-node {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(245, 247, 250, 0.05);
+  border: 1px solid rgba(245, 247, 250, 0.12);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.pipe-node:hover { border-color: rgba(14, 234, 246, 0.4); background: rgba(245, 247, 250, 0.08); }
+.p-ico {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: rgba(14, 234, 246, 0.12);
+  color: #6fe3ee;
+}
+.p-ico svg { width: 18px; height: 18px; }
+.p-txt { display: flex; flex-direction: column; line-height: 1.25; }
+.p-txt strong { font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--ink-text); }
+.p-txt small { font-size: 0.7rem; color: rgba(242, 245, 249, 0.55); }
+.pipe-node-out { flex-wrap: wrap; }
+.export-chips { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin-top: 4px; padding-left: 46px; }
+.export-chip {
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: #9fe9f1;
+  background: rgba(14, 234, 246, 0.1);
+  border: 1px solid rgba(14, 234, 246, 0.2);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.pipe-link {
+  width: 2px;
+  height: 16px;
+  margin: 3px 0 3px 30px;
+  background-image: linear-gradient(rgba(14, 234, 246, 0.55) 55%, transparent 0);
+  background-size: 2px 7px;
+  background-repeat: repeat-y;
+}
+
 /* ===== Le cabinet ===== */
 .split {
   display: grid;
@@ -577,6 +708,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ===== Responsive ===== */
 @media (max-width: 860px) {
   .service-grid { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: 1fr; gap: 40px; }
+  .canvas-card { max-width: 460px; }
   .split { grid-template-columns: 1fr; gap: 32px; }
   .contact-grid { grid-template-columns: 1fr; }
   .foundry-grid { grid-template-columns: 1fr; }

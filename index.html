@@ -24,6 +24,7 @@
     </a>
     <nav class="main-nav" id="main-nav">
       <a href="#modele" data-i18n="nav.model">Le modèle</a>
+      <a href="#produit" data-i18n="nav.product">Le produit</a>
       <a href="#interventions" data-i18n="nav.interventions">Interventions</a>
       <a href="#cabinet" data-i18n="nav.cabinet">Le cabinet</a>
       <a href="#contact" class="nav-cta" data-i18n="nav.contact">Contact</a>
@@ -151,6 +152,90 @@
           <h3 data-i18n="principle3.title">Le workflow est repensé</h3>
           <p data-i18n="principle3.desc">L'IA ne se superpose pas à l'existant : on refond le processus de delivery lui-même. C'est là que se crée l'écart de productivité — pas dans l'outil pris isolément.</p>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- LE PRODUIT -->
+  <section id="produit" class="section product-section">
+    <div class="container">
+      <div class="product-grid">
+        <div class="product-text reveal">
+          <p class="section-kicker" data-i18n="produit.kicker">Le produit</p>
+          <span class="product-tag" data-i18n="produit.tag">L'incarnation logicielle du modèle</span>
+          <h2 data-i18n-html="produit.h2">Theseus —<br>voir le pipeline avant de le construire</h2>
+          <p class="lead-text" data-i18n="produit.intro">
+            Les quatre familles d'agents du cabinet ne sont pas une abstraction. Theseus en est la
+            vitrine publique : un atelier visuel où l'on dessine un pipeline en glisser-déposer, où chaque
+            étape est prévisualisée et auditée en continu, puis exportée en livrables prêts pour la production.
+          </p>
+          <ul class="product-features">
+            <li>
+              <span class="feat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div>
+                <h3 data-i18n="produit.feat1.title">Canvas visuel</h3>
+                <p data-i18n="produit.feat1.desc">Sources, transformations et destinations en glisser-déposer. Un architecte IA transforme un besoin décrit en mots en pipeline prêt à affiner.</p>
+              </div>
+            </li>
+            <li>
+              <span class="feat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div>
+                <h3 data-i18n="produit.feat2.title">Audit de conformité continu</h3>
+                <p data-i18n="produit.feat2.desc">Un score A–E affiché en permanence : complétude, cohérence, qualité, maintenabilité, sécurité et PII. La gouvernance intégrée au geste de conception.</p>
+              </div>
+            </li>
+            <li>
+              <span class="feat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div>
+                <h3 data-i18n="produit.feat3.title">Livrables production</h3>
+                <p data-i18n="produit.feat3.desc">Transform PySpark/Foundry, projet dbt, specs data product (ODPS/DPDS) et classeur de mission — le code exécutable comme documentation.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="product-actions">
+            <a href="https://dataflowcanvas-deploy.vercel.app/" class="btn btn-primary" target="_blank" rel="noopener">
+              <span data-i18n="produit.cta">Essayer l'outil</span><span class="btn-arrow">→</span>
+            </a>
+            <span class="product-free" data-i18n="produit.free">Gratuit · sans installation</span>
+          </div>
+        </div>
+
+        <div class="product-visual reveal">
+          <div class="canvas-card" aria-hidden="true">
+            <div class="canvas-bar">
+              <span class="canvas-dots"><i></i><i></i><i></i></span>
+              <span class="canvas-score" data-i18n="produit.canvas.score">Conformité</span>
+              <span class="canvas-grade">A</span>
+            </div>
+            <div class="pipe">
+              <div class="pipe-node">
+                <span class="p-ico"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="15" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 9.5h17M9 9.5v10" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                <span class="p-txt"><strong data-i18n="produit.canvas.source">Source</strong><small>clients · 10 000 lignes</small></span>
+              </div>
+              <span class="pipe-link" aria-hidden="true"></span>
+              <div class="pipe-node">
+                <span class="p-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+                <span class="p-txt"><strong data-i18n="produit.canvas.transform">Transformations</strong><small>filter · join · dédup</small></span>
+              </div>
+              <span class="pipe-link" aria-hidden="true"></span>
+              <div class="pipe-node">
+                <span class="p-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 5 6v5c0 4 3 6.7 7 8 4-1.3 7-4 7-8V6l-7-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9.5 11.5 2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="p-txt"><strong data-i18n="produit.canvas.audit">Audit conformité</strong><small>score A · 0 PII</small></span>
+              </div>
+              <span class="pipe-link" aria-hidden="true"></span>
+              <div class="pipe-node pipe-node-out">
+                <span class="p-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v10m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 18.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="p-txt"><strong data-i18n="produit.canvas.deliver">Livrables</strong></span>
+                <span class="export-chips">
+                  <span class="export-chip">PySpark</span>
+                  <span class="export-chip">dbt</span>
+                  <span class="export-chip">ODPS</span>
+                  <span class="export-chip">.xlsx</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
