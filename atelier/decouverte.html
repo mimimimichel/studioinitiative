@@ -75,6 +75,9 @@
   .mic-warn{border:1px solid rgba(154,98,18,.4);background:rgba(154,98,18,.08);border-radius:11px;
        padding:13px 16px;margin:16px 0 0;font-size:.87rem;line-height:1.55;color:#5c3c07}
   .mic-warn b{font-family:var(--disp)}
+  .intro-visio{border:1px solid var(--line);background:var(--bg);border-radius:11px;
+       padding:13px 16px;font-size:.87rem;line-height:1.55;color:var(--dim) !important;margin-bottom:20px}
+  .intro-visio b{color:var(--text);font-family:var(--disp)}
   .detail-son{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
   .detail-son summary{cursor:pointer;font-size:.83rem;color:var(--dim)}
   .detail-son summary:hover{color:var(--accent)}
@@ -314,6 +317,12 @@
         sans que vous ayez à ressaisir quoi que ce soit.
       </p>
 
+      <p class="intro-visio">
+        <b>En visio&nbsp;?</b> Votre micro ne capte que vous, pas votre interlocuteur. Activez la
+        transcription de Google&nbsp;Meet ou de Zoom pendant l'appel, puis collez-la dans l'outil :
+        il l'analyse exactement comme s'il avait écouté.
+      </p>
+
       <label class="check">
         <input type="checkbox" id="consentOk">
         <span><b>J'ai prévenu la personne en face et j'ai son accord</b> pour que la conversation
@@ -344,7 +353,27 @@
           <span class="rec-dot" aria-hidden="true"></span><span id="recLabel">Démarrer l'écoute</span>
         </button>
         <span class="chrono" id="chrono">00:00</span>
+        <button type="button" class="act" id="importBtn"
+                style="padding:8px 15px;font-size:.83rem;font-weight:500">Coller une transcription</button>
         <div class="bar-meta" id="barMeta">Écoute à l'arrêt</div>
+      </div>
+
+      <!-- Visio : la transcription vient d'ailleurs (Meet, Zoom, Teams). -->
+      <div class="pane" id="importPane" hidden style="margin-bottom:14px">
+        <h3>Importer une transcription</h3>
+        <p class="pane-sub">
+          En visio, votre micro ne capte que vous. Activez la transcription de Google&nbsp;Meet
+          ou de Zoom pendant l'appel, puis collez-la ici : l'outil l'analyse comme s'il avait
+          écouté — sujets couverts, phrases à retenir, chiffres prononcés.
+          Les horodatages et les noms de locuteurs sont retirés automatiquement.
+        </p>
+        <textarea id="importText" style="min-height:180px;font-size:.9rem"
+          placeholder="00:03:12 Marc Delaunay : On a de la donnée partout, mais personne ne sait laquelle fait foi.&#10;00:03:28 Michael Lozano : Et quand deux systèmes ne sont pas d'accord ?"></textarea>
+        <div class="btns" style="grid-template-columns:auto auto;justify-content:start;gap:9px;margin-top:12px">
+          <button type="button" class="act primary" id="importGo">Analyser</button>
+          <button type="button" class="act" id="importCancel">Annuler</button>
+        </div>
+        <p class="flash" id="importMsg"></p>
       </div>
 
       <div class="live">
@@ -1055,6 +1084,59 @@
 
   $('#recBtn').addEventListener('click', toggleRec);
 
+  /* ── Import d'une transcription extérieure (visio) ──
+     Meet, Zoom et Teams exportent des lignes du type
+     « 00:03:12 Marc Delaunay : … » ou « Marc Delaunay: … ». On retire ce qui
+     n'est pas de la parole avant d'analyser, sinon les noms et les heures
+     polluent la détection des sujets et des chiffres. */
+  var HORODATAGE = /^\s*[\[(]?\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d{1,3})?[\])]?\s*(?:-->\s*[\d:.,]+)?\s*/;
+  var LOCUTEUR = /^\s*([\p{Lu}][\p{L}'’.-]*(?:\s+[\p{L}'’.-]+){0,3})\s*[:：]\s*/u;
+  var NUMERO_SEUL = /^\s*\d+\s*$/;
+
+  // En-têtes et annotations des fichiers de sous-titres : ce n'est pas de la parole.
+  var ENTETE = /^\s*(WEBVTT|NOTE\b|Kind\s*:|Language\s*:)/i;
+
+  function nettoyerLigne(ligne) {
+    var t = ligne.replace(/ /g, ' ').trim();
+    if (!t || ENTETE.test(t) || NUMERO_SEUL.test(t)) return '';
+    t = t.replace(HORODATAGE, '').trim();
+    var m = LOCUTEUR.exec(t);
+    if (m && m[1].length <= 40) t = t.slice(m[0].length).trim();
+    return t;
+  }
+
+  function importer(brut) {
+    var lignes = String(brut || '').split(/\r?\n/).map(nettoyerLigne).filter(Boolean);
+    // Une transcription arrive souvent hachée en fragments : on recolle les
+    // morceaux courts pour retrouver des phrases analysables.
+    var phrases = [], tampon = '';
+    lignes.forEach(function (l) {
+      tampon = tampon ? tampon + ' ' + l : l;
+      if (/[.!?…]$/.test(tampon) || tampon.length > 220) { phrases.push(tampon); tampon = ''; }
+    });
+    if (tampon) phrases.push(tampon);
+
+    phrases.forEach(ingest);
+    if (!startedAt) startedAt = Date.now();
+    paintTranscript();
+    return phrases.length;
+  }
+
+  $('#importBtn').addEventListener('click', function () {
+    var pane = $('#importPane');
+    pane.hidden = !pane.hidden;
+    if (!pane.hidden) $('#importText').focus();
+  });
+  $('#importCancel').addEventListener('click', function () { $('#importPane').hidden = true; });
+  $('#importGo').addEventListener('click', function () {
+    var n = importer($('#importText').value);
+    if (!n) { $('#importMsg').textContent = 'Rien à analyser dans ce texte.'; return; }
+    $('#importText').value = '';
+    $('#importPane').hidden = true;
+    flashLive(n + ' passage' + (n > 1 ? 's' : '') + ' analysé' + (n > 1 ? 's' : '') + '.');
+    touch();
+  });
+
   /* Le moteur du navigateur se met en veille quand l'onglet passe à l'arrière-plan.
      Mieux vaut le dire que de laisser un trou dans la transcription. */
   document.addEventListener('visibilitychange', function () {
@@ -1081,7 +1163,7 @@
     if (!SR) return {
       ok: false,
       titre: 'Ce navigateur ne sait pas transcrire',
-      quoi: 'La transcription vocale n\'existe que sur Chrome et Edge, sur ordinateur. Le reste de l\'outil fonctionne ici.'
+      quoi: 'La transcription vocale n\'existe que sur Chrome et Edge, sur ordinateur. Vous pouvez malgré tout coller une transcription venue de Meet ou Zoom, et tout le reste fonctionne.'
     };
     if (!window.isSecureContext) return {
       ok: false,
@@ -1093,12 +1175,12 @@
     if (location.protocol === 'file:') return {
       ok: false,
       titre: 'Fichier ouvert en local',
-      quoi: 'Chrome n\'ouvre pas le micro sur un fichier double-cliqué, même s\'il considère la page comme sécurisée. La transcription demande le site en ligne (https). Tout le reste fonctionne ici.'
+      quoi: 'Chrome n\'ouvre pas le micro sur un fichier double-cliqué, même s\'il considère la page comme sécurisée. L\'écoute directe demande le site en ligne (https) — mais coller une transcription de Meet ou Zoom fonctionne dès maintenant.'
     };
     if (window.self !== window.top) return {
       ok: false,
       titre: 'Page affichée dans un cadre',
-      quoi: 'Un cadre n\'a pas le droit d\'ouvrir le micro : le navigateur refuse sans afficher de demande. Ouvrez cette page dans un onglet à elle, ou mettez le site en ligne.'
+      quoi: 'Un cadre n\'a pas le droit d\'ouvrir le micro : le navigateur refuse sans afficher de demande. Mettez le site en ligne pour l\'écoute directe — ou collez dès maintenant une transcription de Meet ou Zoom, l\'analyse est la même.'
     };
     return { ok: true };
   }
