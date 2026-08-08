@@ -95,22 +95,53 @@ qu'on tend en main.
 
 Deux outils qui s'enchaînent. Mettez les deux en favori.
 
-### Pendant et juste après l'entretien — `votre-site.com/atelier/decouverte.html`
+### Pendant l'entretien — `votre-site.com/atelier/decouverte.html`
 
-La grille de découverte suit le déroulé d'un vrai entretien : le cadre, pourquoi
-maintenant, le terrain, les frictions, la maturité IA, la gouvernance, qui décide,
-ses mots, votre lecture. Tout s'enregistre au fil de la frappe sur l'appareil —
-si vous fermez l'onglet, vous retrouvez tout.
+L'outil a deux visages, un onglet en haut à droite pour passer de l'un à l'autre.
+
+**Mode Entretien** — le poste de travail pendant le rendez-vous.
+
+Avant toute écoute, une porte : vous confirmez avoir prévenu la ou les personnes
+présentes. Ce n'est pas décoratif. En France, transcrire une conversation
+professionnelle suppose leur accord, et vous vendez de la gouvernance des données —
+c'est le premier endroit où elle se prouve. Une phrase suffit : *« Je prends mes
+notes avec un outil qui transcrit pour ne rien perdre. Ça vous va ? »*
+
+Où va le son, dit noir sur blanc dans l'outil : la reconnaissance vocale du
+navigateur envoie l'audio aux serveurs de son moteur (Google pour Chrome) le temps
+de la transcription. **Le texte, lui, ne quitte jamais l'appareil** — aucun serveur
+de votre côté ne le reçoit.
+
+L'écran se lit en trois colonnes :
+
+- **La trame** — sept temps d'entretien, chacun avec ses questions prêtes à poser
+  et un bloc de notes. Ce que vous tapez là atterrit directement dans la bonne
+  section de la fiche.
+- **Ce qui se dit** — la transcription en direct. Sélectionnez une phrase et
+  capturez-la : elle rejoint « Ses mots », au mot près. Sans lâcher la conversation
+  des yeux, **Ctrl + Entrée** garde la dernière phrase entendue.
+- **Où vous en êtes** — les sujets déjà effleurés se cochent en vert, et l'outil
+  affiche la première question qu'il vous reste à poser, avec un bouton pour y
+  aller. Il repère aussi les phrases marquantes et **tous les chiffres prononcés** :
+  un clic les place dans les frictions.
+
+Un point d'honnêteté que l'outil affiche lui-même : le suivi repère des **mots**,
+pas des idées. Un point vert dit que le sujet a été effleuré — c'est vous qui jugez
+s'il a été traité.
+
+Sans Chrome, la transcription n'est pas disponible : la trame, les notes et la
+fiche fonctionnent quand même, l'outil vous le dit et vous laisse continuer.
+
+**Mode Fiche** — juste après, dans la voiture.
+
+Tout ce que vous avez capté est déjà là. Complétez, surtout la section 09
+« Votre lecture » : elle nourrit l'agent conversationnel et ne s'affiche jamais
+à l'écran du prospect.
 
 Le panneau de droite note le rendez-vous sur cinq axes et vous dit **si l'objet
 vaut le coup** : un porte-clés sur mesure vous coûte du temps, autant le réserver
 aux dossiers où il fera une différence. En dessous de 5/10, une relance simple
 suffit.
-
-La section **« Ses mots »** est la plus importante. Notez les phrases telles
-qu'il les prononce : c'est ce qu'il relira, et il reconnaîtra la sienne au mot près.
-La section **« Votre lecture »** se remplit juste après, dans la voiture — elle
-nourrit l'agent conversationnel et ne s'affiche jamais à l'écran.
 
 ### Puis — **« Préparer le porte-clés »**
 

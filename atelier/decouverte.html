@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Grille de découverte — Studio Initiative</title>
+<title>Entretien de découverte — Studio Initiative</title>
 <link rel="icon" href="../assets/img/logo-mark-square.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +19,7 @@
     --line:rgba(10,29,61,.10); --line-strong:rgba(10,29,61,.20);
     --accent:#067485; --accent-soft:rgba(6,116,133,.09);
     --ok:#1c7a52; --warn:#9a6212; --stop:#a33a3a;
+    --live:#c2352f;
     --disp:"Space Grotesk","Inter",sans-serif;
     --body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     --r:14px;
@@ -28,23 +29,122 @@
        font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
   h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-.02em;margin:0}
   a{color:var(--accent)}
-  .wrap{max-width:1220px;margin:0 auto;padding:28px 22px 140px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .wrap{max-width:1400px;margin:0 auto;padding:22px 20px 120px}
 
-  /* ── en-tête ── */
-  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  /* ── barre haute ── */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
   .brand{display:flex;align-items:center;gap:11px}
   .brand img{width:26px;height:26px}
   .brand b{font-family:var(--disp);font-weight:600;font-size:.95rem}
   .brand span{color:var(--faint);font-size:.82rem}
+  .toprite{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .savestate{font-size:.78rem;color:var(--faint);font-variant-numeric:tabular-nums}
 
-  h1{font-size:1.75rem;margin-bottom:6px}
-  .lede{color:var(--dim);max-width:660px;margin:0 0 26px}
+  .modes{display:flex;background:var(--bg-alt);border-radius:999px;padding:3px;gap:2px}
+  .modes button{border:none;background:none;font-family:var(--body);font-size:.85rem;font-weight:600;
+       color:var(--dim);padding:7px 16px;border-radius:999px;cursor:pointer;transition:all .18s}
+  .modes button[aria-selected="true"]{background:var(--surface);color:var(--text);
+       box-shadow:0 1px 3px rgba(10,29,61,.12)}
 
-  .cols{display:grid;gap:26px;align-items:start}
-  @media (min-width:1040px){.cols{grid-template-columns:1fr 348px}}
+  h1{font-size:1.7rem;margin-bottom:6px}
+  .lede{color:var(--dim);max-width:680px;margin:0 0 22px}
 
-  /* ── sections ── */
+  /* ══════════ MODE ENTRETIEN ══════════ */
+  .consent{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+       padding:24px;max-width:720px}
+  .consent h2{font-size:1.15rem;margin-bottom:12px}
+  .consent p{color:var(--dim);font-size:.9rem;margin:0 0 12px}
+  .consent .rule{background:var(--accent-soft);border-left:3px solid var(--accent);
+       border-radius:0 9px 9px 0;padding:13px 16px;margin:0 0 16px}
+  .consent .rule p{margin:0;color:var(--text);font-size:.89rem}
+  .consent label.check{display:flex;gap:11px;align-items:flex-start;font-size:.9rem;color:var(--text);
+       cursor:pointer;margin-bottom:16px;font-weight:400}
+  .consent input[type=checkbox]{width:18px;height:18px;margin:2px 0 0;flex-shrink:0;accent-color:var(--accent)}
+
+  .live-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surface);
+       border:1px solid var(--line);border-radius:var(--r);padding:13px 18px;margin-bottom:14px;
+       position:sticky;top:0;z-index:5}
+  .rec-btn{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-strong);
+       background:var(--surface);color:var(--text);border-radius:999px;padding:9px 18px;
+       font-family:var(--body);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .18s}
+  .rec-btn:hover{border-color:var(--accent)}
+  .rec-btn[data-on="true"]{background:var(--live);border-color:var(--live);color:#fff}
+  .rec-dot{width:9px;height:9px;border-radius:50%;background:var(--faint);flex:0 0 9px}
+  .rec-btn[data-on="true"] .rec-dot{background:#fff;animation:blip 1.4s ease-in-out infinite}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  .chrono{font-family:var(--disp);font-size:1.05rem;font-variant-numeric:tabular-nums;font-weight:600}
+  .bar-meta{color:var(--faint);font-size:.8rem;margin-left:auto;text-align:right;line-height:1.4}
+
+  .live{display:grid;gap:14px}
+  @media (min-width:1080px){.live{grid-template-columns:1fr 1.05fr 320px;align-items:start}}
+
+  .pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+  .pane > h3{font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
+       margin-bottom:14px}
+
+  /* trame */
+  .sec-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .sec-pill{border:1px solid var(--line-strong);background:var(--surface);color:var(--dim);
+       border-radius:999px;padding:5px 11px;font-size:.76rem;font-family:var(--body);cursor:pointer;
+       display:inline-flex;align-items:center;gap:6px;transition:all .16s}
+  .sec-pill:hover{border-color:var(--accent)}
+  .sec-pill[aria-current="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+  .sec-pill .tick{width:6px;height:6px;border-radius:50%;background:var(--line-strong);flex:0 0 6px}
+  .sec-pill[data-seen="true"] .tick{background:var(--ok)}
+  .sec-pill[aria-current="true"] .tick{background:rgba(255,255,255,.5)}
+  .sec-pill[aria-current="true"][data-seen="true"] .tick{background:#6ee7a8}
+
+  .sec-title{font-family:var(--disp);font-size:1.05rem;font-weight:600;margin:0 0 4px}
+  .sec-why{color:var(--faint);font-size:.82rem;margin:0 0 14px;line-height:1.5}
+  .questions{display:grid;gap:8px;margin-bottom:16px}
+  .q{border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:.92rem;
+     line-height:1.5;background:var(--bg);cursor:pointer;transition:all .16s;text-align:left;
+     font-family:var(--body);color:var(--text);width:100%}
+  .q:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .q[data-asked="true"]{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
+  .notes-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .notes-lbl label{font-size:.79rem;color:var(--dim);font-weight:500;margin:0}
+  .notes-lbl em{font-style:normal;font-size:.74rem;color:var(--faint)}
+  textarea.notes{width:100%;min-height:150px;border:1px solid var(--line-strong);border-radius:9px;
+       padding:11px 13px;font-family:var(--body);font-size:.94rem;line-height:1.6;resize:vertical;
+       background:var(--surface);color:var(--text);outline:none}
+  textarea.notes:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+  /* transcription */
+  .tr-wrap{max-height:52vh;overflow-y:auto;padding-right:4px}
+  .tr-p{margin:0 0 10px;font-size:.93rem;line-height:1.65;color:var(--text)}
+  .tr-p.interim{color:var(--faint)}
+  .tr-empty{color:var(--faint);font-size:.88rem}
+  .tr-hint{font-size:.76rem;color:var(--faint);margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line)}
+  .capture-bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+  /* colonne droite */
+  .cue{border:1px solid var(--accent);background:var(--accent-soft);border-radius:11px;
+       padding:13px 15px;margin-bottom:14px}
+  .cue b{display:block;font-size:.73rem;letter-spacing:.12em;text-transform:uppercase;
+       color:var(--accent);margin-bottom:5px}
+  .cue p{margin:0;font-size:.9rem;line-height:1.5}
+  .cue.quiet{border-color:var(--line);background:var(--bg)}
+  .cue.quiet b{color:var(--faint)}
+
+  .cand{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;
+        background:var(--bg);font-size:.88rem;line-height:1.5}
+  .cand .row{display:flex;gap:9px;align-items:flex-start;justify-content:space-between}
+  .cand p{margin:0;flex:1}
+  .cand button{border:1px solid var(--line-strong);background:var(--surface);border-radius:7px;
+       padding:3px 9px;font-size:.76rem;font-family:var(--body);cursor:pointer;color:var(--dim);flex-shrink:0}
+  .cand button:hover{border-color:var(--accent);color:var(--accent)}
+  .nums{display:flex;flex-wrap:wrap;gap:6px}
+  .num-chip{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;
+       padding:5px 11px;font-size:.8rem;font-variant-numeric:tabular-nums;color:var(--text);
+       cursor:pointer;font-family:var(--body)}
+  .num-chip:hover{border-color:var(--accent);color:var(--accent)}
+  .none{color:var(--faint);font-size:.83rem;margin:0}
+
+  /* ══════════ MODE FICHE ══════════ */
+  .cols{display:grid;gap:24px;align-items:start}
+  @media (min-width:1040px){.cols{grid-template-columns:1fr 344px}}
   section.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
        padding:22px;margin-bottom:16px}
   .shead{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
@@ -72,7 +172,6 @@
          background-position:calc(100% - 17px) 51%,calc(100% - 12px) 51%;
          background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px}
 
-  /* ── puces systèmes ── */
   .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
   .chip{border:1px solid var(--line-strong);background:var(--surface);color:var(--dim);
         border-radius:999px;padding:6px 13px;font-size:.82rem;font-family:var(--body);
@@ -80,7 +179,6 @@
   .chip:hover{border-color:var(--accent);color:var(--text)}
   .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
 
-  /* ── blocs répétables ── */
   .item{border:1px solid var(--line);border-radius:11px;padding:15px;margin-bottom:11px;background:var(--bg)}
   .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
   .item-head b{font-family:var(--disp);font-size:.85rem;color:var(--accent)}
@@ -90,20 +188,16 @@
        padding:9px 15px;font-family:var(--body);font-size:.85rem;cursor:pointer;width:100%}
   .add:hover{border-color:var(--accent);color:var(--accent)}
 
-  /* ── panneau latéral ── */
   .side{position:sticky;top:22px;display:grid;gap:14px}
   .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:19px}
   .panel h3{font-size:.98rem;margin-bottom:13px}
-
   .verdict{border-radius:11px;padding:15px;margin-bottom:14px;border:1px solid}
   .verdict b{display:block;font-family:var(--disp);font-size:1rem;margin-bottom:3px}
-  .verdict p{margin:0;font-size:.84rem;line-height:1.5}
+  .verdict p{margin:0;font-size:.84rem;line-height:1.5;color:var(--dim)}
   .v-go{background:rgba(28,122,82,.07);border-color:rgba(28,122,82,.3);color:var(--ok)}
   .v-wait{background:rgba(154,98,18,.07);border-color:rgba(154,98,18,.3);color:var(--warn)}
   .v-no{background:rgba(163,58,58,.07);border-color:rgba(163,58,58,.3);color:var(--stop)}
-  .verdict p{color:var(--dim)}
-
-  .axes{display:grid;gap:9px;margin-bottom:4px}
+  .axes{display:grid;gap:9px}
   .axis{display:flex;align-items:center;gap:10px;font-size:.82rem}
   /* flex:0 0 9px et non flex-shrink seul : la pastille est un span, et la règle
      .axis span ci-dessous lui donnerait flex-grow:1 — elle s'étirerait en ovale. */
@@ -120,10 +214,8 @@
   button.act:hover{border-color:var(--accent);color:var(--accent)}
   button.act.primary{background:var(--navy);border-color:var(--navy);color:#fff}
   button.act.primary:hover{background:var(--navy-deep);color:#fff}
-  button.act:disabled{opacity:.45;cursor:not-allowed}
   .flash{font-size:.8rem;color:var(--accent);min-height:1.2em;margin:9px 0 0}
   .missing{font-size:.8rem;color:var(--warn);margin:9px 0 0;line-height:1.5}
-
   .archive{font-size:.83rem}
   .archive ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
   .archive li{display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -134,7 +226,9 @@
   .archive .when{color:var(--faint);font-size:.75rem;white-space:nowrap}
   .empty{color:var(--faint);font-size:.83rem;margin:0}
 
-  @media print{.side,.top,.lede{display:none}section.card{break-inside:avoid;border:none}}
+  [hidden]{display:none !important}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+  @media print{.side,.top,.lede,.live-bar,.modes{display:none}section.card{break-inside:avoid;border:none}}
 </style>
 </head>
 <body>
@@ -144,215 +238,328 @@
     <div class="brand">
       <img src="../assets/img/logo-mark.png" alt="">
       <b>Studio Initiative</b>
-      <span>· Grille de découverte</span>
+      <span>· Entretien de découverte</span>
     </div>
-    <div class="savestate" id="savestate">—</div>
+    <div class="toprite">
+      <div class="modes" role="tablist">
+        <button type="button" role="tab" id="tab-live" aria-selected="true">Entretien</button>
+        <button type="button" role="tab" id="tab-fiche" aria-selected="false">Fiche</button>
+      </div>
+      <div class="savestate" id="savestate">—</div>
+    </div>
   </div>
 
-  <h1>Premier rendez-vous</h1>
-  <p class="lede">
-    L'ordre des sections suit le déroulé d'un vrai entretien : le cadre, puis pourquoi maintenant,
-    puis le terrain, puis la décision. Tout est enregistré au fil de la frappe sur cet appareil.
-    À la fin, la grille fabrique le dossier du porte-clés — vous n'aurez rien à ressaisir.
-  </p>
+  <!-- ══════════════════ MODE ENTRETIEN ══════════════════ -->
+  <div id="view-live">
 
-  <div class="cols">
-    <main>
+    <!-- Porte d'entrée : consentement -->
+    <div class="consent" id="consent">
+      <h2>Avant d'écouter</h2>
+      <p>
+        L'outil transcrit la conversation pour suivre en direct ce qui a été couvert et vous souffler
+        la relance. Vous gardez les yeux sur votre interlocuteur au lieu de votre clavier.
+      </p>
+      <div class="rule">
+        <p><b>Où va le son.</b> La reconnaissance vocale du navigateur envoie l'audio aux serveurs de
+        son moteur (Google pour Chrome) le temps de la transcription. Le texte, lui, ne quitte jamais
+        cet appareil : il est enregistré localement et n'est transmis à aucun serveur de notre côté.</p>
+      </div>
+      <p>
+        En France, enregistrer ou transcrire une conversation professionnelle suppose l'accord des
+        personnes présentes. Vous vendez de la gouvernance des données — c'est le premier endroit où
+        elle se prouve. Une phrase suffit : <em>« Je prends mes notes avec un outil qui transcrit
+        pour ne rien perdre. Ça vous va&nbsp;? »</em>
+      </p>
+      <label class="check">
+        <input type="checkbox" id="consentOk">
+        <span>J'ai prévenu la ou les personnes présentes et j'ai leur accord.</span>
+      </label>
+      <div class="btns" style="grid-template-columns:auto auto;justify-content:start;gap:9px">
+        <button type="button" class="act primary" id="consentGo" disabled>Ouvrir l'entretien</button>
+        <button type="button" class="act" id="consentSkip">Continuer sans écoute</button>
+      </div>
+      <p class="flash" id="srWarn" style="color:var(--warn)"></p>
+    </div>
 
-      <section class="card">
-        <div class="shead"><span class="num">01</span><h2>Le cadre</h2></div>
-        <p class="why">Ce qui identifie le dossier, et ce qui s'affichera en grand sur son écran.</p>
-        <div class="grid g2">
-          <div><label for="firstName">Prénom <span class="req">— s'affiche en très grand</span></label><input id="firstName"></div>
-          <div><label for="lastName">Nom</label><input id="lastName"></div>
-        </div>
-        <div class="grid g2">
-          <div><label for="role">Fonction</label><input id="role" placeholder="Directeur Industriel"></div>
-          <div><label for="company">Entreprise</label><input id="company"></div>
-        </div>
-        <div class="grid g3">
-          <div><label for="sector">Secteur</label><input id="sector" placeholder="Aéronautique"></div>
-          <div><label for="size">Effectif</label><input id="size" placeholder="600"></div>
-          <div><label for="origin">Origine du contact</label><input id="origin" placeholder="LinkedIn, recommandation…"></div>
-        </div>
-        <div class="grid g3">
-          <div><label for="date">Date du rendez-vous</label><input type="date" id="date"></div>
-          <div><label for="time">Heure</label><input type="time" id="time" value="14:30"></div>
-          <div><label for="place">Lieu <span style="color:var(--faint)">— se lit après la date</span></label><input id="place" placeholder="à Blagnac"></div>
-        </div>
-        <div class="grid">
-          <div><label for="others">Qui d'autre était présent</label><input id="others" placeholder="Nom, fonction — un par personne"></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">02</span><h2>Pourquoi maintenant</h2></div>
-        <p class="why">La question qui prédit le mieux la suite. Un besoin sans échéance ne se transforme presque jamais.</p>
-        <div class="grid">
-          <div><label for="trigger">Qu'est-ce qui déclenche ce sujet aujourd'hui</label>
-            <textarea id="trigger" placeholder="Un audit, un incident, une pression du groupe, un départ, une échéance réglementaire…"></textarea></div>
-        </div>
-        <div class="grid g21">
-          <div><label for="deadline">Échéance mentionnée</label><input id="deadline" placeholder="Fin d'exercice, comité de novembre…"></div>
-          <div><label for="triggerStrength">Solidité du déclencheur</label>
-            <select id="triggerStrength">
-              <option value="">—</option>
-              <option value="fort">Daté et porté par quelqu'un</option>
-              <option value="moyen">Réel mais sans échéance</option>
-              <option value="faible">Curiosité, veille</option>
-            </select></div>
-        </div>
-        <div class="grid">
-          <div><label for="doNothing">Ce qui se passe s'ils ne font rien</label>
-            <textarea id="doNothing" placeholder="Sa réponse, pas la vôtre."></textarea></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">03</span><h2>Le terrain</h2></div>
-        <p class="why">Les systèmes cités et l'état du référentiel. C'est de là que sortira la cartographie affichée sur la page.</p>
-        <label>Systèmes cités</label>
-        <div class="chips" id="systems"></div>
-        <div class="grid g2">
-          <div><label for="systemsOther">Autres systèmes</label><input id="systemsOther" placeholder="Séparés par des virgules"></div>
-          <div><label for="refSource">Existe-t-il un référentiel faisant foi</label>
-            <select id="refSource">
-              <option value="">—</option>
-              <option value="oui">Oui, identifié et respecté</option>
-              <option value="partiel">Sur une partie seulement</option>
-              <option value="non">Non — chacun a le sien</option>
-            </select></div>
-        </div>
-        <div class="grid g2">
-          <div><label for="team">Équipe data interne</label><input id="team" placeholder="2 analystes, pas d'ingénieur data"></div>
-          <div><label for="hosting">Contraintes d'hébergement</label><input id="hosting" placeholder="Cloud, on-prem, souveraineté, secret défense…"></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">04</span><h2>Les frictions</h2></div>
-        <p class="why">Une friction chiffrable vaut dix frustrations vagues. Chaque ligne remplie devient un constat chiffré sur sa page.</p>
-        <div id="frictions"></div>
-        <button type="button" class="add" id="addFriction">+ Ajouter une friction</button>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">05</span><h2>Où en est l'IA chez eux</h2></div>
-        <p class="why">Des pilotes bloqués sont le meilleur point d'entrée du cabinet : le problème est presque toujours en amont du modèle.</p>
-        <div class="grid g21">
-          <div><label for="pilots">Pilotes ou projets IA lancés</label>
-            <textarea id="pilots" placeholder="Maintenance prédictive (1 an), contrôle visuel (6 mois)…"></textarea></div>
-          <div><label for="pilotState">Où ils en sont</label>
-            <select id="pilotState">
-              <option value="">—</option>
-              <option value="aucun">Aucun projet lancé</option>
-              <option value="bloques">Lancés, aucun en production</option>
-              <option value="partiel">Un passé en production</option>
-              <option value="matures">Plusieurs en production</option>
-            </select></div>
-        </div>
-        <div class="grid g2">
-          <div><label for="blockerTheirs">Leur explication du blocage</label><textarea id="blockerTheirs"></textarea></div>
-          <div><label for="blockerYours">La vôtre</label><textarea id="blockerYours"></textarea></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">06</span><h2>Gouvernance</h2></div>
-        <p class="why">Le socle que vend le cabinet. Trois « non » ici valent une mission.</p>
-        <div class="grid g3">
-          <div><label for="owners">Propriétaires de données désignés</label>
-            <select id="owners"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
-          <div><label for="lineage">Traçabilité / lineage</label>
-            <select id="lineage"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
-          <div><label for="quality">Qualité mesurée</label>
-            <select id="quality"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
-        </div>
-        <div class="grid g2">
-          <div><label for="compliance">RGPD / AI Act — où ils en sont</label><textarea id="compliance"></textarea></div>
-          <div><label for="incident">Incident ou audit récent</label><textarea id="incident"></textarea></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">07</span><h2>Qui décide</h2></div>
-        <p class="why">Un interlocuteur convaincu qui ne décide pas, et sans accès à qui décide, c'est un dossier qui dort.</p>
-        <div class="grid g3">
-          <div><label for="decider">Qui signe</label><input id="decider"></div>
-          <div><label for="influencer">Qui influence</label><input id="influencer"></div>
-          <div><label for="blocker">Qui peut bloquer</label><input id="blocker"></div>
-        </div>
-        <div class="grid g3">
-          <div><label for="sponsorAccess">Accès au décideur</label>
-            <select id="sponsorAccess">
-              <option value="">—</option>
-              <option value="oui">Mon interlocuteur décide</option>
-              <option value="partiel">Il peut m'y amener</option>
-              <option value="non">Pas d'accès identifié</option>
-            </select></div>
-          <div><label for="budget">Budget</label>
-            <select id="budget">
-              <option value="">—</option>
-              <option value="oui">Existe et est fléché</option>
-              <option value="partiel">À créer, mais l'enveloppe existe</option>
-              <option value="non">Inconnu ou inexistant</option>
-            </select></div>
-          <div><label for="competition">Autres cabinets en lice</label><input id="competition"></div>
-        </div>
-        <div class="grid">
-          <div><label for="process">Processus d'achat et délais</label><textarea id="process" placeholder="Appel d'offres, achat direct, comité, seuil de délégation…"></textarea></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">08</span><h2>Ses mots</h2></div>
-        <p class="why">Le plus précieux de la grille. Notez les phrases telles qu'il les prononce — c'est ce qu'il relira sur le porte-clés, et il reconnaîtra la sienne au mot près.</p>
-        <div id="quotes"></div>
-        <button type="button" class="add" id="addQuote">+ Ajouter une phrase</button>
-      </section>
-
-      <section class="card">
-        <div class="shead"><span class="num">09</span><h2>Votre lecture</h2></div>
-        <p class="why">À remplir juste après, dans la voiture. C'est ce qui nourrira l'agent conversationnel — et ce qui ne s'affichera jamais à l'écran.</p>
-        <div class="grid">
-          <div><label for="unsaid">Ce qu'il n'a pas dit mais qui transparaît</label><textarea id="unsaid"></textarea></div>
-        </div>
-        <div class="grid g2">
-          <div><label for="diagnosis">Votre diagnostic</label><textarea id="diagnosis"></textarea></div>
-          <div><label for="reco">Votre recommandation</label><textarea id="reco"></textarea></div>
-        </div>
-        <div class="grid g21">
-          <div><label for="nextStep">Prochaine étape convenue</label><input id="nextStep" placeholder="Atelier de cadrage, envoi d'une note, présentation au comité…"></div>
-          <div><label for="nextDate">Engagée pour le</label><input type="date" id="nextDate"></div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- ══════ Panneau ══════ -->
-    <aside class="side">
-      <div class="panel">
-        <h3>Lecture du rendez-vous</h3>
-        <div class="verdict" id="verdict"><b>—</b><p>Remplissez la grille.</p></div>
-        <div class="axes" id="axes"></div>
+    <!-- Poste de travail -->
+    <div id="deck" hidden>
+      <div class="live-bar">
+        <button type="button" class="rec-btn" id="recBtn" data-on="false" aria-pressed="false">
+          <span class="rec-dot" aria-hidden="true"></span><span id="recLabel">Démarrer l'écoute</span>
+        </button>
+        <span class="chrono" id="chrono">00:00</span>
+        <div class="bar-meta" id="barMeta">Écoute à l'arrêt</div>
       </div>
 
-      <div class="panel">
-        <h3>Ensuite</h3>
-        <div class="btns">
-          <button type="button" class="act primary" id="toKeychain">Préparer le porte-clés</button>
-          <button type="button" class="act" id="copySummary">Copier le compte rendu</button>
-          <button type="button" class="act" id="saveNew">Enregistrer et repartir à zéro</button>
-        </div>
-        <p class="flash" id="flash"></p>
-        <p class="missing" id="missing"></p>
-      </div>
+      <div class="live">
 
-      <div class="panel archive">
-        <h3>Rendez-vous enregistrés</h3>
-        <div id="archive"><p class="empty">Aucun pour le moment.</p></div>
+        <!-- Trame + notes -->
+        <div class="pane">
+          <h3>Trame</h3>
+          <div class="sec-nav" id="secNav"></div>
+          <p class="sec-title" id="secTitle">—</p>
+          <p class="sec-why" id="secWhy"></p>
+          <div class="questions" id="questions"></div>
+          <div class="notes-lbl">
+            <label for="liveNotes">Vos notes sur ce point</label>
+            <em id="notesEcho"></em>
+          </div>
+          <textarea class="notes" id="liveNotes" placeholder="Deux mots suffisent — vous structurerez dans la fiche."></textarea>
+        </div>
+
+        <!-- Transcription -->
+        <div class="pane">
+          <h3>Ce qui se dit</h3>
+          <div class="tr-wrap" id="trWrap">
+            <p class="tr-empty" id="trEmpty">La transcription apparaîtra ici dès que vous démarrez l'écoute.</p>
+          </div>
+          <div class="capture-bar">
+            <button type="button" class="act" id="capSel">Capturer la sélection</button>
+            <button type="button" class="act" id="capLast">Capturer la dernière phrase</button>
+          </div>
+          <p class="tr-hint">
+            Sélectionnez une phrase et capturez-la : elle rejoint ses mots, au mot près — c'est ce
+            qu'il relira sur le porte-clés. Sans lâcher la conversation des yeux :
+            <b>Ctrl + Entrée</b> garde la dernière phrase entendue.
+          </p>
+        </div>
+
+        <!-- Aiguillage -->
+        <div class="pane">
+          <h3>Où vous en êtes</h3>
+          <div id="cue"></div>
+          <p class="tr-hint" style="margin-top:10px;padding-top:0;border:0">
+            Le suivi repère des mots, pas des idées. Un point vert dit que le sujet
+            a été effleuré — c'est vous qui jugez s'il a été traité.
+          </p>
+
+          <h3 style="margin-top:20px">Phrases à retenir</h3>
+          <div id="quoteCands"><p class="none">Rien de marquant pour l'instant.</p></div>
+
+          <h3 style="margin-top:20px">Chiffres entendus</h3>
+          <div class="nums" id="numCands"><p class="none">Aucun.</p></div>
+        </div>
+
       </div>
-    </aside>
+    </div>
+  </div>
+
+  <!-- ══════════════════ MODE FICHE ══════════════════ -->
+  <div id="view-fiche" hidden>
+    <h1>Fiche du rendez-vous</h1>
+    <p class="lede">
+      Ce que vous avez capté pendant l'entretien est déjà là. Complétez ce qui manque —
+      surtout la section 09, à remplir juste après. À la fin, la fiche fabrique le dossier du
+      porte-clés : vous n'aurez rien à ressaisir.
+    </p>
+
+    <div class="cols">
+      <main>
+
+        <section class="card">
+          <div class="shead"><span class="num">01</span><h2>Le cadre</h2></div>
+          <p class="why">Ce qui identifie le dossier, et ce qui s'affichera en grand sur son écran.</p>
+          <div class="grid g2">
+            <div><label for="firstName">Prénom <span class="req">— s'affiche en très grand</span></label><input id="firstName"></div>
+            <div><label for="lastName">Nom</label><input id="lastName"></div>
+          </div>
+          <div class="grid g2">
+            <div><label for="role">Fonction</label><input id="role" placeholder="Directeur Industriel"></div>
+            <div><label for="company">Entreprise</label><input id="company"></div>
+          </div>
+          <div class="grid g3">
+            <div><label for="sector">Secteur</label><input id="sector" placeholder="Aéronautique"></div>
+            <div><label for="size">Effectif</label><input id="size" placeholder="600"></div>
+            <div><label for="origin">Origine du contact</label><input id="origin" placeholder="LinkedIn, recommandation…"></div>
+          </div>
+          <div class="grid g3">
+            <div><label for="date">Date du rendez-vous</label><input type="date" id="date"></div>
+            <div><label for="time">Heure</label><input type="time" id="time" value="14:30"></div>
+            <div><label for="place">Lieu <span style="color:var(--faint)">— se lit après la date</span></label><input id="place" placeholder="à Blagnac"></div>
+          </div>
+          <div class="grid">
+            <div><label for="others">Qui d'autre était présent</label><input id="others" placeholder="Nom, fonction — un par personne"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">02</span><h2>Pourquoi maintenant</h2></div>
+          <p class="why">La question qui prédit le mieux la suite. Un besoin sans échéance ne se transforme presque jamais.</p>
+          <div class="grid">
+            <div><label for="trigger">Ce qui déclenche le sujet aujourd'hui</label>
+              <textarea id="trigger" placeholder="Un audit, un incident, une pression du groupe, un départ, une échéance réglementaire…"></textarea></div>
+          </div>
+          <div class="grid g21">
+            <div><label for="deadline">Échéance mentionnée</label><input id="deadline" placeholder="Fin d'exercice, comité de novembre…"></div>
+            <div><label for="triggerStrength">Solidité du déclencheur</label>
+              <select id="triggerStrength">
+                <option value="">—</option>
+                <option value="fort">Daté et porté par quelqu'un</option>
+                <option value="moyen">Réel mais sans échéance</option>
+                <option value="faible">Curiosité, veille</option>
+              </select></div>
+          </div>
+          <div class="grid">
+            <div><label for="doNothing">Ce qui se passe s'ils ne font rien</label>
+              <textarea id="doNothing" placeholder="Sa réponse, pas la vôtre."></textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">03</span><h2>Le terrain</h2></div>
+          <p class="why">Les systèmes cités et l'état du référentiel. C'est de là que sortira la cartographie affichée sur la page.</p>
+          <label>Systèmes cités</label>
+          <div class="chips" id="systems"></div>
+          <div class="grid g2">
+            <div><label for="systemsOther">Autres systèmes</label><input id="systemsOther" placeholder="Séparés par des virgules"></div>
+            <div><label for="refSource">Existe-t-il un référentiel faisant foi</label>
+              <select id="refSource">
+                <option value="">—</option>
+                <option value="oui">Oui, identifié et respecté</option>
+                <option value="partiel">Sur une partie seulement</option>
+                <option value="non">Non — chacun a le sien</option>
+              </select></div>
+          </div>
+          <div class="grid g2">
+            <div><label for="team">Équipe data interne</label><input id="team" placeholder="2 analystes, pas d'ingénieur data"></div>
+            <div><label for="hosting">Contraintes d'hébergement</label><input id="hosting" placeholder="Cloud, on-prem, souveraineté…"></div>
+          </div>
+          <div class="grid">
+            <div><label for="terrainNotes">Notes prises pendant l'entretien</label><textarea id="terrainNotes"></textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">04</span><h2>Les frictions</h2></div>
+          <p class="why">Une friction chiffrable vaut dix frustrations vagues. Chaque ligne remplie devient un constat chiffré sur sa page.</p>
+          <div class="grid">
+            <div><label for="frictionNotes">Notes prises pendant l'entretien</label><textarea id="frictionNotes"></textarea></div>
+          </div>
+          <div id="frictions"></div>
+          <button type="button" class="add" id="addFriction">+ Ajouter une friction</button>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">05</span><h2>Où en est l'IA chez eux</h2></div>
+          <p class="why">Des pilotes bloqués sont le meilleur point d'entrée du cabinet : le problème est presque toujours en amont du modèle.</p>
+          <div class="grid g21">
+            <div><label for="pilots">Pilotes ou projets IA lancés</label>
+              <textarea id="pilots" placeholder="Maintenance prédictive (1 an), contrôle visuel (6 mois)…"></textarea></div>
+            <div><label for="pilotState">Où ils en sont</label>
+              <select id="pilotState">
+                <option value="">—</option>
+                <option value="aucun">Aucun projet lancé</option>
+                <option value="bloques">Lancés, aucun en production</option>
+                <option value="partiel">Un passé en production</option>
+                <option value="matures">Plusieurs en production</option>
+              </select></div>
+          </div>
+          <div class="grid g2">
+            <div><label for="blockerTheirs">Leur explication du blocage</label><textarea id="blockerTheirs"></textarea></div>
+            <div><label for="blockerYours">La vôtre</label><textarea id="blockerYours"></textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">06</span><h2>Gouvernance</h2></div>
+          <p class="why">Le socle que vend le cabinet. Trois « non » ici valent une mission.</p>
+          <div class="grid g3">
+            <div><label for="owners">Propriétaires de données désignés</label>
+              <select id="owners"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
+            <div><label for="lineage">Traçabilité / lineage</label>
+              <select id="lineage"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
+            <div><label for="quality">Qualité mesurée</label>
+              <select id="quality"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
+          </div>
+          <div class="grid g2">
+            <div><label for="compliance">RGPD / AI Act — où ils en sont</label><textarea id="compliance"></textarea></div>
+            <div><label for="incident">Incident ou audit récent</label><textarea id="incident"></textarea></div>
+          </div>
+          <div class="grid">
+            <div><label for="gouvNotes">Notes prises pendant l'entretien</label><textarea id="gouvNotes"></textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">07</span><h2>Qui décide</h2></div>
+          <p class="why">Un interlocuteur convaincu qui ne décide pas, et sans accès à qui décide, c'est un dossier qui dort.</p>
+          <div class="grid g3">
+            <div><label for="decider">Qui signe</label><input id="decider"></div>
+            <div><label for="influencer">Qui influence</label><input id="influencer"></div>
+            <div><label for="blocker">Qui peut bloquer</label><input id="blocker"></div>
+          </div>
+          <div class="grid g3">
+            <div><label for="sponsorAccess">Accès au décideur</label>
+              <select id="sponsorAccess">
+                <option value="">—</option>
+                <option value="oui">Mon interlocuteur décide</option>
+                <option value="partiel">Il peut m'y amener</option>
+                <option value="non">Pas d'accès identifié</option>
+              </select></div>
+            <div><label for="budget">Budget</label>
+              <select id="budget">
+                <option value="">—</option>
+                <option value="oui">Existe et est fléché</option>
+                <option value="partiel">À créer, mais l'enveloppe existe</option>
+                <option value="non">Inconnu ou inexistant</option>
+              </select></div>
+            <div><label for="competition">Autres cabinets en lice</label><input id="competition"></div>
+          </div>
+          <div class="grid">
+            <div><label for="process">Processus d'achat et délais</label><textarea id="process" placeholder="Appel d'offres, achat direct, comité, seuil de délégation…"></textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">08</span><h2>Ses mots</h2></div>
+          <p class="why">Le plus précieux de la fiche. Les phrases capturées pendant l'entretien arrivent ici — relisez-les, elles seront affichées telles quelles.</p>
+          <div id="quotes"></div>
+          <button type="button" class="add" id="addQuote">+ Ajouter une phrase</button>
+        </section>
+
+        <section class="card">
+          <div class="shead"><span class="num">09</span><h2>Votre lecture</h2></div>
+          <p class="why">À remplir juste après, dans la voiture. C'est ce qui nourrira l'agent conversationnel — et ce qui ne s'affichera jamais à l'écran.</p>
+          <div class="grid">
+            <div><label for="unsaid">Ce qu'il n'a pas dit mais qui transparaît</label><textarea id="unsaid"></textarea></div>
+          </div>
+          <div class="grid g2">
+            <div><label for="diagnosis">Votre diagnostic</label><textarea id="diagnosis"></textarea></div>
+            <div><label for="reco">Votre recommandation</label><textarea id="reco"></textarea></div>
+          </div>
+          <div class="grid g21">
+            <div><label for="nextStep">Prochaine étape convenue</label><input id="nextStep" placeholder="Atelier de cadrage, envoi d'une note…"></div>
+            <div><label for="nextDate">Engagée pour le</label><input type="date" id="nextDate"></div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="side">
+        <div class="panel">
+          <h3>Lecture du rendez-vous</h3>
+          <div class="verdict" id="verdict"><b>—</b><p>Remplissez la fiche.</p></div>
+          <div class="axes" id="axes"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Ensuite</h3>
+          <div class="btns">
+            <button type="button" class="act primary" id="toKeychain">Préparer le porte-clés</button>
+            <button type="button" class="act" id="copySummary">Copier le compte rendu</button>
+            <button type="button" class="act" id="copyTranscript">Copier la transcription</button>
+            <button type="button" class="act" id="saveNew">Enregistrer et repartir à zéro</button>
+          </div>
+          <p class="flash" id="flash"></p>
+          <p class="missing" id="missing"></p>
+        </div>
+
+        <div class="panel archive">
+          <h3>Rendez-vous enregistrés</h3>
+          <div id="archive"><p class="empty">Aucun pour le moment.</p></div>
+        </div>
+      </aside>
+    </div>
   </div>
 </div>
 
@@ -367,14 +574,368 @@
   var SYSTEMS = ['ERP', 'MES', 'CRM', 'PLM', 'GMAO', 'Excel / SharePoint', 'Data lake',
                  'Snowflake', 'Databricks', 'Palantir Foundry', 'Power BI', 'Tableau', 'SAP'];
 
-  /* ── champs simples ── */
   var FIELDS = ['firstName','lastName','role','company','sector','size','origin','date','time',
     'place','others','trigger','deadline','triggerStrength','doNothing','systemsOther','refSource',
-    'team','hosting','pilots','pilotState','blockerTheirs','blockerYours','owners','lineage',
-    'quality','compliance','incident','decider','influencer','blocker','sponsorAccess','budget',
-    'competition','process','unsaid','diagnosis','reco','nextStep','nextDate'];
+    'team','hosting','terrainNotes','frictionNotes','pilots','pilotState','blockerTheirs','blockerYours',
+    'owners','lineage','quality','compliance','incident','gouvNotes','decider','influencer','blocker',
+    'sponsorAccess','budget','competition','process','unsaid','diagnosis','reco','nextStep','nextDate'];
 
-  /* ── puces systèmes ── */
+  /* ════════════════════════════════════════════════════════════
+     La trame : ce que l'outil fait dire, et ce qu'il guette
+     ════════════════════════════════════════════════════════════ */
+  var TRAME = [
+    { id: '02', titre: 'Pourquoi maintenant',
+      why: "Un besoin sans échéance ne se transforme presque jamais. C'est la question la plus prédictive de l'entretien.",
+      notes: 'trigger',
+      questions: [
+        "Qu'est-ce qui fait que vous regardez ce sujet maintenant, et pas il y a six mois ?",
+        "Il y a une échéance derrière ?",
+        "Si rien ne bouge d'ici là, il se passe quoi ?"
+      ],
+      lex: /pourquoi maintenant|éch[ée]ance|deadline|urgen|comit[ée]|audit|r[ée]glementaire|fin d'ann[ée]e|avant (la fin|le|l')|pression|direction (g[ée]n[ée]rale|groupe)/i },
+
+    { id: '03', titre: 'Le terrain',
+      why: "Les systèmes cités et l'état du référentiel. C'est de là que sortira la cartographie affichée sur sa page.",
+      notes: 'terrainNotes',
+      questions: [
+        "Quand vous avez besoin du chiffre juste, vous le cherchez où ?",
+        "Et si deux systèmes ne sont pas d'accord, lequel gagne ?",
+        "Qui, chez vous, sait construire une donnée de bout en bout ?"
+      ],
+      // « mes » a été retiré : la possessive française (« mes équipes ») cochait
+      // la section à tort. « tableau » exclut « tableau de bord », qui n'a rien
+      // à voir avec l'outil Tableau. Un point vert erroné est pire qu'absent.
+      lex: /\berp\b|\bcrm\b|\bplm\b|gmao|excel|sharepoint|power ?bi|\btableau\b(?!\s*de\s*bord)|snowflake|databricks|foundry|data ?lake|entrep[ôo]t|r[ée]f[ée]rentiel|source de v[ée]rit[ée]|\bsap\b|base de donn[ée]es/i },
+
+    { id: '04', titre: 'Les frictions',
+      why: "Une friction chiffrable vaut dix frustrations vagues. Faites raconter un cas précis, puis chiffrez-le.",
+      notes: 'frictionNotes',
+      questions: [
+        "Racontez-moi la dernière fois où ça a coincé.",
+        "Qui l'a payé, et combien de temps ça a pris ?",
+        "Aujourd'hui, vous faites comment pour compenser ?"
+      ],
+      lex: /ressais|[àa] la main|manuel|doublon|r[ée]concil|perd(re|ons|u)|chronophage|fastidieux|galère|erreur|retap|copier[- ]coller|ça coince|probl[èe]me/i },
+
+    { id: '05', titre: "Où en est l'IA",
+      why: "Des pilotes bloqués sont votre meilleur point d'entrée : le blocage est presque toujours en amont du modèle.",
+      notes: 'pilots',
+      questions: [
+        "Vous avez déjà lancé des choses côté IA ? Où elles en sont ?",
+        "À votre avis, qu'est-ce qui les empêche de passer en production ?",
+        "Qui les porte en interne ?"
+      ],
+      lex: /\bia\b|intelligence artificielle|\bpoc\b|pilote|preuve de concept|mod[èe]le|machine learning|pr[ée]dicti|algorithme|llm|copilot/i },
+
+    { id: '06', titre: 'Gouvernance',
+      why: "Le socle que vous vendez. Trois « non » ici valent une mission — mais il faut les entendre dire, pas les supposer.",
+      notes: 'gouvNotes',
+      questions: [
+        "Si je vous demande qui est responsable de cette donnée-là, vous me répondez un nom ?",
+        "Vous sauriez dire d'où vient un chiffre, de bout en bout ?",
+        "Comment vous savez qu'une donnée est fausse — avant que quelqu'un s'en plaigne ?"
+      ],
+      lex: /gouvernance|propri[ée]taire|data owner|steward|qualit[ée] (des )?donn[ée]es|lineage|tra[çc]abilit[ée]|rgpd|ai act|conformit[ée]|catalogue|dictionnaire/i },
+
+    { id: '07', titre: 'Qui décide',
+      why: "Un interlocuteur convaincu qui ne décide pas, et sans accès à qui décide, c'est un dossier qui dort.",
+      notes: 'process',
+      questions: [
+        "Sur un sujet comme celui-là, qui signe ?",
+        "Il y a une enveloppe, ou il faut la créer ?",
+        "Qu'est-ce qui pourrait faire capoter le projet en interne ?"
+      ],
+      lex: /budget|enveloppe|d[ée]cide|d[ée]cision|\bdsi\b|\bdaf\b|\bcodir\b|comex|valid|signature|signer|appel d'offres|achat|arbitr/i },
+
+    { id: '09', titre: 'La suite',
+      why: "Ne quittez jamais la pièce sans une date. C'est le cinquième axe de la qualification.",
+      notes: 'nextStep',
+      questions: [
+        "Concrètement, quelle est la prochaine étape ?",
+        "On la cale quand ?",
+        "Qui d'autre devrait être dans la boucle ?"
+      ],
+      lex: /prochaine [ée]tape|on se revoit|on se rappelle|atelier|proposition|revenir vers|recontact|planifi|caler|agenda/i }
+  ];
+
+  /* ════════════════════════════════════════════════════════════
+     Écoute
+     ════════════════════════════════════════════════════════════ */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec = null, wantOn = false, startedAt = null, chronoTimer = null;
+  var transcript = [];   // phrases finales
+  var interim = '';
+  var seen = {};         // sections repérées dans la parole
+  var quoteCands = [], numCands = [];
+  var currentSec = TRAME[0].id;
+  var asked = {};        // questions cochées
+
+  function fmt(ms) {
+    var s = Math.floor(ms / 1000);
+    return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  }
+
+  function setBar(msg) { $('#barMeta').innerHTML = msg; }
+
+  function startRec() {
+    if (!SR) return;
+    if (!rec) {
+      rec = new SR();
+      rec.lang = 'fr-FR';
+      rec.continuous = true;
+      rec.interimResults = true;
+
+      rec.onresult = function (e) {
+        var live = '';
+        for (var i = e.resultIndex; i < e.results.length; i++) {
+          var txt = e.results[i][0].transcript;
+          if (e.results[i].isFinal) ingest(txt.trim());
+          else live += txt;
+        }
+        interim = live;
+        paintTranscript();
+      };
+      // Le moteur s'arrête tout seul après un silence : on relance tant que
+      // l'utilisateur n'a pas coupé lui-même.
+      rec.onend = function () { if (wantOn) { try { rec.start(); } catch (e) {} } };
+      rec.onerror = function (e) {
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+          wantOn = false; paintRec();
+          setBar('<b style="color:var(--stop)">Micro refusé.</b> Autorisez-le dans la barre d\'adresse.');
+        } else if (e.error === 'network') {
+          setBar('<b style="color:var(--warn)">Réseau instable</b> — la transcription reprendra seule.');
+        }
+      };
+    }
+    try { rec.start(); } catch (e) {}
+  }
+
+  function toggleRec() {
+    wantOn = !wantOn;
+    if (wantOn) {
+      startRec();
+      if (!startedAt) startedAt = Date.now();
+      chronoTimer = setInterval(function () { $('#chrono').textContent = fmt(Date.now() - startedAt); }, 1000);
+      setBar('Écoute en cours · le texte reste sur cet appareil');
+    } else {
+      try { rec && rec.stop(); } catch (e) {}
+      clearInterval(chronoTimer);
+      setBar('Écoute en pause');
+    }
+    paintRec();
+  }
+
+  function paintRec() {
+    var b = $('#recBtn');
+    b.dataset.on = String(wantOn);
+    b.setAttribute('aria-pressed', String(wantOn));
+    $('#recLabel').textContent = wantOn ? "Couper l'écoute" : (startedAt ? "Reprendre l'écoute" : "Démarrer l'écoute");
+  }
+
+  /* ── analyse d'un segment ── */
+  var PAIN = /(on|nous|je|j'|c'est|ils)\b[^.!?]{10,}(pas|jamais|aucun|personne|probl|perd|manque|impossible|compliqu|galère|difficile|n'arrive)/i;
+  var NUM = /(\d[\d  ]*(?:[.,]\d+)?)\s*(heures?|h\b|jours?|semaines?|mois|%|k€|€|millions?|etp|personnes?|fois)/gi;
+
+  function ingest(text) {
+    if (!text) return;
+    transcript.push(text);
+    if (transcript.length > 900) transcript.splice(0, 200);
+
+    TRAME.forEach(function (s) { if (s.lex.test(text)) seen[s.id] = true; });
+
+    if (PAIN.test(text) && text.length >= 40 && text.length <= 240) {
+      if (quoteCands.indexOf(text) < 0) {
+        quoteCands.unshift(text);
+        quoteCands = quoteCands.slice(0, 6);
+      }
+    }
+
+    var m;
+    NUM.lastIndex = 0;
+    while ((m = NUM.exec(text)) !== null) {
+      var val = (m[1] + ' ' + m[2]).replace(/\s+/g, ' ').trim();
+      if (numCands.indexOf(val) < 0) numCands.unshift(val);
+    }
+    numCands = numCands.slice(0, 12);
+
+    paintCue(); paintCands(); touch();
+  }
+
+  /* ── rendus du mode entretien ── */
+  function paintTranscript() {
+    var w = $('#trWrap');
+    if (!transcript.length && !interim) return;
+    $('#trEmpty') && $('#trEmpty').remove();
+    var atBottom = w.scrollHeight - w.scrollTop - w.clientHeight < 60;
+    w.innerHTML = transcript.slice(-60).map(function (t) {
+      return '<p class="tr-p">' + esc(t) + '</p>';
+    }).join('') + (interim ? '<p class="tr-p interim">' + esc(interim) + '</p>' : '');
+    if (atBottom) w.scrollTop = w.scrollHeight;
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function paintNav() {
+    $('#secNav').innerHTML = TRAME.map(function (s) {
+      return '<button type="button" class="sec-pill" data-sec="' + s.id + '" ' +
+        'aria-current="' + (s.id === currentSec) + '" data-seen="' + !!seen[s.id] + '">' +
+        '<span class="tick" aria-hidden="true"></span>' + s.id + ' · ' + s.titre + '</button>';
+    }).join('');
+  }
+
+  function paintSection() {
+    var s = TRAME.filter(function (x) { return x.id === currentSec; })[0];
+    $('#secTitle').textContent = s.id + ' · ' + s.titre;
+    $('#secWhy').textContent = s.why;
+    $('#questions').innerHTML = s.questions.map(function (q, i) {
+      return '<button type="button" class="q" data-q="' + i + '" data-asked="' +
+        !!(asked[s.id] && asked[s.id][i]) + '">' + esc(q) + '</button>';
+    }).join('');
+    var ta = $('#liveNotes');
+    ta.value = $('#' + s.notes) ? $('#' + s.notes).value : '';
+    $('#notesEcho').textContent = 'va dans « ' + s.titre +' » de la fiche';
+    paintNav();
+  }
+
+  function paintCue() {
+    var manque = TRAME.filter(function (s) { return !seen[s.id]; });
+    var html = '';
+    if (!transcript.length) {
+      html = '<div class="cue quiet"><b>En attente</b><p>Démarrez l\'écoute : l\'outil suit ce qui a été abordé et vous signale ce qui manque.</p></div>';
+    } else if (!manque.length) {
+      html = '<div class="cue"><b>Tout est passé</b><p>Les sept points ont été abordés. Reste à verrouiller la date de la prochaine étape.</p></div>';
+    } else {
+      var s = manque[0];
+      html = '<div class="cue"><b>Pas encore abordé</b><p><b>' + s.id + ' · ' + s.titre + '</b><br>' +
+             esc(s.questions[0]) + '</p>' +
+             '<button type="button" class="act" style="margin-top:11px;padding:7px 15px;font-size:.82rem" ' +
+             'data-goto="' + s.id + '">Ouvrir cette section</button></div>';
+      if (manque.length > 1) {
+        html += '<p class="none">Restent aussi : ' + manque.slice(1).map(function (x) {
+          return x.titre.toLowerCase(); }).join(', ') + '.</p>';
+      }
+    }
+    $('#cue').innerHTML = html;
+    paintNav();
+  }
+
+  function paintCands() {
+    $('#quoteCands').innerHTML = quoteCands.length
+      ? quoteCands.map(function (q, i) {
+          return '<div class="cand"><div class="row"><p>' + esc(q) + '</p>' +
+                 '<button type="button" data-addq="' + i + '">garder</button></div></div>';
+        }).join('')
+      : '<p class="none">Rien de marquant pour l\'instant.</p>';
+
+    $('#numCands').innerHTML = numCands.length
+      ? numCands.map(function (n) {
+          return '<button type="button" class="num-chip" data-num="' + esc(n) + '">' + esc(n) + '</button>';
+        }).join('')
+      : '<p class="none">Aucun.</p>';
+  }
+
+  /* ── captures ── */
+  function addQuoteText(t) {
+    t = (t || '').trim().replace(/\s+/g, ' ');
+    if (!t) return false;
+    var vide = $$('#quotes [data-q]').filter(function (x) { return !x.value.trim(); })[0];
+    if (vide) vide.value = t; else addQuote(t);
+    renumber(); touch();
+    return true;
+  }
+
+  $('#capSel').addEventListener('click', function () {
+    var t = String(window.getSelection());
+    flashLive(addQuoteText(t) ? 'Phrase gardée.' : 'Sélectionnez d\'abord une phrase.');
+  });
+  $('#capLast').addEventListener('click', function () {
+    flashLive(addQuoteText(transcript[transcript.length - 1]) ? 'Phrase gardée.' : 'Rien à capturer.');
+  });
+  $('#quoteCands').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-addq]'); if (!b) return;
+    addQuoteText(quoteCands[+b.dataset.addq]);
+    quoteCands.splice(+b.dataset.addq, 1); paintCands();
+    flashLive('Phrase gardée.');
+  });
+  $('#numCands').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-num]'); if (!b) return;
+    var cible = $$('#frictions [data-f="cost"]').filter(function (x) { return !x.value.trim(); })[0];
+    if (!cible) { addFriction(); cible = $$('#frictions [data-f="cost"]').pop(); }
+    cible.value = b.dataset.num;
+    touch();
+    flashLive('Chiffre placé dans les frictions.');
+  });
+
+  function flashLive(t) { setBar(t); setTimeout(function () {
+    setBar(wantOn ? 'Écoute en cours · le texte reste sur cet appareil' : (startedAt ? 'Écoute en pause' : 'Écoute à l\'arrêt'));
+  }, 2400); }
+
+  function gotoSection(id) {
+    saveLiveNotes(); currentSec = id; paintSection();
+    $('#liveNotes').focus({ preventScroll: true });
+  }
+  $('#secNav').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sec]'); if (!b) return;
+    gotoSection(b.dataset.sec);
+  });
+  $('#cue').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-goto]'); if (!b) return;
+    gotoSection(b.dataset.goto);
+  });
+
+  /* Raccourci clavier : garder la dernière phrase sans quitter des yeux
+     son interlocuteur ni chercher un bouton. */
+  document.addEventListener('keydown', function (e) {
+    if (!(e.ctrlKey || e.metaKey) || e.key !== 'Enter') return;
+    if ($('#view-live').hidden) return;
+    e.preventDefault();
+    flashLive(addQuoteText(transcript[transcript.length - 1]) ? 'Phrase gardée.' : 'Rien à capturer.');
+  });
+  $('#questions').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-q]'); if (!b) return;
+    asked[currentSec] = asked[currentSec] || {};
+    var i = +b.dataset.q;
+    asked[currentSec][i] = !asked[currentSec][i];
+    b.dataset.asked = String(!!asked[currentSec][i]);
+    touch();
+  });
+
+  function saveLiveNotes() {
+    var s = TRAME.filter(function (x) { return x.id === currentSec; })[0];
+    var f = $('#' + s.notes);
+    if (f) f.value = $('#liveNotes').value;
+  }
+  $('#liveNotes').addEventListener('input', function () { saveLiveNotes(); touch(); });
+
+  $('#recBtn').addEventListener('click', toggleRec);
+
+  /* ── consentement ── */
+  if (!SR) {
+    $('#srWarn').textContent =
+      "Ce navigateur ne sait pas transcrire. La trame et les notes fonctionnent quand même — pour l'écoute, utilisez Chrome.";
+    $('#consentOk').checked = true;
+    $('#consentGo').disabled = false;
+  }
+  $('#consentOk').addEventListener('change', function () {
+    $('#consentGo').disabled = !this.checked;
+  });
+  function openDeck(withRec) {
+    $('#consent').hidden = true;
+    $('#deck').hidden = false;
+    if (!SR) { $('#recBtn').disabled = true; setBar('Transcription indisponible sur ce navigateur'); }
+    paintSection(); paintCue(); paintCands();
+    if (withRec && SR) toggleRec();
+  }
+  $('#consentGo').addEventListener('click', function () { openDeck(true); });
+  $('#consentSkip').addEventListener('click', function () { openDeck(false); });
+
+  /* ════════════════════════════════════════════════════════════
+     Mode fiche — inchangé pour l'essentiel
+     ════════════════════════════════════════════════════════════ */
   $('#systems').innerHTML = SYSTEMS.map(function (s) {
     return '<button type="button" class="chip" aria-pressed="false" data-sys="' + s + '">' + s + '</button>';
   }).join('');
@@ -384,7 +945,6 @@
     touch();
   });
 
-  /* ── blocs répétables ── */
   function frictionBlock(i) {
     return '<div class="item" data-friction>' +
       '<div class="item-head"><b>Friction ' + i + '</b><button type="button" class="kill" data-kill>retirer</button></div>' +
@@ -402,7 +962,7 @@
   function quoteBlock(i) {
     return '<div class="item" data-quote>' +
       '<div class="item-head"><b>Phrase ' + i + '</b><button type="button" class="kill" data-kill>retirer</button></div>' +
-      '<textarea data-q placeholder="Ses mots exacts, entre guillemets dans votre tête."></textarea>' +
+      '<textarea data-q placeholder="Ses mots exacts."></textarea>' +
     '</div>';
   }
   function renumber() {
@@ -431,9 +991,8 @@
     if (e.target.matches('[data-kill]')) { e.target.closest('.item').remove(); renumber(); touch(); }
   });
 
-  /* ── état ── */
   function collect() {
-    var o = { v: 1, savedAt: new Date().toISOString() };
+    var o = { v: 2, savedAt: new Date().toISOString() };
     FIELDS.forEach(function (f) { var e = $('#' + f); o[f] = e ? e.value.trim() : ''; });
     o.systems = $$('#systems .chip[aria-pressed="true"]').map(function (c) { return c.dataset.sys; });
     o.frictions = $$('#frictions [data-friction]').map(function (el) {
@@ -441,6 +1000,9 @@
       return { what: g('what'), who: g('who'), freq: g('freq'), cost: g('cost'), workaround: g('workaround') };
     }).filter(function (f) { return f.what || f.cost; });
     o.quotes = $$('#quotes [data-q]').map(function (t) { return t.value.trim(); }).filter(Boolean);
+    o.transcript = transcript;
+    o.asked = asked;
+    o.seen = seen;
     return o;
   }
 
@@ -453,50 +1015,47 @@
     (o.frictions && o.frictions.length ? o.frictions : [null]).forEach(function (f) { addFriction(f); });
     (o.quotes && o.quotes.length ? o.quotes : [null]).forEach(function (q) { addQuote(q); });
     renumber();
+    transcript = o.transcript || [];
+    asked = o.asked || {};
+    seen = o.seen || {};
+    paintTranscript(); paintCue(); paintCands();
   }
 
-  /* ── qualification ──
-     Cinq axes, deux points chacun. Les seuils sont explicités dans le verdict :
-     l'outil aide à décider, il ne décide pas à la place. */
   var AXES = [
-    { id: 'trig', label: 'Déclencheur daté',    hint: 'section 02',
+    { label: 'Déclencheur daté', hint: 'section 02',
       score: function (o) { return o.triggerStrength === 'fort' ? 2 : o.triggerStrength === 'moyen' ? 1 : 0; } },
-    { id: 'pain', label: 'Douleur chiffrable',  hint: 'section 04',
+    { label: 'Douleur chiffrable', hint: 'section 04',
       score: function (o) {
-        var chiffrees = o.frictions.filter(function (f) { return f.cost; }).length;
-        return chiffrees >= 2 ? 2 : chiffrees === 1 ? 1 : o.frictions.length ? 1 : 0;
+        var c = o.frictions.filter(function (f) { return f.cost; }).length;
+        return c >= 2 ? 2 : c === 1 ? 1 : o.frictions.length ? 1 : 0;
       } },
-    { id: 'spon', label: 'Accès au décideur',   hint: 'section 07',
+    { label: 'Accès au décideur', hint: 'section 07',
       score: function (o) { return o.sponsorAccess === 'oui' ? 2 : o.sponsorAccess === 'partiel' ? 1 : 0; } },
-    { id: 'budg', label: 'Budget identifiable', hint: 'section 07',
+    { label: 'Budget identifiable', hint: 'section 07',
       score: function (o) { return o.budget === 'oui' ? 2 : o.budget === 'partiel' ? 1 : 0; } },
-    { id: 'next', label: 'Prochaine étape engagée', hint: 'section 09',
+    { label: 'Prochaine étape engagée', hint: 'section 09',
       score: function (o) { return o.nextStep && o.nextDate ? 2 : o.nextStep ? 1 : 0; } }
   ];
-
   function qualify(o) {
-    var detail = AXES.map(function (a) { return { label: a.label, hint: a.hint, s: a.score(o) }; });
-    return { detail: detail, total: detail.reduce(function (n, d) { return n + d.s; }, 0) };
+    var d = AXES.map(function (a) { return { label: a.label, hint: a.hint, s: a.score(o) }; });
+    return { detail: d, total: d.reduce(function (n, x) { return n + x.s; }, 0) };
   }
-
   function paintVerdict(o) {
     var q = qualify(o);
     $('#axes').innerHTML = q.detail.map(function (d) {
       return '<div class="axis ' + (d.s === 2 ? 'full' : d.s === 1 ? 'part' : '') + '">' +
         '<span class="dot"></span><span>' + d.label + '</span><em>' + d.hint + '</em></div>';
     }).join('');
-
     var v = $('#verdict'), t = q.total;
     var etat = t >= 8
-      ? ['v-go',   'Porte-clés justifié',  'Fabriquez-le dans les 48 h, pendant que le rendez-vous est encore frais dans sa tête.']
+      ? ['v-go', 'Porte-clés justifié', 'Fabriquez-le dans les 48 h, pendant que le rendez-vous est encore frais dans sa tête.']
       : t >= 5
-      ? ['v-wait', 'À requalifier',        'Il manque de quoi rendre la page spécifique. Un appel de dix minutes vaut mieux qu\'un porte-clés générique.']
-      : ['v-no',   'Pas encore mûr',       'Une relance simple suffit. Gardez l\'objet pour un dossier où il fera une différence.'];
+      ? ['v-wait', 'À requalifier', 'Il manque de quoi rendre la page spécifique. Un appel de dix minutes vaut mieux qu\'un porte-clés générique.']
+      : ['v-no', 'Pas encore mûr', 'Une relance simple suffit. Gardez l\'objet pour un dossier où il fera une différence.'];
     v.className = 'verdict ' + etat[0];
     v.innerHTML = '<b>' + etat[1] + ' · ' + t + '/10</b><p>' + etat[2] + '</p>';
   }
 
-  /* ── enregistrement au fil de la frappe ── */
   var timer = null;
   function touch() {
     var o = collect();
@@ -508,13 +1067,12 @@
         var h = new Date();
         $('#savestate').textContent = 'enregistré à ' +
           String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0');
-      } catch (e) { $('#savestate').textContent = 'enregistrement impossible'; }
-    }, 400);
+      } catch (e) { $('#savestate').textContent = 'mémoire pleine — copiez la transcription'; }
+    }, 500);
   }
   document.addEventListener('input', touch);
   document.addEventListener('change', touch);
 
-  /* ── archive ── */
   function readArchive() {
     try { return JSON.parse(localStorage.getItem(ARCHIVE) || '[]'); } catch (e) { return []; }
   }
@@ -523,8 +1081,8 @@
     if (!a.length) { $('#archive').innerHTML = '<p class="empty">Aucun pour le moment.</p>'; return; }
     $('#archive').innerHTML = '<ul>' + a.map(function (o, i) {
       var qui = [o.firstName, o.company].filter(Boolean).join(' — ') || 'Sans nom';
-      return '<li><button type="button" data-load="' + i + '">' + qui + '</button>' +
-             '<span class="when">' + (o.date || '') + '</span></li>';
+      return '<li><button type="button" data-load="' + i + '">' + esc(qui) + '</button>' +
+             '<span class="when">' + esc(o.date || '') + '</span></li>';
     }).join('') + '</ul>';
   }
   $('#archive').addEventListener('click', function (e) {
@@ -532,7 +1090,6 @@
     var o = readArchive()[+b.dataset.load]; if (!o) return;
     restore(o); touch(); flash('Rendez-vous rechargé.');
   });
-
   function flash(t) { $('#flash').textContent = t; setTimeout(function () { $('#flash').textContent = ''; }, 3000); }
 
   $('#saveNew').addEventListener('click', function () {
@@ -541,14 +1098,15 @@
     var a = readArchive(); a.unshift(o);
     try { localStorage.setItem(ARCHIVE, JSON.stringify(a.slice(0, 40))); } catch (e) {}
     localStorage.removeItem(KEY);
-    restore({ frictions: [], quotes: [] });
     FIELDS.forEach(function (f) { var e = $('#' + f); if (e) e.value = ''; });
+    transcript = []; asked = {}; seen = {}; quoteCands = []; numCands = [];
+    startedAt = null; $('#chrono').textContent = '00:00';
+    restore({ frictions: [], quotes: [] });
     $('#time').value = '14:30';
     $('#date').value = new Date().toISOString().slice(0, 10);
-    paintArchive(); touch(); flash('Enregistré. Grille vierge.');
+    paintArchive(); paintSection(); touch(); flash('Enregistré. Fiche vierge.');
   });
 
-  /* ── compte rendu ── */
   function summary(o) {
     var L = [];
     var qui = [o.firstName, o.lastName].filter(Boolean).join(' ');
@@ -556,24 +1114,24 @@
     L.push(o.date + (o.time ? ' ' + o.time : '') + (o.place ? ' ' + o.place : ''));
     if (o.others) L.push('Également présents : ' + o.others);
     if (o.trigger) L.push('\nDÉCLENCHEUR\n' + o.trigger + (o.deadline ? '\nÉchéance : ' + o.deadline : ''));
-    if (o.doNothing) L.push('S\'ils ne font rien : ' + o.doNothing);
+    if (o.doNothing) L.push("S'ils ne font rien : " + o.doNothing);
     var sys = (o.systems || []).concat(o.systemsOther ? o.systemsOther.split(',').map(function (s) { return s.trim(); }) : []).filter(Boolean);
     if (sys.length) L.push('\nTERRAIN\nSystèmes : ' + sys.join(', '));
     if (o.refSource) L.push('Référentiel faisant foi : ' + o.refSource);
     if (o.team) L.push('Équipe data : ' + o.team);
+    if (o.terrainNotes) L.push(o.terrainNotes);
     if (o.frictions.length) {
       L.push('\nFRICTIONS');
       o.frictions.forEach(function (f) {
-        L.push('- ' + f.what + [f.who && ' / ' + f.who, f.freq && ' / ' + f.freq, f.cost && ' / ' + f.cost]
-          .filter(Boolean).join(''));
+        L.push('- ' + f.what + [f.who && ' / ' + f.who, f.freq && ' / ' + f.freq, f.cost && ' / ' + f.cost].filter(Boolean).join(''));
       });
     }
+    if (o.frictionNotes) L.push(o.frictionNotes);
     if (o.pilots || o.pilotState) L.push('\nIA\n' + [o.pilots, o.pilotState && 'État : ' + o.pilotState,
-      o.blockerTheirs && 'Leur lecture : ' + o.blockerTheirs, o.blockerYours && 'Ma lecture : ' + o.blockerYours]
-      .filter(Boolean).join('\n'));
+      o.blockerTheirs && 'Leur lecture : ' + o.blockerTheirs, o.blockerYours && 'Ma lecture : ' + o.blockerYours].filter(Boolean).join('\n'));
     var gouv = [o.owners && 'propriétaires ' + o.owners, o.lineage && 'lineage ' + o.lineage,
                 o.quality && 'qualité ' + o.quality].filter(Boolean);
-    if (gouv.length) L.push('\nGOUVERNANCE\n' + gouv.join(' · '));
+    if (gouv.length || o.gouvNotes) L.push('\nGOUVERNANCE\n' + [gouv.join(' · '), o.gouvNotes].filter(Boolean).join('\n'));
     if (o.decider || o.budget) L.push('\nDÉCISION\n' + [o.decider && 'Signe : ' + o.decider,
       o.influencer && 'Influence : ' + o.influencer, o.blocker && 'Bloque : ' + o.blocker,
       o.budget && 'Budget : ' + o.budget, o.process].filter(Boolean).join('\n'));
@@ -598,8 +1156,11 @@
   $('#copySummary').addEventListener('click', function () {
     copy(summary(collect()), function () { flash('Compte rendu copié.'); });
   });
+  $('#copyTranscript').addEventListener('click', function () {
+    if (!transcript.length) { flash('Aucune transcription.'); return; }
+    copy(transcript.join('\n'), function () { flash('Transcription copiée.'); });
+  });
 
-  /* ── passage au porte-clés ── */
   function missingFor(o) {
     var m = [];
     if (!o.firstName) m.push('le prénom');
@@ -608,7 +1169,6 @@
     if (!o.frictions.filter(function (f) { return f.cost; }).length) m.push('une friction chiffrée');
     return m;
   }
-
   $('#toKeychain').addEventListener('click', function () {
     var o = collect();
     var m = missingFor(o);
@@ -616,19 +1176,32 @@
       ? 'La page sera générique sans ' + m.join(', ') + '. Vous pouvez continuer, mais l\'effet en dépend.'
       : '';
     try {
-      sessionStorage.setItem('si-decouverte', JSON.stringify(o));
+      // La transcription ne sort pas d'ici : le générateur n'en a pas besoin.
+      var light = JSON.parse(JSON.stringify(o)); delete light.transcript;
+      sessionStorage.setItem('si-decouverte', JSON.stringify(light));
       window.open('../k/nouveau.html?depuis=decouverte', '_blank');
-    } catch (e) {
-      flash('Impossible de transmettre — copiez le compte rendu.');
-    }
+    } catch (e) { flash('Impossible de transmettre — copiez le compte rendu.'); }
   });
+
+  /* ── bascule de mode ── */
+  function mode(live) {
+    $('#view-live').hidden = !live;
+    $('#view-fiche').hidden = live;
+    $('#tab-live').setAttribute('aria-selected', String(live));
+    $('#tab-fiche').setAttribute('aria-selected', String(!live));
+    if (live && !$('#consent').hidden) { /* la porte reste */ }
+    if (!live) saveLiveNotes();
+  }
+  $('#tab-live').addEventListener('click', function () { mode(true); });
+  $('#tab-fiche').addEventListener('click', function () { mode(false); });
 
   /* ── démarrage ── */
   var start = null;
   try { start = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
-  if (start) { restore(start); }
+  if (start) restore(start);
   else { restore({ frictions: [], quotes: [] }); $('#date').value = new Date().toISOString().slice(0, 10); }
   paintArchive();
+  paintSection();
   touch();
 })();
 </script>
