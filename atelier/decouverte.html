@@ -58,9 +58,24 @@
   .consent .rule{background:var(--accent-soft);border-left:3px solid var(--accent);
        border-radius:0 9px 9px 0;padding:13px 16px;margin:0 0 16px}
   .consent .rule p{margin:0;color:var(--text);font-size:.89rem}
-  .consent label.check{display:flex;gap:11px;align-items:flex-start;font-size:.9rem;color:var(--text);
-       cursor:pointer;margin-bottom:16px;font-weight:400}
+  .consent label.check{display:flex;gap:11px;align-items:flex-start;font-size:.88rem;color:var(--text);
+       cursor:pointer;margin-bottom:18px;font-weight:400;line-height:1.5;
+       border:1px solid var(--line);border-radius:11px;padding:14px 16px;background:var(--bg)}
+  .consent label.check:hover{border-color:var(--accent)}
   .consent input[type=checkbox]{width:18px;height:18px;margin:2px 0 0;flex-shrink:0;accent-color:var(--accent)}
+  .intro-lede{font-size:1rem;color:var(--text);margin-bottom:20px}
+  .steps3{list-style:none;padding:0;margin:0 0 20px;display:grid;gap:15px}
+  .steps3 li{display:flex;gap:14px;align-items:flex-start}
+  .stepno{flex:0 0 26px;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;
+       display:grid;place-items:center;font-family:var(--disp);font-size:.82rem;font-weight:600}
+  .steps3 b{display:block;font-family:var(--disp);font-size:.98rem;margin-bottom:2px}
+  .steps3 p{margin:0;font-size:.89rem;color:var(--dim);line-height:1.5}
+  .intro-fin{border-left:3px solid var(--accent);padding-left:14px;font-size:.9rem;
+       color:var(--text) !important;margin-bottom:22px}
+  .detail-son{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+  .detail-son summary{cursor:pointer;font-size:.83rem;color:var(--dim)}
+  .detail-son summary:hover{color:var(--accent)}
+  .detail-son p{font-size:.84rem;margin:10px 0 0}
 
   .live-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surface);
        border:1px solid var(--line);border-radius:var(--r);padding:13px 18px;margin-bottom:14px;
@@ -81,7 +96,8 @@
 
   .pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
   .pane > h3{font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
-       margin-bottom:14px}
+       margin-bottom:4px}
+  .pane-sub{font-size:.83rem;color:var(--faint);margin:0 0 15px;line-height:1.45}
 
   /* trame */
   .sec-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
@@ -247,8 +263,8 @@
     </div>
     <div class="toprite">
       <div class="modes" role="tablist">
-        <button type="button" role="tab" id="tab-live" aria-selected="true">Entretien</button>
-        <button type="button" role="tab" id="tab-fiche" aria-selected="false">Fiche</button>
+        <button type="button" role="tab" id="tab-live" aria-selected="true">Pendant le rendez-vous</button>
+        <button type="button" role="tab" id="tab-fiche" aria-selected="false">Après</button>
       </div>
       <div class="savestate" id="savestate">—</div>
     </div>
@@ -259,31 +275,63 @@
 
     <!-- Porte d'entrée : consentement -->
     <div class="consent" id="consent">
-      <h2>Avant d'écouter</h2>
-      <p>
-        L'outil transcrit la conversation pour suivre en direct ce qui a été couvert et vous souffler
-        la relance. Vous gardez les yeux sur votre interlocuteur au lieu de votre clavier.
+      <h2>Un copilote pour vos premiers rendez-vous</h2>
+      <p class="intro-lede">
+        Vous allez voir un prospect. Gardez cet écran ouvert à côté de vous, il fait trois choses
+        pendant que vous discutez.
       </p>
-      <div class="rule">
-        <p><b>Où va le son.</b> La reconnaissance vocale du navigateur envoie l'audio aux serveurs de
-        son moteur (Google pour Chrome) le temps de la transcription. Le texte, lui, ne quitte jamais
-        cet appareil : il est enregistré localement et n'est transmis à aucun serveur de notre côté.</p>
-      </div>
-      <p>
-        En France, enregistrer ou transcrire une conversation professionnelle suppose l'accord des
-        personnes présentes. Vous vendez de la gouvernance des données — c'est le premier endroit où
-        elle se prouve. Une phrase suffit : <em>« Je prends mes notes avec un outil qui transcrit
-        pour ne rien perdre. Ça vous va&nbsp;? »</em>
+
+      <ol class="steps3">
+        <li>
+          <span class="stepno">1</span>
+          <div>
+            <b>Il vous rappelle quoi demander</b>
+            <p>Sept questions à poser, dans l'ordre d'un vrai entretien. Vous lisez, vous cochez.</p>
+          </div>
+        </li>
+        <li>
+          <span class="stepno">2</span>
+          <div>
+            <b>Il écrit à votre place</b>
+            <p>Il transcrit la conversation. Une phrase vous plaît ? Un clic et elle est gardée,
+            au mot près.</p>
+          </div>
+        </li>
+        <li>
+          <span class="stepno">3</span>
+          <div>
+            <b>Il vous dit ce que vous avez oublié</b>
+            <p>Avant de partir, vous voyez d'un coup d'œil les sujets que vous n'avez pas ouverts.</p>
+          </div>
+        </li>
+      </ol>
+
+      <p class="intro-fin">
+        En sortant, il rassemble tout dans une fiche — qui fabrique ensuite la page du porte-clés,
+        sans que vous ayez à ressaisir quoi que ce soit.
       </p>
+
       <label class="check">
         <input type="checkbox" id="consentOk">
-        <span>J'ai prévenu la ou les personnes présentes et j'ai leur accord.</span>
+        <span><b>J'ai prévenu la personne en face et j'ai son accord</b> pour que la conversation
+        soit transcrite. Une phrase suffit : « Je prends mes notes avec un outil qui transcrit,
+        ça vous va ? »</span>
       </label>
+
       <div class="btns" style="grid-template-columns:auto auto;justify-content:start;gap:9px">
-        <button type="button" class="act primary" id="consentGo" disabled>Ouvrir l'entretien</button>
-        <button type="button" class="act" id="consentSkip">Continuer sans écoute</button>
+        <button type="button" class="act primary" id="consentGo" disabled>Démarrer le rendez-vous</button>
+        <button type="button" class="act" id="consentSkip">Ouvrir sans micro</button>
       </div>
       <p class="flash" id="srWarn" style="color:var(--warn)"></p>
+
+      <details class="detail-son">
+        <summary>Où va le son, exactement</summary>
+        <p>La reconnaissance vocale du navigateur envoie l'audio aux serveurs de son moteur
+        (Google pour Chrome) le temps de la transcription. <b>Le texte, lui, ne quitte jamais cet
+        appareil</b> : il est enregistré ici et n'est transmis à aucun serveur de notre côté.
+        En France, transcrire une conversation professionnelle suppose l'accord des personnes
+        présentes — d'où la case ci-dessus.</p>
+      </details>
     </div>
 
     <!-- Poste de travail -->
@@ -300,7 +348,8 @@
 
         <!-- Trame + notes -->
         <div class="pane">
-          <h3>Trame</h3>
+          <h3>Ce que vous demandez</h3>
+          <p class="pane-sub">Les questions à poser, et où noter ce qu'on vous répond.</p>
           <div class="sec-nav" id="secNav"></div>
           <p class="sec-title" id="secTitle">—</p>
           <p class="sec-why" id="secWhy"></p>
@@ -315,6 +364,7 @@
         <!-- Transcription -->
         <div class="pane">
           <h3>Ce qui se dit</h3>
+          <p class="pane-sub">La conversation, écrite au fil de l'eau.</p>
           <div class="tr-wrap" id="trWrap">
             <p class="tr-empty" id="trEmpty">La transcription apparaîtra ici dès que vous démarrez l'écoute.</p>
           </div>
@@ -331,7 +381,8 @@
 
         <!-- Aiguillage -->
         <div class="pane">
-          <h3>Où vous en êtes</h3>
+          <h3>Ce qu'il reste à faire</h3>
+          <p class="pane-sub">Ce que vous n'avez pas encore demandé, et ce qui vaut d'être gardé.</p>
           <div id="cue"></div>
           <p class="tr-hint" style="margin-top:10px;padding-top:0;border:0">
             Le suivi repère des mots, pas des idées. Un point vert dit que le sujet
@@ -826,19 +877,22 @@
   }
 
   var NIVEAU = ['pas abordé', 'effleuré', 'creusé'];
+  // Sauter de 02 à 09 à l'écran n'avait de sens que pour moi : on numérote
+  // la trame dans son propre ordre, 1 à 7.
+  function rang(s) { return TRAME.indexOf(s) + 1; }
   function paintNav() {
     $('#secNav').innerHTML = TRAME.map(function (s) {
       var n = level(s.id);
       return '<button type="button" class="sec-pill" data-sec="' + s.id + '" ' +
         'aria-current="' + (s.id === currentSec) + '" data-level="' + n + '" ' +
         'title="' + s.titre + ' — ' + NIVEAU[n] + '">' +
-        '<span class="tick" aria-hidden="true"></span>' + s.id + ' · ' + s.titre + '</button>';
+        '<span class="tick" aria-hidden="true"></span>' + rang(s) + ' · ' + s.titre + '</button>';
     }).join('');
   }
 
   function paintSection() {
     var s = TRAME.filter(function (x) { return x.id === currentSec; })[0];
-    $('#secTitle').textContent = s.id + ' · ' + s.titre;
+    $('#secTitle').textContent = rang(s) + ' · ' + s.titre;
     $('#secWhy').textContent = s.why;
     $('#questions').innerHTML = s.questions.map(function (q, i) {
       return '<button type="button" class="q" data-qi="' + i + '" data-asked="' +
@@ -896,7 +950,7 @@
   }
 
   function cueBox(titre, s, question) {
-    return '<div class="cue"><b>' + titre + '</b><p><b>' + s.id + ' · ' + s.titre + '</b><br>' +
+    return '<div class="cue"><b>' + titre + '</b><p><b>' + rang(s) + ' · ' + s.titre + '</b><br>' +
       esc(question) + '</p>' +
       '<button type="button" class="act" style="margin-top:11px;padding:7px 15px;font-size:.82rem" ' +
       'data-goto="' + s.id + '">Ouvrir cette section</button></div>';
