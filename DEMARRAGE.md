@@ -33,18 +33,52 @@ voir la démonstration avec Marc Delaunay.
 
 ## Étape 2 — Allumer l'agent conversationnel
 
-1. Allez sur **console.anthropic.com** → **API Keys** → **Create Key**. Copiez la
-   clé (elle commence par `sk-ant-`). Elle ne s'affiche qu'une fois.
-2. Retour sur Vercel → votre projet → **Settings** → **Environment Variables**.
-3. Nom : `ANTHROPIC_API_KEY`. Valeur : votre clé. → **Save**.
-4. Onglet **Deployments** → sur le déploiement du haut, menu `···` → **Redeploy**.
+Deux voies. Vous pouvez commencer par la gratuite et basculer plus tard sans
+retoucher une ligne de code : c'est la présence de la variable qui décide.
 
-Le chat est vivant. **Ne mettez jamais cette clé dans un fichier du dépôt** —
-elle serait publique. Sa place est ici, et nulle part ailleurs.
+### Voie A — gratuite, pour tester (OpenRouter)
 
-**Ce que ça coûte :** Vercel est gratuit à ce volume. Côté Anthropic, vous payez
-à l'usage — une conversation de prospect coûte quelques centimes. Mettez un
-plafond mensuel dans la console (**Billing → Limits**) et vous dormez tranquille.
+1. **openrouter.ai** → créez un compte → **Keys** → **Create Key**.
+2. Vercel → votre projet → **Settings** → **Environment Variables**.
+3. Nom : `OPENROUTER_API_KEY`. Valeur : votre clé. → **Save**.
+4. **Deployments** → menu `···` du déploiement du haut → **Redeploy**.
+
+Trois modèles gratuits sont essayés dans l'ordre ; si le premier est saturé
+— ça arrive souvent sur le gratuit — le suivant prend le relais automatiquement.
+
+Pour changer l'ordre, ajoutez la variable `OPENROUTER_MODELS` avec la liste
+séparée par des virgules. Par défaut :
+
+```
+google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3-ultra-550b-a55b:free,openai/gpt-oss-20b:free
+```
+
+Gemma est en tête parce qu'il livre son premier mot en 0,8 s de façon stable.
+Nemotron Ultra répond mieux sur le fond, mais met entre 3,5 et 7,6 s selon la
+charge — mettez-le en tête si vous préférez la finesse à la vivacité.
+
+### Voie B — payante, pour de vrai (Claude)
+
+1. **console.anthropic.com** → **API Keys** → **Create Key**. La clé commence par
+   `sk-ant-` et ne s'affiche qu'une fois.
+2. Même chemin sur Vercel, nom : `ANTHROPIC_API_KEY`. → **Save** → **Redeploy**.
+
+Dès que cette variable existe, elle prend le pas sur OpenRouter. Pour rester sur
+le gratuit alors que les deux clés sont présentes, ajoutez `CHAT_PROVIDER` =
+`openrouter`.
+
+> **Ne mettez jamais une clé dans un fichier du dépôt** — sur GitHub elle serait
+> publique en quelques secondes. Sa place est dans les variables d'environnement,
+> et nulle part ailleurs. Si une clé a traîné ailleurs (un mail, une conversation,
+> une capture d'écran), révoquez-la et regénérez-en une.
+
+**Ce que ça coûte :** Vercel est gratuit à ce volume. OpenRouter en modèles
+`:free` ne coûte rien mais n'offre aucune garantie de disponibilité. Côté
+Anthropic vous payez à l'usage — quelques centimes par conversation ; mettez un
+plafond mensuel dans **Billing → Limits** et le sujet est clos.
+
+**Sans aucune clé**, la page fonctionne toujours : le chat invite à vous écrire
+directement. Elle ne montre jamais d'erreur technique à un prospect.
 
 ---
 

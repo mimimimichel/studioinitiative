@@ -4,23 +4,38 @@
  * les premiers mots s'affichent immédiatement : sur cette page, la latence tue
  * l'effet autant qu'une mauvaise réponse.
  *
+ * Deux fournisseurs, choisis automatiquement selon les variables présentes :
+ *
+ *   ANTHROPIC_API_KEY   → Claude (claude-opus-5). C'est la qualité de service
+ *                         qu'on veut devant un prospect.
+ *   OPENROUTER_API_KEY  → modèle gratuit via OpenRouter. Pour tester sans payer.
+ *   CHAT_PROVIDER       → "anthropic" | "openrouter" pour forcer, si les deux
+ *                         clés sont présentes.
+ *
  * Le contexte du prospect n'est JAMAIS pris dans la requête du client : il est
  * relu côté serveur depuis k/data/<tag>.json. Le navigateur ne peut donc pas
  * réécrire ce que l'agent croit savoir.
- *
- * Variable d'environnement requise : ANTHROPIC_API_KEY
  */
 
-import Anthropic from '@anthropic-ai/sdk';
-
-const MODEL = 'claude-opus-5';
 const MAX_MESSAGE_CHARS = 600;
 const MAX_HISTORY = 12;
 
-const client = new Anthropic(); // lit ANTHROPIC_API_KEY dans l'environnement
+const ANTHROPIC_MODEL = 'claude-opus-5';
+
+/* Chaîne de repli OpenRouter : les modèles gratuits sont régulièrement saturés
+   (429), on essaie le suivant. Ordre établi par mesure sur une vraie question
+   de prospect en français — délai avant le premier mot, justesse du ton,
+   absence de raisonnement en clair.
+   Mesures (premier mot, en flux) : gemma-4-26b 0,8 s stable · nemotron ultra
+   3,5 à 7,6 s selon la charge, mais réponses plus fines.
+   Pour changer l'ordre sans toucher au code : variable OPENROUTER_MODELS,
+   liste séparée par des virgules. */
+const OPENROUTER_MODELS = (process.env.OPENROUTER_MODELS ||
+  'google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3-ultra-550b-a55b:free,openai/gpt-oss-20b:free'
+).split(',').map((s) => s.trim()).filter(Boolean);
 
 /* ------------------------------------------------------------------ */
-/* Socle de connaissance — stable, donc mis en cache par l'API         */
+/* Socle de connaissance — stable, donc mis en cache côté Claude       */
 /* ------------------------------------------------------------------ */
 
 const GROUNDING = `Tu es l'agent conversationnel de Studio Initiative, cabinet de conseil en data et intelligence artificielle basé à Toulouse (France et Europe), fondé par Michael Lozano — quinze ans dans la data industrielle.
@@ -46,32 +61,43 @@ Trois principes, à connaître et à savoir défendre :
 - Court. Deux à cinq phrases en général. Tu es sur un téléphone, pas dans un livre blanc. Si la question mérite plus, structure en quelques lignes brèves.
 - Concret. Tu préfères un ordre de grandeur assumé à une généralité prudente.
 - Tu peux être en désaccord avec ton interlocuteur, poliment, quand il se trompe. C'est un signe de compétence, pas d'impolitesse.
+- Tu t'adresses directement à lui. Ne parle jamais de lui à la troisième personne, et ne le nomme pas comme s'il s'agissait d'un tiers.
 
 # Tes limites, à tenir strictement
 - Tu ne connais que ce qui figure dans ce message : le cabinet, et le dossier ci-dessous. Si on te demande autre chose (l'actualité, un concurrent, un point technique que tu ignores, un détail du dossier qui n'y figure pas), tu le dis simplement et tu proposes d'en parler avec Michael. Ne devine jamais.
+- Tu n'inventes pas la méthode de calcul d'un chiffre du dossier. Si on te demande d'où vient un chiffre, tu dis honnêtement qu'il s'agit d'un ordre de grandeur établi à partir de ce qui a été décrit en rendez-vous, et qu'il demande confirmation sur pièces. N'invente jamais une formule ni un temps unitaire.
 - Tu ne t'engages sur AUCUN prix ferme, AUCUN devis, AUCUN délai contractuel. Tu peux donner des ordres de grandeur ("un cadrage se compte en semaines, pas en trimestres") en précisant qu'ils demandent confirmation. Un chiffrage est du ressort de Michael.
 - Tu ne parles pas de sujets étrangers au cabinet et à la data. Tu ramènes poliment la conversation.
 - Tu n'inventes jamais une référence client, un logo, un chiffre de résultat.
-- N'inclus aucune balise XML interne ni aucun commentaire sur ton propre fonctionnement dans ta réponse. Réponds seulement.
+- Réponds directement, en français. N'écris jamais ton raisonnement, ni de balise interne, ni de commentaire sur ton propre fonctionnement.
 
 # Ce vers quoi tu ramènes
 Quand la conversation arrive naturellement à sa fin, ou quand la question dépasse ce que tu peux traiter, tu proposes les vingt minutes de cadrage avec Michael, ou un mot à contact@studioinitiative.com. Une fois suffit — n'insiste pas à chaque réponse.`;
 
 /* ------------------------------------------------------------------ */
+/* Dossier prospect — relu côté serveur                                */
+/* ------------------------------------------------------------------ */
 
 const isValidTag = (t) => typeof t === 'string' && /^[A-Za-z0-9_-]{1,24}$/.test(t);
 
+function originOf(req) {
+  const host = req.headers['x-forwarded-host'] || req.headers.host || '';
+  // Derrière Vercel l'en-tête est toujours présent ; en local il ne l'est pas,
+  // et forcer https ferait échouer la lecture du dossier.
+  const proto = req.headers['x-forwarded-proto'] ||
+    (req.socket?.encrypted ? 'https' : /^(localhost|127\.0\.0\.1)(:|$)/.test(host) ? 'http' : 'https');
+  return `${proto}://${host}`;
+}
+
 async function loadContext(req, tag) {
-  const host = req.headers['x-forwarded-host'] || req.headers.host;
-  const proto = req.headers['x-forwarded-proto'] || 'https';
+  const origin = originOf(req);
   const names = isValidTag(tag) ? [tag.toUpperCase(), '_demo'] : ['_demo'];
 
   for (const name of names) {
     try {
-      const r = await fetch(`${proto}://${host}/k/data/${name}.json`, { cache: 'no-store' });
+      const r = await fetch(`${origin}/k/data/${name}.json`, { cache: 'no-store' });
       if (!r.ok) continue;
-      const d = await r.json();
-      return buildContext(d);
+      return buildContext(await r.json());
     } catch {
       /* dossier suivant */
     }
@@ -112,6 +138,167 @@ function buildContext(d) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Fournisseur A — Claude                                              */
+/* ------------------------------------------------------------------ */
+
+async function* streamAnthropic(system, context, messages) {
+  const { default: Anthropic } = await import('@anthropic-ai/sdk');
+  const client = new Anthropic();
+
+  const params = {
+    model: ANTHROPIC_MODEL,
+    max_tokens: 1600,
+    // Effort bas : sur un chat mobile la latence compte autant que la finesse.
+    // La réflexion reste active (recommandé sur Opus 5) mais courte.
+    output_config: { effort: 'low' },
+    system: [
+      // Bloc stable en premier → mis en cache et relu à ~0,1× sur les tours suivants.
+      { type: 'text', text: system, cache_control: { type: 'ephemeral' } },
+      // Bloc volatile ensuite : il change d'un prospect à l'autre.
+      { type: 'text', text: context }
+    ],
+    messages
+  };
+
+  const drain = async function* (stream) {
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
+        yield event.delta.text;
+      }
+    }
+  };
+
+  // Repli côté serveur si les classifieurs déclinent la demande. Si le bêta
+  // n'est pas ouvert sur l'organisation, on retombe sur l'appel standard.
+  try {
+    yield* drain(client.beta.messages.stream({
+      ...params,
+      betas: ['server-side-fallback-2026-07-01'],
+      fallbacks: 'default'
+    }));
+  } catch (err) {
+    console.warn('[chat] repli sans fallbacks :', err?.message || err);
+    yield* drain(client.messages.stream(params));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Fournisseur B — OpenRouter (modèles gratuits)                       */
+/* ------------------------------------------------------------------ */
+
+async function* streamOpenRouter(system, context, messages, req) {
+  const key = process.env.OPENROUTER_API_KEY;
+  const origin = originOf(req);
+  const body = {
+    stream: true,
+    max_tokens: 700,
+    messages: [{ role: 'system', content: system + '\n\n' + context }, ...messages]
+  };
+
+  let lastErr = 'aucun modèle disponible';
+
+  for (const model of OPENROUTER_MODELS) {
+    let res;
+    try {
+      res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json',
+          // Attribution demandée par OpenRouter.
+          'HTTP-Referer': origin,
+          'X-Title': 'Studio Initiative'
+        },
+        body: JSON.stringify({ ...body, model })
+      });
+    } catch (e) {
+      lastErr = e.message;
+      continue;
+    }
+
+    // 429 = modèle gratuit saturé : on essaie le suivant de la chaîne.
+    if (!res.ok || !res.body) {
+      lastErr = `${model} → ${res.status}`;
+      console.warn('[chat] openrouter', lastErr);
+      continue;
+    }
+
+    let emitted = false;
+    for await (const chunk of readSse(res.body)) {
+      if (chunk === '[DONE]') break;
+      let piece;
+      try { piece = JSON.parse(chunk)?.choices?.[0]?.delta?.content; } catch { continue; }
+      if (piece) { emitted = true; yield piece; }
+    }
+    if (emitted) return;
+    lastErr = `${model} → réponse vide`;
+  }
+
+  throw new Error(lastErr);
+}
+
+async function* readSse(stream) {
+  const reader = stream.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const parts = buf.split('\n');
+    buf = parts.pop();
+    for (const line of parts) {
+      const t = line.trim();
+      if (t.startsWith('data:')) yield t.slice(5).trim();
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Filtre de sortie                                                    */
+/* ------------------------------------------------------------------ */
+
+/* Certains modèles ouverts recrachent leur raisonnement entre balises, parfois
+   en anglais. Devant un prospect c'est rédhibitoire : on le retire au vol. */
+function makeCleaner() {
+  let buf = '';
+  let inThought = false;
+  const OPEN = /<(think|thought|reasoning|analysis)>/i;
+  const CLOSE = /<\/(think|thought|reasoning|analysis)>/i;
+
+  return {
+    push(chunk) {
+      buf += chunk;
+      let out = '';
+      for (;;) {
+        if (inThought) {
+          const m = buf.match(CLOSE);
+          if (!m) { buf = buf.slice(-24); return out; }
+          buf = buf.slice(m.index + m[0].length);
+          inThought = false;
+        } else {
+          const m = buf.match(OPEN);
+          if (!m) {
+            // On retient une queue courte, au cas où une balise soit coupée
+            // entre deux morceaux du flux.
+            const keep = Math.min(buf.length, 12);
+            out += buf.slice(0, buf.length - keep);
+            buf = buf.slice(buf.length - keep);
+            return out;
+          }
+          out += buf.slice(0, m.index);
+          buf = buf.slice(m.index + m[0].length);
+          inThought = true;
+        }
+      }
+    },
+    flush() { return inThought ? '' : buf; }
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Entrée client                                                       */
+/* ------------------------------------------------------------------ */
 
 function sanitizeHistory(raw) {
   if (!Array.isArray(raw)) return [];
@@ -121,22 +308,29 @@ function sanitizeHistory(raw) {
     .filter((m) => m.content.length > 0)
     .slice(-MAX_HISTORY);
 
-  // L'API exige un premier tour utilisateur.
   while (msgs.length && msgs[0].role !== 'user') msgs.shift();
   return msgs;
 }
 
-/* Garde-fou léger : un seul instance-local, donc best-effort — c'est un
+/* Garde-fou léger : local à l'instance, donc best-effort — c'est un
    ralentisseur, pas une serrure. */
 const hits = new Map();
 function throttled(ip) {
   const now = Date.now();
-  const win = 60_000;
-  const bucket = (hits.get(ip) || []).filter((t) => now - t < win);
+  const bucket = (hits.get(ip) || []).filter((t) => now - t < 60_000);
   bucket.push(now);
   hits.set(ip, bucket);
   if (hits.size > 500) hits.clear();
   return bucket.length > 20;
+}
+
+function pickProvider() {
+  const forced = (process.env.CHAT_PROVIDER || '').toLowerCase();
+  if (forced === 'anthropic' && process.env.ANTHROPIC_API_KEY) return 'anthropic';
+  if (forced === 'openrouter' && process.env.OPENROUTER_API_KEY) return 'openrouter';
+  if (process.env.ANTHROPIC_API_KEY) return 'anthropic';
+  if (process.env.OPENROUTER_API_KEY) return 'openrouter';
+  return null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -163,6 +357,12 @@ export default async function handler(req, res) {
     return;
   }
 
+  const provider = pickProvider();
+  if (!provider) {
+    res.status(503).json({ error: 'no_provider' });
+    return;
+  }
+
   const context = await loadContext(req, body.tag);
 
   res.writeHead(200, {
@@ -178,56 +378,26 @@ export default async function handler(req, res) {
     res.write(`data: ${JSON.stringify(obj)}\n\n`);
   };
 
-  const params = {
-    model: MODEL,
-    max_tokens: 1600,
-    // Effort bas : sur un chat mobile la latence compte autant que la finesse.
-    // La réflexion reste active (recommandé sur Opus 5) mais courte.
-    output_config: { effort: 'low' },
-    system: [
-      // Bloc stable en premier → mis en cache et relu à ~0,1× sur les tours suivants.
-      { type: 'text', text: GROUNDING, cache_control: { type: 'ephemeral' } },
-      // Bloc volatile ensuite : il change d'un prospect à l'autre.
-      { type: 'text', text: context }
-    ],
-    messages
-  };
-
-  // Repli côté serveur si les classifieurs déclinent la demande : le prospect
-  // obtient une réponse plutôt qu'un blanc. Si le bêta n'est pas ouvert sur
-  // l'organisation, on retombe sur l'appel standard — mais seulement tant que
-  // rien n'a encore été écrit, sinon on couperait une réponse en cours.
-  const pipe = async (stream) => {
-    for await (const event of stream) {
-      if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
-        write({ t: event.delta.text });
-      }
-    }
-    return stream.finalMessage();
-  };
+  const cleaner = makeCleaner();
 
   try {
-    let final;
-    try {
-      final = await pipe(client.beta.messages.stream({
-        ...params,
-        betas: ['server-side-fallback-2026-07-01'],
-        fallbacks: 'default'
-      }));
-    } catch (betaErr) {
-      if (written > 0) throw betaErr;
-      console.warn('[chat] repli sans fallbacks :', betaErr?.message || betaErr);
-      final = await pipe(client.messages.stream(params));
-    }
+    const source = provider === 'anthropic'
+      ? streamAnthropic(GROUNDING, context, messages)
+      : streamOpenRouter(GROUNDING, context, messages, req);
 
-    if (final?.stop_reason === 'refusal' && written === 0) {
-      write({ t: "Je préfère ne pas traiter cette demande ici. Michael y répondra mieux que moi : contact@studioinitiative.com." });
+    for await (const chunk of source) {
+      const clean = cleaner.push(chunk);
+      if (clean) write({ t: clean });
     }
+    const tail = cleaner.flush();
+    if (tail) write({ t: tail });
 
+    if (!written) write({ t: "Je n'ai pas de réponse utile à vous donner sur ce point. Michael y répondra mieux que moi : contact@studioinitiative.com." });
     write({ done: true });
   } catch (err) {
-    console.error('[chat]', err?.message || err);
-    write({ error: 'upstream' });
+    console.error('[chat]', provider, err?.message || err);
+    if (!written) write({ error: 'upstream' });
+    write({ done: true });
   } finally {
     res.end();
   }

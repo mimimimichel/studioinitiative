@@ -354,7 +354,8 @@
 
     var answer = '';
 
-    fetch('api/chat', {
+    // Chemin absolu : depuis /k/A7F2 un chemin relatif viserait /k/api/chat.
+    fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tag: TAG, messages: history.slice(-12) })
