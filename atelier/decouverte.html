@@ -72,6 +72,9 @@
   .steps3 p{margin:0;font-size:.89rem;color:var(--dim);line-height:1.5}
   .intro-fin{border-left:3px solid var(--accent);padding-left:14px;font-size:.9rem;
        color:var(--text) !important;margin-bottom:22px}
+  .mic-warn{border:1px solid rgba(154,98,18,.4);background:rgba(154,98,18,.08);border-radius:11px;
+       padding:13px 16px;margin:16px 0 0;font-size:.87rem;line-height:1.55;color:#5c3c07}
+  .mic-warn b{font-family:var(--disp)}
   .detail-son{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
   .detail-son summary{cursor:pointer;font-size:.83rem;color:var(--dim)}
   .detail-son summary:hover{color:var(--accent)}
@@ -322,7 +325,7 @@
         <button type="button" class="act primary" id="consentGo" disabled>Démarrer le rendez-vous</button>
         <button type="button" class="act" id="consentSkip">Ouvrir sans micro</button>
       </div>
-      <p class="flash" id="srWarn" style="color:var(--warn)"></p>
+      <p class="mic-warn" id="srWarn" hidden></p>
 
       <details class="detail-son">
         <summary>Où va le son, exactement</summary>
@@ -762,7 +765,13 @@
       rec.onerror = function (e) {
         if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
           wantOn = false; paintRec();
-          setBar('<b style="color:var(--stop)">Micro refusé.</b> Autorisez-le dans la barre d\'adresse.');
+          // Le motif du refus n'est pas le même selon d'où la page est ouverte,
+          // et le conseil à donner non plus.
+          setBar('<b style="color:var(--stop)">Micro refusé.</b> ' + (
+            location.protocol === 'file:'
+              ? "Chrome n'ouvre pas le micro sur un fichier ouvert en local, même si la page paraît sécurisée. Il faut le site en ligne (https)."
+              : "Autorisez-le via l'icône à gauche de l'adresse, puis relancez l'écoute."
+          ));
         } else if (e.error === 'network') {
           setBar('<b style="color:var(--warn)">Réseau instable</b> — la transcription reprendra seule.');
         }
@@ -1065,22 +1074,60 @@
     e.returnValue = '';
   });
 
-  /* ── consentement ── */
-  if (!SR) {
-    $('#srWarn').textContent =
-      "Ce navigateur ne sait pas transcrire. La trame et les notes fonctionnent quand même — pour l'écoute, utilisez Chrome.";
+  /* ── le micro peut-il seulement s'ouvrir ? ──
+     Trois raisons de blocage, et le navigateur n'en signale aucune de lui-même :
+     il ne demande simplement rien. Autant l'annoncer avant le clic. */
+  function micDiagnostic() {
+    if (!SR) return {
+      ok: false,
+      titre: 'Ce navigateur ne sait pas transcrire',
+      quoi: 'La transcription vocale n\'existe que sur Chrome et Edge, sur ordinateur. Le reste de l\'outil fonctionne ici.'
+    };
+    if (!window.isSecureContext) return {
+      ok: false,
+      titre: 'Adresse non sécurisée',
+      quoi: 'Le navigateur n\'ouvre le micro que sur une adresse en https.'
+    };
+    // Chrome déclare un fichier local « sécurisé » mais refuse quand même le
+    // micro. Autant le dire ici plutôt que de laisser essayer pour rien.
+    if (location.protocol === 'file:') return {
+      ok: false,
+      titre: 'Fichier ouvert en local',
+      quoi: 'Chrome n\'ouvre pas le micro sur un fichier double-cliqué, même s\'il considère la page comme sécurisée. La transcription demande le site en ligne (https). Tout le reste fonctionne ici.'
+    };
+    if (window.self !== window.top) return {
+      ok: false,
+      titre: 'Page affichée dans un cadre',
+      quoi: 'Un cadre n\'a pas le droit d\'ouvrir le micro : le navigateur refuse sans afficher de demande. Ouvrez cette page dans un onglet à elle, ou mettez le site en ligne.'
+    };
+    return { ok: true };
+  }
+
+  var mic = micDiagnostic();
+  if (!mic.ok) {
+    $('#srWarn').innerHTML = '<b>' + mic.titre + '.</b> ' + mic.quoi;
+    $('#srWarn').hidden = false;
     $('#consentOk').checked = true;
     $('#consentGo').disabled = false;
+    $('#consentGo').textContent = 'Ouvrir quand même';
+    $('#consentSkip').hidden = true;
+    var caseConsent = $('#consentOk').closest('label');
+    if (caseConsent) caseConsent.hidden = true; // rien à consentir : rien ne sera écouté
   }
+
   $('#consentOk').addEventListener('change', function () {
     $('#consentGo').disabled = !this.checked;
   });
   function openDeck(withRec) {
     $('#consent').hidden = true;
     $('#deck').hidden = false;
-    if (!SR) { $('#recBtn').disabled = true; setBar('Transcription indisponible sur ce navigateur'); }
+    if (!mic.ok) {
+      $('#recBtn').disabled = true;
+      $('#recLabel').textContent = 'Écoute indisponible';
+      setBar('<b>' + mic.titre + '.</b> Prise de notes et suivi manuel disponibles.');
+    }
     paintSection(); paintCue(); paintCands();
-    if (withRec && SR) toggleRec();
+    if (withRec && mic.ok) toggleRec();
   }
   $('#consentGo').addEventListener('click', function () { openDeck(true); });
   $('#consentSkip').addEventListener('click', function () { openDeck(false); });
@@ -1365,7 +1412,7 @@
     mode(false);
     $('#consent').hidden = true;
     $('#deck').hidden = false;
-    if (!SR) $('#recBtn').disabled = true;
+    if (!mic.ok) { $('#recBtn').disabled = true; $('#recLabel').textContent = 'Écoute indisponible'; }
     setBar('Écoute à l\'arrêt · reprenez quand vous voulez');
   }
 })();
