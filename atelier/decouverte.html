@@ -78,6 +78,11 @@
   .intro-visio{border:1px solid var(--line);background:var(--bg);border-radius:11px;
        padding:13px 16px;font-size:.87rem;line-height:1.55;color:var(--dim) !important;margin-bottom:20px}
   .intro-visio b{color:var(--text);font-family:var(--disp)}
+  .intro-visio p{font-size:.87rem;line-height:1.55;color:var(--dim);margin:0}
+  .detail-visio{margin-top:11px;border-top:1px solid var(--line);padding-top:11px}
+  .detail-visio summary{cursor:pointer;font-size:.84rem;color:var(--dim)}
+  .detail-visio summary:hover{color:var(--accent)}
+  .detail-visio p{margin-top:11px}
   .detail-son{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
   .detail-son summary{cursor:pointer;font-size:.83rem;color:var(--dim)}
   .detail-son summary:hover{color:var(--accent)}
@@ -317,11 +322,29 @@
         sans que vous ayez à ressaisir quoi que ce soit.
       </p>
 
-      <p class="intro-visio">
-        <b>En visio&nbsp;?</b> Votre micro ne capte que vous, pas votre interlocuteur. Activez la
+      <div class="intro-visio">
+        <p><b>En visio&nbsp;?</b> Votre micro ne capte que vous, pas votre interlocuteur. Activez la
         transcription de Google&nbsp;Meet ou de Zoom pendant l'appel, puis collez-la dans l'outil :
-        il l'analyse exactement comme s'il avait écouté.
-      </p>
+        il l'analyse exactement comme s'il avait écouté.</p>
+
+        <details class="detail-visio">
+          <summary>Et pour l'aiguillage en direct pendant la visio (gratuit, 15&nbsp;min à installer)</summary>
+          <p>Le navigateur ne sait écouter qu'une chose : <b>le micro</b>. Il n'existe aucun moyen de
+          lui donner le son d'un onglet. Mais rien n'empêche de faire l'inverse — dire au système
+          d'exploitation que le son de la visio <i>est</i> un micro. L'outil écoute alors les deux
+          voix sans une ligne de code en plus.</p>
+          <p><b>macOS</b> — installez <i>BlackHole</i> (gratuit, open source). Dans
+          <i>Configuration audio et MIDI</i>, créez un périphérique agrégé qui réunit votre micro et
+          BlackHole, et un périphérique multi-sortie qui envoie le son à la fois dans votre casque et
+          dans BlackHole. Choisissez l'agrégé comme micro du navigateur.<br>
+          <b>Windows</b> — <i>VoiceMeeter</i> (gratuit) fait la même chose en une fenêtre :
+          il mélange votre micro et le son du système, et publie le résultat comme micro virtuel.</p>
+          <p><b>Le piège à connaître :</b> l'annulation d'écho de Chrome peut effacer la voix d'en
+          face si la visio tourne dans le même navigateur que cet outil. Le remède est simple —
+          la visio dans un navigateur, l'outil dans l'autre (Edge fait tourner la transcription
+          aussi bien que Chrome). Testez une fois à vide avant un vrai rendez-vous.</p>
+        </details>
+      </div>
 
       <label class="check">
         <input type="checkbox" id="consentOk">

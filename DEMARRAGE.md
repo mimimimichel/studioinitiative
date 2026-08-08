@@ -132,6 +132,21 @@ s'il a été traité.
 Sans Chrome, la transcription n'est pas disponible : la trame, les notes et la
 fiche fonctionnent quand même, l'outil vous le dit et vous laisse continuer.
 
+**En visio**, votre micro ne capte que vous. Deux réponses, toutes deux gratuites :
+
+- *Après l'appel* — activez la transcription native de Meet ou de Zoom, puis
+  **« Coller une transcription »** dans l'outil. Horodatages, noms de locuteurs et
+  numéros de sous-titres sont nettoyés automatiquement ; l'analyse est identique à
+  une écoute en direct. C'est la voie sans installation.
+- *Pendant l'appel*, si vous voulez l'aiguillage en temps réel — un câble audio
+  virtuel (*BlackHole* sur macOS, *VoiceMeeter* sur Windows, tous deux gratuits)
+  fait passer le son de la visio pour un micro. L'outil entend alors les deux voix
+  sans modification. Un quart d'heure d'installation, une seule fois. Attention à
+  l'annulation d'écho de Chrome : faites tourner la visio dans un navigateur et
+  l'outil dans l'autre, et testez à vide avant un vrai rendez-vous.
+
+Aucun abonnement de transcription n'est nécessaire dans un cas comme dans l'autre.
+
 **Mode Fiche** — juste après, dans la voiture.
 
 Tout ce que vous avez capté est déjà là. Complétez, surtout la section 09
