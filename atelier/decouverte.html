@@ -90,10 +90,15 @@
        display:inline-flex;align-items:center;gap:6px;transition:all .16s}
   .sec-pill:hover{border-color:var(--accent)}
   .sec-pill[aria-current="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
-  .sec-pill .tick{width:6px;height:6px;border-radius:50%;background:var(--line-strong);flex:0 0 6px}
-  .sec-pill[data-seen="true"] .tick{background:var(--ok)}
-  .sec-pill[aria-current="true"] .tick{background:rgba(255,255,255,.5)}
-  .sec-pill[aria-current="true"][data-seen="true"] .tick{background:#6ee7a8}
+  /* Trois états, pas deux : effleuré n'est pas creusé. Le demi-cercle se lit
+     d'un coup d'œil sans avoir à compter. */
+  .sec-pill .tick{width:7px;height:7px;border-radius:50%;flex:0 0 7px;
+       background:var(--line-strong);border:0}
+  .sec-pill[data-level="1"] .tick{background:linear-gradient(90deg,var(--warn) 50%,var(--line-strong) 50%)}
+  .sec-pill[data-level="2"] .tick{background:var(--ok)}
+  .sec-pill[aria-current="true"][data-level="0"] .tick{background:rgba(255,255,255,.45)}
+  .sec-pill[aria-current="true"][data-level="1"] .tick{background:linear-gradient(90deg,#f0b862 50%,rgba(255,255,255,.45) 50%)}
+  .sec-pill[aria-current="true"][data-level="2"] .tick{background:#6ee7a8}
 
   .sec-title{font-family:var(--disp);font-size:1.05rem;font-weight:600;margin:0 0 4px}
   .sec-why{color:var(--faint);font-size:.82rem;margin:0 0 14px;line-height:1.5}
@@ -663,12 +668,17 @@
      ════════════════════════════════════════════════════════════ */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var rec = null, wantOn = false, startedAt = null, chronoTimer = null;
-  var transcript = [];   // phrases finales
+  var transcript = [];   // phrases finales — conservées en entier
   var interim = '';
-  var seen = {};         // sections repérées dans la parole
+  var hits = {};         // nombre de fois qu'un sujet a été touché dans la parole
   var quoteCands = [], numCands = [];
   var currentSec = TRAME[0].id;
   var asked = {};        // questions cochées
+  var drawn = 0;         // phrases déjà peintes : le rendu est en ajout, pas en refonte
+
+  // Un sujet touché une ou deux fois a été effleuré ; à partir de trois, creusé.
+  function level(id) { var n = hits[id] || 0; return n === 0 ? 0 : n < 3 ? 1 : 2; }
+  function minutes() { return startedAt ? Math.floor((Date.now() - startedAt) / 60000) : 0; }
 
   function fmt(ms) {
     var s = Math.floor(ms / 1000);
@@ -715,7 +725,11 @@
     if (wantOn) {
       startRec();
       if (!startedAt) startedAt = Date.now();
-      chronoTimer = setInterval(function () { $('#chrono').textContent = fmt(Date.now() - startedAt); }, 1000);
+      chronoTimer = setInterval(function () {
+        $('#chrono').textContent = fmt(Date.now() - startedAt);
+        // L'aiguillage dépend aussi du temps écoulé, pas seulement des mots.
+        if (Math.floor((Date.now() - startedAt) / 1000) % 30 === 0) paintCue();
+      }, 1000);
       setBar('Écoute en cours · le texte reste sur cet appareil');
     } else {
       try { rec && rec.stop(); } catch (e) {}
@@ -739,9 +753,8 @@
   function ingest(text) {
     if (!text) return;
     transcript.push(text);
-    if (transcript.length > 900) transcript.splice(0, 200);
 
-    TRAME.forEach(function (s) { if (s.lex.test(text)) seen[s.id] = true; });
+    TRAME.forEach(function (s) { if (s.lex.test(text)) hits[s.id] = (hits[s.id] || 0) + 1; });
 
     if (PAIN.test(text) && text.length >= 40 && text.length <= 240) {
       if (quoteCands.indexOf(text) < 0) {
@@ -762,15 +775,48 @@
   }
 
   /* ── rendus du mode entretien ── */
+  /* Rendu en ajout : on n'écrase jamais ce qui est déjà à l'écran. Un entretien
+     d'une heure reste consultable de bout en bout, et le défilement ne saute pas
+     si l'utilisateur est remonté pour relire. */
   function paintTranscript() {
     var w = $('#trWrap');
     if (!transcript.length && !interim) return;
-    $('#trEmpty') && $('#trEmpty').remove();
-    var atBottom = w.scrollHeight - w.scrollTop - w.clientHeight < 60;
-    w.innerHTML = transcript.slice(-60).map(function (t) {
-      return '<p class="tr-p">' + esc(t) + '</p>';
-    }).join('') + (interim ? '<p class="tr-p interim">' + esc(interim) + '</p>' : '');
+    var vide = $('#trEmpty'); if (vide) vide.remove();
+
+    var atBottom = w.scrollHeight - w.scrollTop - w.clientHeight < 80;
+    var live = $('#trLive');
+
+    if (drawn > transcript.length) { // fiche rechargée : on repart de zéro
+      w.innerHTML = ''; drawn = 0; live = null;
+    }
+    if (drawn < transcript.length) {
+      var frag = document.createDocumentFragment();
+      for (; drawn < transcript.length; drawn++) {
+        var p = document.createElement('p');
+        p.className = 'tr-p';
+        p.textContent = transcript[drawn];
+        frag.appendChild(p);
+      }
+      if (live) w.insertBefore(frag, live); else w.appendChild(frag);
+    }
+
+    if (interim) {
+      if (!live) {
+        live = document.createElement('p');
+        live.id = 'trLive'; live.className = 'tr-p interim';
+        w.appendChild(live);
+      }
+      live.textContent = interim;
+    } else if (live) { live.remove(); }
+
     if (atBottom) w.scrollTop = w.scrollHeight;
+  }
+
+  function repaintTranscript() {
+    $('#trWrap').innerHTML = transcript.length ? '' :
+      '<p class="tr-empty" id="trEmpty">La transcription apparaîtra ici dès que vous démarrez l\'écoute.</p>';
+    drawn = 0;
+    paintTranscript();
   }
 
   function esc(s) {
@@ -779,10 +825,13 @@
     });
   }
 
+  var NIVEAU = ['pas abordé', 'effleuré', 'creusé'];
   function paintNav() {
     $('#secNav').innerHTML = TRAME.map(function (s) {
+      var n = level(s.id);
       return '<button type="button" class="sec-pill" data-sec="' + s.id + '" ' +
-        'aria-current="' + (s.id === currentSec) + '" data-seen="' + !!seen[s.id] + '">' +
+        'aria-current="' + (s.id === currentSec) + '" data-level="' + n + '" ' +
+        'title="' + s.titre + ' — ' + NIVEAU[n] + '">' +
         '<span class="tick" aria-hidden="true"></span>' + s.id + ' · ' + s.titre + '</button>';
     }).join('');
   }
@@ -792,7 +841,7 @@
     $('#secTitle').textContent = s.id + ' · ' + s.titre;
     $('#secWhy').textContent = s.why;
     $('#questions').innerHTML = s.questions.map(function (q, i) {
-      return '<button type="button" class="q" data-q="' + i + '" data-asked="' +
+      return '<button type="button" class="q" data-qi="' + i + '" data-asked="' +
         !!(asked[s.id] && asked[s.id][i]) + '">' + esc(q) + '</button>';
     }).join('');
     var ta = $('#liveNotes');
@@ -802,25 +851,55 @@
   }
 
   function paintCue() {
-    var manque = TRAME.filter(function (s) { return !seen[s.id]; });
+    var jamais = TRAME.filter(function (s) { return level(s.id) === 0; });
+    var effleure = TRAME.filter(function (s) { return level(s.id) === 1; });
+    var mn = minutes();
     var html = '';
+
     if (!transcript.length) {
-      html = '<div class="cue quiet"><b>En attente</b><p>Démarrez l\'écoute : l\'outil suit ce qui a été abordé et vous signale ce qui manque.</p></div>';
-    } else if (!manque.length) {
-      html = '<div class="cue"><b>Tout est passé</b><p>Les sept points ont été abordés. Reste à verrouiller la date de la prochaine étape.</p></div>';
-    } else {
-      var s = manque[0];
-      html = '<div class="cue"><b>Pas encore abordé</b><p><b>' + s.id + ' · ' + s.titre + '</b><br>' +
-             esc(s.questions[0]) + '</p>' +
-             '<button type="button" class="act" style="margin-top:11px;padding:7px 15px;font-size:.82rem" ' +
-             'data-goto="' + s.id + '">Ouvrir cette section</button></div>';
-      if (manque.length > 1) {
-        html += '<p class="none">Restent aussi : ' + manque.slice(1).map(function (x) {
+      html = '<div class="cue quiet"><b>En attente</b><p>Démarrez l\'écoute : l\'outil suit ce qui a été abordé, distingue ce qui a été effleuré de ce qui a été creusé, et vous signale ce qui manque.</p></div>';
+    } else if (jamais.length) {
+      var s = jamais[0];
+      html = cueBox('Pas encore abordé', s, s.questions[0]);
+      if (jamais.length > 1) {
+        html += '<p class="none">Restent aussi : ' + jamais.slice(1).map(function (x) {
           return x.titre.toLowerCase(); }).join(', ') + '.</p>';
       }
+    } else if (effleure.length) {
+      // Tout a été touché : on pousse à creuser là où c'est le plus mince.
+      var e = effleure[0];
+      html = cueBox('Effleuré, pas creusé', e, e.questions[1] || e.questions[0]);
+      if (effleure.length > 1) {
+        html += '<p class="none">Également survolé : ' + effleure.slice(1).map(function (x) {
+          return x.titre.toLowerCase(); }).join(', ') + '.</p>';
+      }
+    } else {
+      html = '<div class="cue"><b>Les sept points sont creusés</b><p>Il vous reste à verrouiller une date pour la prochaine étape — c\'est le cinquième axe de la qualification, et celui qu\'on oublie en partant.</p></div>';
     }
+
+    // Conscience du temps : un rendez-vous d'une heure avec trois sujets
+    // intacts, ce n'est plus un oubli, c'est un problème de conduite.
+    if (mn >= 25 && jamais.length >= 2) {
+      html += '<div class="cue" style="border-color:var(--warn);background:rgba(154,98,18,.07)">' +
+        '<b style="color:var(--warn)">' + mn + ' minutes écoulées</b>' +
+        '<p>' + jamais.length + ' sujets ne sont toujours pas ouverts. Si le temps file, gardez la priorité sur ' +
+        jamais.slice(0, 2).map(function (x) { return '<b>' + esc(x.titre.toLowerCase()) + '</b>'; }).join(' et ') +
+        '.</p></div>';
+    } else if (mn >= 35 && level('09') === 0) {
+      html += '<div class="cue" style="border-color:var(--warn);background:rgba(154,98,18,.07)">' +
+        '<b style="color:var(--warn)">Vous n\'avez pas de date</b>' +
+        '<p>Ne quittez pas la pièce sans la prochaine étape et son créneau.</p></div>';
+    }
+
     $('#cue').innerHTML = html;
     paintNav();
+  }
+
+  function cueBox(titre, s, question) {
+    return '<div class="cue"><b>' + titre + '</b><p><b>' + s.id + ' · ' + s.titre + '</b><br>' +
+      esc(question) + '</p>' +
+      '<button type="button" class="act" style="margin-top:11px;padding:7px 15px;font-size:.82rem" ' +
+      'data-goto="' + s.id + '">Ouvrir cette section</button></div>';
   }
 
   function paintCands() {
@@ -896,9 +975,9 @@
     flashLive(addQuoteText(transcript[transcript.length - 1]) ? 'Phrase gardée.' : 'Rien à capturer.');
   });
   $('#questions').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-q]'); if (!b) return;
+    var b = e.target.closest('[data-qi]'); if (!b) return;
     asked[currentSec] = asked[currentSec] || {};
-    var i = +b.dataset.q;
+    var i = +b.dataset.qi;
     asked[currentSec][i] = !asked[currentSec][i];
     b.dataset.asked = String(!!asked[currentSec][i]);
     touch();
@@ -912,6 +991,25 @@
   $('#liveNotes').addEventListener('input', function () { saveLiveNotes(); touch(); });
 
   $('#recBtn').addEventListener('click', toggleRec);
+
+  /* Le moteur du navigateur se met en veille quand l'onglet passe à l'arrière-plan.
+     Mieux vaut le dire que de laisser un trou dans la transcription. */
+  document.addEventListener('visibilitychange', function () {
+    if (!wantOn) return;
+    if (document.hidden) {
+      setBar('<b style="color:var(--warn)">Onglet en arrière-plan</b> — l\'écoute peut se suspendre. Laissez cette page visible.');
+    } else {
+      try { rec && rec.start(); } catch (e) {}
+      setBar('Écoute en cours · le texte reste sur cet appareil');
+    }
+  });
+
+  /* Un rendez-vous en cours ne se ferme pas par accident. */
+  window.addEventListener('beforeunload', function (e) {
+    if (!wantOn && !transcript.length) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
 
   /* ── consentement ── */
   if (!SR) {
@@ -1002,7 +1100,7 @@
     o.quotes = $$('#quotes [data-q]').map(function (t) { return t.value.trim(); }).filter(Boolean);
     o.transcript = transcript;
     o.asked = asked;
-    o.seen = seen;
+    o.hits = hits;
     return o;
   }
 
@@ -1017,8 +1115,11 @@
     renumber();
     transcript = o.transcript || [];
     asked = o.asked || {};
-    seen = o.seen || {};
-    paintTranscript(); paintCue(); paintCands();
+    // Reprise des fiches enregistrées avant l'échelle à trois niveaux :
+    // un sujet coché valait « abordé », on le relit comme « effleuré ».
+    hits = o.hits || {};
+    if (!o.hits && o.seen) Object.keys(o.seen).forEach(function (k) { if (o.seen[k]) hits[k] = 1; });
+    repaintTranscript(); paintCue(); paintCands();
   }
 
   var AXES = [
@@ -1099,7 +1200,7 @@
     try { localStorage.setItem(ARCHIVE, JSON.stringify(a.slice(0, 40))); } catch (e) {}
     localStorage.removeItem(KEY);
     FIELDS.forEach(function (f) { var e = $('#' + f); if (e) e.value = ''; });
-    transcript = []; asked = {}; seen = {}; quoteCands = []; numCands = [];
+    transcript = []; asked = {}; hits = {}; quoteCands = []; numCands = [];
     startedAt = null; $('#chrono').textContent = '00:00';
     restore({ frictions: [], quotes: [] });
     $('#time').value = '14:30';
@@ -1203,6 +1304,16 @@
   paintArchive();
   paintSection();
   touch();
+
+  // Un entretien déjà transcrit veut dire que le rendez-vous a eu lieu : on
+  // ouvre sur la fiche à structurer, pas sur la porte de consentement.
+  if (transcript.length) {
+    mode(false);
+    $('#consent').hidden = true;
+    $('#deck').hidden = false;
+    if (!SR) $('#recBtn').disabled = true;
+    setBar('Écoute à l\'arrêt · reprenez quand vous voulez');
+  }
 })();
 </script>
 </body>
