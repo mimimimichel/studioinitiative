@@ -87,7 +87,19 @@
   <p class="lead">
     Remplissez après le rendez-vous, pendant que c'est frais. Le formulaire fabrique le fichier —
     vous n'écrivez pas une ligne de code. Vous pouvez voir le résultat exact avant de publier quoi que ce soit.
+    Vous sortez d'un entretien ? Passez d'abord par la
+    <a href="../atelier/decouverte.html">grille de découverte</a>, elle remplit cette page toute seule.
   </p>
+
+  <div id="fromDiscovery" hidden style="border:1px solid rgba(14,234,246,.35);background:rgba(14,234,246,.07);
+       border-radius:14px;padding:16px 18px;margin:0 0 26px">
+    <p style="margin:0 0 6px;font-family:var(--disp);font-weight:600;color:var(--cyan-soft)">Pré-rempli depuis la grille de découverte</p>
+    <p style="margin:0;color:var(--dim);font-size:.87rem;line-height:1.55">
+      Tout vient de vos propres notes — rien n'a été inventé. Relisez quand même deux choses :
+      les <b>constats chiffrés</b>, dont il manque le titre court, et le <b>travail des agents</b>,
+      qui doit décrire ce que vous avez réellement produit depuis. N'annoncez rien que vous n'ayez fait.
+    </p>
+  </div>
 
   <div class="cols">
 
@@ -352,9 +364,153 @@
 
   document.addEventListener('input', refresh);
 
+  /* — reprise de la grille de découverte —
+     Tout ce qui est pré-rempli vient des notes de l'entretien. Rien n'est
+     déduit ni inventé : les champs qui demandent une décision éditoriale
+     (titres des constats, travail réellement produit par les agents) restent
+     vides plutôt que d'être remplis de plausible. */
+  function set(id, val) { var e = $('#' + id); if (e && val) e.value = val; }
+
+  function joinNonVide(sep) {
+    return [].slice.call(arguments, 1).filter(Boolean).join(sep);
+  }
+
+  function briefDepuis(o) {
+    var sys = (o.systems || []).concat(
+      o.systemsOther ? o.systemsOther.split(',').map(function (s) { return s.trim(); }) : []
+    ).filter(Boolean);
+
+    var bloc = [];
+    bloc.push(joinNonVide(', ',
+      joinNonVide(' ', o.firstName, o.lastName) + (o.role ? ', ' + o.role : ''),
+      o.company && ('chez ' + o.company),
+      o.sector, o.size && (o.size + ' personnes')) + '.');
+    bloc.push('Rendez-vous du ' + o.date + (o.place ? ' ' + o.place : '') + '.');
+    if (o.others) bloc.push('Également présents : ' + o.others + '.');
+
+    if (o.trigger) bloc.push('\nPourquoi maintenant : ' + o.trigger +
+      (o.deadline ? ' Échéance évoquée : ' + o.deadline + '.' : ''));
+    if (o.doNothing) bloc.push("S'ils ne font rien, selon lui : " + o.doNothing);
+
+    if (sys.length || o.refSource || o.team) {
+      bloc.push('\nTerrain : ' + joinNonVide(' ',
+        sys.length && ('systèmes cités — ' + sys.join(', ') + '.'),
+        o.refSource && ('Référentiel faisant foi : ' + o.refSource + '.'),
+        o.team && ('Équipe data : ' + o.team + '.'),
+        o.hosting && ('Contraintes : ' + o.hosting + '.')));
+    }
+
+    if ((o.frictions || []).length) {
+      bloc.push('\nFrictions relevées :');
+      o.frictions.forEach(function (f) {
+        bloc.push('- ' + f.what + joinNonVide('', f.who && ' Subi par ' + f.who + '.',
+          f.freq && ' ' + f.freq + '.', f.cost && ' Estimé à ' + f.cost + '.',
+          f.workaround && ' Compensé aujourd\'hui par : ' + f.workaround + '.'));
+      });
+    }
+
+    if (o.pilots || o.pilotState) {
+      bloc.push('\nIA : ' + joinNonVide(' ', o.pilots, o.pilotState && ('État : ' + o.pilotState + '.'),
+        o.blockerTheirs && ('Leur explication du blocage : ' + o.blockerTheirs),
+        o.blockerYours && ('La mienne : ' + o.blockerYours)));
+    }
+
+    var gouv = joinNonVide(' · ', o.owners && ('propriétaires ' + o.owners),
+      o.lineage && ('lineage ' + o.lineage), o.quality && ('qualité mesurée ' + o.quality));
+    if (gouv || o.compliance || o.incident) {
+      bloc.push('\nGouvernance : ' + joinNonVide(' ', gouv && gouv + '.', o.compliance, o.incident));
+    }
+
+    if (o.decider || o.budget || o.process) {
+      bloc.push('\nDécision : ' + joinNonVide(' ', o.decider && ('signe ' + o.decider + '.'),
+        o.influencer && ('influence ' + o.influencer + '.'), o.blocker && ('peut bloquer ' + o.blocker + '.'),
+        o.budget && ('Budget : ' + o.budget + '.'), o.process));
+    }
+
+    if (o.unsaid) bloc.push("\nCe qu'il n'a pas dit mais qui transparaît : " + o.unsaid);
+    if (o.diagnosis) bloc.push('Mon diagnostic : ' + o.diagnosis);
+    if (o.reco) bloc.push('Ma recommandation : ' + o.reco);
+    if (o.nextStep) bloc.push('Prochaine étape convenue : ' + o.nextStep +
+      (o.nextDate ? ' (' + o.nextDate + ')' : '') + '.');
+
+    return bloc.join('\n');
+  }
+
+  function reprendreDecouverte() {
+    var o;
+    try { o = JSON.parse(sessionStorage.getItem('si-decouverte') || 'null'); } catch (e) { return; }
+    if (!o) return;
+
+    ['firstName', 'lastName', 'role', 'company', 'date', 'time', 'place'].forEach(function (k) { set(k, o[k]); });
+
+    (o.quotes || []).slice(0, 3).forEach(function (q, i) { set('q' + (i + 1), q); });
+
+    // Constats : le chiffre et son explication viennent de la grille ; le titre
+    // court est un choix de rédaction, il reste à faire.
+    (o.frictions || []).filter(function (f) { return f.cost; }).slice(0, 3).forEach(function (f, i) {
+      var m = /^\s*([^A-Za-zÀ-ÿ]*[\d.,  ]+)\s*(.*)$/.exec(f.cost);
+      set('f' + i + 'value', m ? m[1].trim() : f.cost);
+      set('f' + i + 'unit', m ? m[2].trim() : '');
+      set('f' + i + 'detail', joinNonVide(' ', f.what, f.freq && ('(' + f.freq + ')'),
+        f.workaround && ('Compensé aujourd\'hui par : ' + f.workaround + '.')));
+    });
+
+    // Agents : seuls les deux constats directement contenus dans vos notes sont
+    // proposés. Les deux autres décrivent un travail que vous seul savez avoir
+    // fait — ils restent vides volontairement.
+    var sys = (o.systems || []).concat(
+      o.systemsOther ? o.systemsOther.split(',').map(function (s) { return s.trim(); }) : []
+    ).filter(Boolean);
+    if (sys.length) {
+      set('a0line', 'Cartographié les systèmes que vous avez cités — ' + sys.join(', ') + '.');
+      set('a0meta', sys.length + ' systèmes');
+    }
+    var premiere = (o.frictions || [])[0];
+    if (premiere && premiere.what) {
+      set('a1line', 'Isolé le point de rupture : ' + premiere.what);
+      if (premiere.cost) set('a1meta', premiere.cost);
+    }
+
+    set('closeLead', o.diagnosis);
+    if (o.firstName) {
+      set('opener', 'Bonjour ' + o.firstName + ". J'ai le contexte de notre rendez-vous et le détail de " +
+        'ce que les agents ont produit depuis. Demandez-moi ce que vous voulez.');
+    }
+    var sugg = [];
+    // Le « ≈ » se lit mal dans une question posée à voix haute.
+    if (premiere && premiere.cost) {
+      sugg.push("D'où sortent les " + premiere.cost.replace(/^[≈~environ\s]+/i, '') + ' ?');
+    }
+    if (o.pilotState === 'bloques') sugg.push('Pourquoi mes pilotes ne passent pas en production ?');
+    sugg.push('Concrètement, les deux premières semaines ?');
+    sugg.slice(0, 3).forEach(function (s, i) { set('s' + (i + 1), s); });
+
+    set('context', briefDepuis(o));
+    $('#fromDiscovery').hidden = false;
+    sessionStorage.removeItem('si-decouverte');
+  }
+
   /* — valeurs de départ — */
   $('#id').value = newId();
   $('#date').value = new Date().toISOString().slice(0, 10);
+
+  // Le domaine et le lien d'agenda ne changent pas d'un prospect à l'autre.
+  try {
+    var memo = JSON.parse(localStorage.getItem('si-generateur') || '{}');
+    if (memo.domain) $('#domain').value = memo.domain;
+    if (memo.calendarUrl) $('#calendarUrl').value = memo.calendarUrl;
+  } catch (e) {}
+  ['domain', 'calendarUrl'].forEach(function (id) {
+    $('#' + id).addEventListener('change', function () {
+      try {
+        localStorage.setItem('si-generateur', JSON.stringify({
+          domain: v('domain'), calendarUrl: v('calendarUrl')
+        }));
+      } catch (e) {}
+    });
+  });
+
+  reprendreDecouverte();
   refresh();
 })();
 </script>

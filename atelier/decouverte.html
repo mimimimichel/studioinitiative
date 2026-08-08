@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Grille de découverte — Studio Initiative</title>
+<link rel="icon" href="../assets/img/logo-mark-square.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Face claire de la charte : cet outil sert en réunion, en plein jour,
+     parfois écran tourné vers le prospect. Le sombre du scan n'a pas sa place ici. */
+  :root{
+    --bg:#f5f7fa; --bg-alt:#eaeef3; --surface:#fff;
+    --navy:#0a1d3d; --navy-deep:#060f22;
+    --text:#10192c; --dim:#545e70; --faint:#8991a1;
+    --line:rgba(10,29,61,.10); --line-strong:rgba(10,29,61,.20);
+    --accent:#067485; --accent-soft:rgba(6,116,133,.09);
+    --ok:#1c7a52; --warn:#9a6212; --stop:#a33a3a;
+    --disp:"Space Grotesk","Inter",sans-serif;
+    --body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);
+       font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-.02em;margin:0}
+  a{color:var(--accent)}
+  .wrap{max-width:1220px;margin:0 auto;padding:28px 22px 140px}
+
+  /* ── en-tête ── */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand img{width:26px;height:26px}
+  .brand b{font-family:var(--disp);font-weight:600;font-size:.95rem}
+  .brand span{color:var(--faint);font-size:.82rem}
+  .savestate{font-size:.78rem;color:var(--faint);font-variant-numeric:tabular-nums}
+
+  h1{font-size:1.75rem;margin-bottom:6px}
+  .lede{color:var(--dim);max-width:660px;margin:0 0 26px}
+
+  .cols{display:grid;gap:26px;align-items:start}
+  @media (min-width:1040px){.cols{grid-template-columns:1fr 348px}}
+
+  /* ── sections ── */
+  section.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+       padding:22px;margin-bottom:16px}
+  .shead{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+  .num{font-family:var(--disp);font-size:.78rem;font-weight:600;color:var(--accent);
+       letter-spacing:.1em;flex-shrink:0}
+  .shead h2{font-size:1.08rem}
+  .why{color:var(--faint);font-size:.83rem;margin:0 0 18px;line-height:1.55;padding-left:30px}
+  @media (max-width:560px){.why{padding-left:0}}
+
+  label{display:block;font-size:.79rem;color:var(--dim);font-weight:500;margin:0 0 5px}
+  .req{color:var(--accent)}
+  .grid{display:grid;gap:13px;margin-bottom:13px}
+  @media (min-width:620px){
+    .g2{grid-template-columns:1fr 1fr}
+    .g3{grid-template-columns:1fr 1fr 1fr}
+    .g21{grid-template-columns:2fr 1fr}
+  }
+  input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--line-strong);
+       border-radius:9px;padding:10px 12px;color:var(--text);font-family:var(--body);
+       font-size:.94rem;outline:none;transition:border-color .18s,box-shadow .18s}
+  input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  textarea{resize:vertical;min-height:64px;line-height:1.55}
+  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),
+         linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+         background-position:calc(100% - 17px) 51%,calc(100% - 12px) 51%;
+         background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px}
+
+  /* ── puces systèmes ── */
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+  .chip{border:1px solid var(--line-strong);background:var(--surface);color:var(--dim);
+        border-radius:999px;padding:6px 13px;font-size:.82rem;font-family:var(--body);
+        cursor:pointer;transition:all .16s}
+  .chip:hover{border-color:var(--accent);color:var(--text)}
+  .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+
+  /* ── blocs répétables ── */
+  .item{border:1px solid var(--line);border-radius:11px;padding:15px;margin-bottom:11px;background:var(--bg)}
+  .item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+  .item-head b{font-family:var(--disp);font-size:.85rem;color:var(--accent)}
+  .kill{border:none;background:none;color:var(--faint);cursor:pointer;font-size:.8rem;padding:3px 6px}
+  .kill:hover{color:var(--stop)}
+  .add{border:1px dashed var(--line-strong);background:none;color:var(--dim);border-radius:9px;
+       padding:9px 15px;font-family:var(--body);font-size:.85rem;cursor:pointer;width:100%}
+  .add:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ── panneau latéral ── */
+  .side{position:sticky;top:22px;display:grid;gap:14px}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:19px}
+  .panel h3{font-size:.98rem;margin-bottom:13px}
+
+  .verdict{border-radius:11px;padding:15px;margin-bottom:14px;border:1px solid}
+  .verdict b{display:block;font-family:var(--disp);font-size:1rem;margin-bottom:3px}
+  .verdict p{margin:0;font-size:.84rem;line-height:1.5}
+  .v-go{background:rgba(28,122,82,.07);border-color:rgba(28,122,82,.3);color:var(--ok)}
+  .v-wait{background:rgba(154,98,18,.07);border-color:rgba(154,98,18,.3);color:var(--warn)}
+  .v-no{background:rgba(163,58,58,.07);border-color:rgba(163,58,58,.3);color:var(--stop)}
+  .verdict p{color:var(--dim)}
+
+  .axes{display:grid;gap:9px;margin-bottom:4px}
+  .axis{display:flex;align-items:center;gap:10px;font-size:.82rem}
+  /* flex:0 0 9px et non flex-shrink seul : la pastille est un span, et la règle
+     .axis span ci-dessous lui donnerait flex-grow:1 — elle s'étirerait en ovale. */
+  .axis .dot{flex:0 0 9px;width:9px;height:9px;border-radius:50%;background:var(--line-strong)}
+  .axis.full .dot{background:var(--ok)}
+  .axis.part .dot{background:var(--warn)}
+  .axis span:not(.dot){flex:1;color:var(--dim)}
+  .axis em{font-style:normal;color:var(--faint);font-size:.76rem}
+
+  .btns{display:grid;gap:8px}
+  button.act{border:1px solid var(--line-strong);background:var(--surface);color:var(--text);
+       border-radius:999px;padding:11px 18px;font-family:var(--body);font-size:.88rem;
+       font-weight:600;cursor:pointer;transition:all .18s}
+  button.act:hover{border-color:var(--accent);color:var(--accent)}
+  button.act.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+  button.act.primary:hover{background:var(--navy-deep);color:#fff}
+  button.act:disabled{opacity:.45;cursor:not-allowed}
+  .flash{font-size:.8rem;color:var(--accent);min-height:1.2em;margin:9px 0 0}
+  .missing{font-size:.8rem;color:var(--warn);margin:9px 0 0;line-height:1.5}
+
+  .archive{font-size:.83rem}
+  .archive ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+  .archive li{display:flex;align-items:center;justify-content:space-between;gap:8px;
+       border:1px solid var(--line);border-radius:8px;padding:8px 11px}
+  .archive button{border:none;background:none;cursor:pointer;font-family:var(--body);
+       font-size:.83rem;color:var(--text);text-align:left;flex:1;padding:0}
+  .archive button:hover{color:var(--accent)}
+  .archive .when{color:var(--faint);font-size:.75rem;white-space:nowrap}
+  .empty{color:var(--faint);font-size:.83rem;margin:0}
+
+  @media print{.side,.top,.lede{display:none}section.card{break-inside:avoid;border:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <img src="../assets/img/logo-mark.png" alt="">
+      <b>Studio Initiative</b>
+      <span>· Grille de découverte</span>
+    </div>
+    <div class="savestate" id="savestate">—</div>
+  </div>
+
+  <h1>Premier rendez-vous</h1>
+  <p class="lede">
+    L'ordre des sections suit le déroulé d'un vrai entretien : le cadre, puis pourquoi maintenant,
+    puis le terrain, puis la décision. Tout est enregistré au fil de la frappe sur cet appareil.
+    À la fin, la grille fabrique le dossier du porte-clés — vous n'aurez rien à ressaisir.
+  </p>
+
+  <div class="cols">
+    <main>
+
+      <section class="card">
+        <div class="shead"><span class="num">01</span><h2>Le cadre</h2></div>
+        <p class="why">Ce qui identifie le dossier, et ce qui s'affichera en grand sur son écran.</p>
+        <div class="grid g2">
+          <div><label for="firstName">Prénom <span class="req">— s'affiche en très grand</span></label><input id="firstName"></div>
+          <div><label for="lastName">Nom</label><input id="lastName"></div>
+        </div>
+        <div class="grid g2">
+          <div><label for="role">Fonction</label><input id="role" placeholder="Directeur Industriel"></div>
+          <div><label for="company">Entreprise</label><input id="company"></div>
+        </div>
+        <div class="grid g3">
+          <div><label for="sector">Secteur</label><input id="sector" placeholder="Aéronautique"></div>
+          <div><label for="size">Effectif</label><input id="size" placeholder="600"></div>
+          <div><label for="origin">Origine du contact</label><input id="origin" placeholder="LinkedIn, recommandation…"></div>
+        </div>
+        <div class="grid g3">
+          <div><label for="date">Date du rendez-vous</label><input type="date" id="date"></div>
+          <div><label for="time">Heure</label><input type="time" id="time" value="14:30"></div>
+          <div><label for="place">Lieu <span style="color:var(--faint)">— se lit après la date</span></label><input id="place" placeholder="à Blagnac"></div>
+        </div>
+        <div class="grid">
+          <div><label for="others">Qui d'autre était présent</label><input id="others" placeholder="Nom, fonction — un par personne"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">02</span><h2>Pourquoi maintenant</h2></div>
+        <p class="why">La question qui prédit le mieux la suite. Un besoin sans échéance ne se transforme presque jamais.</p>
+        <div class="grid">
+          <div><label for="trigger">Qu'est-ce qui déclenche ce sujet aujourd'hui</label>
+            <textarea id="trigger" placeholder="Un audit, un incident, une pression du groupe, un départ, une échéance réglementaire…"></textarea></div>
+        </div>
+        <div class="grid g21">
+          <div><label for="deadline">Échéance mentionnée</label><input id="deadline" placeholder="Fin d'exercice, comité de novembre…"></div>
+          <div><label for="triggerStrength">Solidité du déclencheur</label>
+            <select id="triggerStrength">
+              <option value="">—</option>
+              <option value="fort">Daté et porté par quelqu'un</option>
+              <option value="moyen">Réel mais sans échéance</option>
+              <option value="faible">Curiosité, veille</option>
+            </select></div>
+        </div>
+        <div class="grid">
+          <div><label for="doNothing">Ce qui se passe s'ils ne font rien</label>
+            <textarea id="doNothing" placeholder="Sa réponse, pas la vôtre."></textarea></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">03</span><h2>Le terrain</h2></div>
+        <p class="why">Les systèmes cités et l'état du référentiel. C'est de là que sortira la cartographie affichée sur la page.</p>
+        <label>Systèmes cités</label>
+        <div class="chips" id="systems"></div>
+        <div class="grid g2">
+          <div><label for="systemsOther">Autres systèmes</label><input id="systemsOther" placeholder="Séparés par des virgules"></div>
+          <div><label for="refSource">Existe-t-il un référentiel faisant foi</label>
+            <select id="refSource">
+              <option value="">—</option>
+              <option value="oui">Oui, identifié et respecté</option>
+              <option value="partiel">Sur une partie seulement</option>
+              <option value="non">Non — chacun a le sien</option>
+            </select></div>
+        </div>
+        <div class="grid g2">
+          <div><label for="team">Équipe data interne</label><input id="team" placeholder="2 analystes, pas d'ingénieur data"></div>
+          <div><label for="hosting">Contraintes d'hébergement</label><input id="hosting" placeholder="Cloud, on-prem, souveraineté, secret défense…"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">04</span><h2>Les frictions</h2></div>
+        <p class="why">Une friction chiffrable vaut dix frustrations vagues. Chaque ligne remplie devient un constat chiffré sur sa page.</p>
+        <div id="frictions"></div>
+        <button type="button" class="add" id="addFriction">+ Ajouter une friction</button>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">05</span><h2>Où en est l'IA chez eux</h2></div>
+        <p class="why">Des pilotes bloqués sont le meilleur point d'entrée du cabinet : le problème est presque toujours en amont du modèle.</p>
+        <div class="grid g21">
+          <div><label for="pilots">Pilotes ou projets IA lancés</label>
+            <textarea id="pilots" placeholder="Maintenance prédictive (1 an), contrôle visuel (6 mois)…"></textarea></div>
+          <div><label for="pilotState">Où ils en sont</label>
+            <select id="pilotState">
+              <option value="">—</option>
+              <option value="aucun">Aucun projet lancé</option>
+              <option value="bloques">Lancés, aucun en production</option>
+              <option value="partiel">Un passé en production</option>
+              <option value="matures">Plusieurs en production</option>
+            </select></div>
+        </div>
+        <div class="grid g2">
+          <div><label for="blockerTheirs">Leur explication du blocage</label><textarea id="blockerTheirs"></textarea></div>
+          <div><label for="blockerYours">La vôtre</label><textarea id="blockerYours"></textarea></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">06</span><h2>Gouvernance</h2></div>
+        <p class="why">Le socle que vend le cabinet. Trois « non » ici valent une mission.</p>
+        <div class="grid g3">
+          <div><label for="owners">Propriétaires de données désignés</label>
+            <select id="owners"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
+          <div><label for="lineage">Traçabilité / lineage</label>
+            <select id="lineage"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
+          <div><label for="quality">Qualité mesurée</label>
+            <select id="quality"><option value="">—</option><option>Oui</option><option>Partiel</option><option>Non</option></select></div>
+        </div>
+        <div class="grid g2">
+          <div><label for="compliance">RGPD / AI Act — où ils en sont</label><textarea id="compliance"></textarea></div>
+          <div><label for="incident">Incident ou audit récent</label><textarea id="incident"></textarea></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">07</span><h2>Qui décide</h2></div>
+        <p class="why">Un interlocuteur convaincu qui ne décide pas, et sans accès à qui décide, c'est un dossier qui dort.</p>
+        <div class="grid g3">
+          <div><label for="decider">Qui signe</label><input id="decider"></div>
+          <div><label for="influencer">Qui influence</label><input id="influencer"></div>
+          <div><label for="blocker">Qui peut bloquer</label><input id="blocker"></div>
+        </div>
+        <div class="grid g3">
+          <div><label for="sponsorAccess">Accès au décideur</label>
+            <select id="sponsorAccess">
+              <option value="">—</option>
+              <option value="oui">Mon interlocuteur décide</option>
+              <option value="partiel">Il peut m'y amener</option>
+              <option value="non">Pas d'accès identifié</option>
+            </select></div>
+          <div><label for="budget">Budget</label>
+            <select id="budget">
+              <option value="">—</option>
+              <option value="oui">Existe et est fléché</option>
+              <option value="partiel">À créer, mais l'enveloppe existe</option>
+              <option value="non">Inconnu ou inexistant</option>
+            </select></div>
+          <div><label for="competition">Autres cabinets en lice</label><input id="competition"></div>
+        </div>
+        <div class="grid">
+          <div><label for="process">Processus d'achat et délais</label><textarea id="process" placeholder="Appel d'offres, achat direct, comité, seuil de délégation…"></textarea></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">08</span><h2>Ses mots</h2></div>
+        <p class="why">Le plus précieux de la grille. Notez les phrases telles qu'il les prononce — c'est ce qu'il relira sur le porte-clés, et il reconnaîtra la sienne au mot près.</p>
+        <div id="quotes"></div>
+        <button type="button" class="add" id="addQuote">+ Ajouter une phrase</button>
+      </section>
+
+      <section class="card">
+        <div class="shead"><span class="num">09</span><h2>Votre lecture</h2></div>
+        <p class="why">À remplir juste après, dans la voiture. C'est ce qui nourrira l'agent conversationnel — et ce qui ne s'affichera jamais à l'écran.</p>
+        <div class="grid">
+          <div><label for="unsaid">Ce qu'il n'a pas dit mais qui transparaît</label><textarea id="unsaid"></textarea></div>
+        </div>
+        <div class="grid g2">
+          <div><label for="diagnosis">Votre diagnostic</label><textarea id="diagnosis"></textarea></div>
+          <div><label for="reco">Votre recommandation</label><textarea id="reco"></textarea></div>
+        </div>
+        <div class="grid g21">
+          <div><label for="nextStep">Prochaine étape convenue</label><input id="nextStep" placeholder="Atelier de cadrage, envoi d'une note, présentation au comité…"></div>
+          <div><label for="nextDate">Engagée pour le</label><input type="date" id="nextDate"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ══════ Panneau ══════ -->
+    <aside class="side">
+      <div class="panel">
+        <h3>Lecture du rendez-vous</h3>
+        <div class="verdict" id="verdict"><b>—</b><p>Remplissez la grille.</p></div>
+        <div class="axes" id="axes"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Ensuite</h3>
+        <div class="btns">
+          <button type="button" class="act primary" id="toKeychain">Préparer le porte-clés</button>
+          <button type="button" class="act" id="copySummary">Copier le compte rendu</button>
+          <button type="button" class="act" id="saveNew">Enregistrer et repartir à zéro</button>
+        </div>
+        <p class="flash" id="flash"></p>
+        <p class="missing" id="missing"></p>
+      </div>
+
+      <div class="panel archive">
+        <h3>Rendez-vous enregistrés</h3>
+        <div id="archive"><p class="empty">Aucun pour le moment.</p></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var KEY = 'si-decouverte-courant';
+  var ARCHIVE = 'si-decouverte-archive';
+
+  var SYSTEMS = ['ERP', 'MES', 'CRM', 'PLM', 'GMAO', 'Excel / SharePoint', 'Data lake',
+                 'Snowflake', 'Databricks', 'Palantir Foundry', 'Power BI', 'Tableau', 'SAP'];
+
+  /* ── champs simples ── */
+  var FIELDS = ['firstName','lastName','role','company','sector','size','origin','date','time',
+    'place','others','trigger','deadline','triggerStrength','doNothing','systemsOther','refSource',
+    'team','hosting','pilots','pilotState','blockerTheirs','blockerYours','owners','lineage',
+    'quality','compliance','incident','decider','influencer','blocker','sponsorAccess','budget',
+    'competition','process','unsaid','diagnosis','reco','nextStep','nextDate'];
+
+  /* ── puces systèmes ── */
+  $('#systems').innerHTML = SYSTEMS.map(function (s) {
+    return '<button type="button" class="chip" aria-pressed="false" data-sys="' + s + '">' + s + '</button>';
+  }).join('');
+  $('#systems').addEventListener('click', function (e) {
+    var c = e.target.closest('.chip'); if (!c) return;
+    c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    touch();
+  });
+
+  /* ── blocs répétables ── */
+  function frictionBlock(i) {
+    return '<div class="item" data-friction>' +
+      '<div class="item-head"><b>Friction ' + i + '</b><button type="button" class="kill" data-kill>retirer</button></div>' +
+      '<div class="grid"><div><label>Ce qui coince</label>' +
+        '<textarea data-f="what" placeholder="La double saisie entre l\'ERP et le MES sur les contrôles qualité."></textarea></div></div>' +
+      '<div class="grid g3">' +
+        '<div><label>Qui la subit</label><input data-f="who" placeholder="Les équipes qualité"></div>' +
+        '<div><label>À quelle fréquence</label><input data-f="freq" placeholder="Chaque vendredi"></div>' +
+        '<div><label>Temps perdu estimé</label><input data-f="cost" placeholder="≈ 340 h/an"></div>' +
+      '</div>' +
+      '<div class="grid"><div><label>Comment ils compensent aujourd\'hui</label>' +
+        '<input data-f="workaround" placeholder="Réconciliation manuelle sur un fichier partagé"></div></div>' +
+    '</div>';
+  }
+  function quoteBlock(i) {
+    return '<div class="item" data-quote>' +
+      '<div class="item-head"><b>Phrase ' + i + '</b><button type="button" class="kill" data-kill>retirer</button></div>' +
+      '<textarea data-q placeholder="Ses mots exacts, entre guillemets dans votre tête."></textarea>' +
+    '</div>';
+  }
+  function renumber() {
+    $$('#frictions [data-friction] b').forEach(function (b, i) { b.textContent = 'Friction ' + (i + 1); });
+    $$('#quotes [data-quote] b').forEach(function (b, i) { b.textContent = 'Phrase ' + (i + 1); });
+  }
+  function addFriction(fill) {
+    var d = document.createElement('div');
+    d.innerHTML = frictionBlock($$('#frictions [data-friction]').length + 1);
+    var el = d.firstChild; $('#frictions').appendChild(el);
+    if (fill) Object.keys(fill).forEach(function (k) {
+      var f = el.querySelector('[data-f="' + k + '"]'); if (f) f.value = fill[k];
+    });
+    return el;
+  }
+  function addQuote(text) {
+    var d = document.createElement('div');
+    d.innerHTML = quoteBlock($$('#quotes [data-quote]').length + 1);
+    var el = d.firstChild; $('#quotes').appendChild(el);
+    if (text) el.querySelector('[data-q]').value = text;
+    return el;
+  }
+  $('#addFriction').addEventListener('click', function () { addFriction(); touch(); });
+  $('#addQuote').addEventListener('click', function () { addQuote(); touch(); });
+  document.addEventListener('click', function (e) {
+    if (e.target.matches('[data-kill]')) { e.target.closest('.item').remove(); renumber(); touch(); }
+  });
+
+  /* ── état ── */
+  function collect() {
+    var o = { v: 1, savedAt: new Date().toISOString() };
+    FIELDS.forEach(function (f) { var e = $('#' + f); o[f] = e ? e.value.trim() : ''; });
+    o.systems = $$('#systems .chip[aria-pressed="true"]').map(function (c) { return c.dataset.sys; });
+    o.frictions = $$('#frictions [data-friction]').map(function (el) {
+      var g = function (k) { var i = el.querySelector('[data-f="' + k + '"]'); return i ? i.value.trim() : ''; };
+      return { what: g('what'), who: g('who'), freq: g('freq'), cost: g('cost'), workaround: g('workaround') };
+    }).filter(function (f) { return f.what || f.cost; });
+    o.quotes = $$('#quotes [data-q]').map(function (t) { return t.value.trim(); }).filter(Boolean);
+    return o;
+  }
+
+  function restore(o) {
+    FIELDS.forEach(function (f) { var e = $('#' + f); if (e && o[f] != null) e.value = o[f]; });
+    $$('#systems .chip').forEach(function (c) {
+      c.setAttribute('aria-pressed', (o.systems || []).indexOf(c.dataset.sys) >= 0 ? 'true' : 'false');
+    });
+    $('#frictions').innerHTML = ''; $('#quotes').innerHTML = '';
+    (o.frictions && o.frictions.length ? o.frictions : [null]).forEach(function (f) { addFriction(f); });
+    (o.quotes && o.quotes.length ? o.quotes : [null]).forEach(function (q) { addQuote(q); });
+    renumber();
+  }
+
+  /* ── qualification ──
+     Cinq axes, deux points chacun. Les seuils sont explicités dans le verdict :
+     l'outil aide à décider, il ne décide pas à la place. */
+  var AXES = [
+    { id: 'trig', label: 'Déclencheur daté',    hint: 'section 02',
+      score: function (o) { return o.triggerStrength === 'fort' ? 2 : o.triggerStrength === 'moyen' ? 1 : 0; } },
+    { id: 'pain', label: 'Douleur chiffrable',  hint: 'section 04',
+      score: function (o) {
+        var chiffrees = o.frictions.filter(function (f) { return f.cost; }).length;
+        return chiffrees >= 2 ? 2 : chiffrees === 1 ? 1 : o.frictions.length ? 1 : 0;
+      } },
+    { id: 'spon', label: 'Accès au décideur',   hint: 'section 07',
+      score: function (o) { return o.sponsorAccess === 'oui' ? 2 : o.sponsorAccess === 'partiel' ? 1 : 0; } },
+    { id: 'budg', label: 'Budget identifiable', hint: 'section 07',
+      score: function (o) { return o.budget === 'oui' ? 2 : o.budget === 'partiel' ? 1 : 0; } },
+    { id: 'next', label: 'Prochaine étape engagée', hint: 'section 09',
+      score: function (o) { return o.nextStep && o.nextDate ? 2 : o.nextStep ? 1 : 0; } }
+  ];
+
+  function qualify(o) {
+    var detail = AXES.map(function (a) { return { label: a.label, hint: a.hint, s: a.score(o) }; });
+    return { detail: detail, total: detail.reduce(function (n, d) { return n + d.s; }, 0) };
+  }
+
+  function paintVerdict(o) {
+    var q = qualify(o);
+    $('#axes').innerHTML = q.detail.map(function (d) {
+      return '<div class="axis ' + (d.s === 2 ? 'full' : d.s === 1 ? 'part' : '') + '">' +
+        '<span class="dot"></span><span>' + d.label + '</span><em>' + d.hint + '</em></div>';
+    }).join('');
+
+    var v = $('#verdict'), t = q.total;
+    var etat = t >= 8
+      ? ['v-go',   'Porte-clés justifié',  'Fabriquez-le dans les 48 h, pendant que le rendez-vous est encore frais dans sa tête.']
+      : t >= 5
+      ? ['v-wait', 'À requalifier',        'Il manque de quoi rendre la page spécifique. Un appel de dix minutes vaut mieux qu\'un porte-clés générique.']
+      : ['v-no',   'Pas encore mûr',       'Une relance simple suffit. Gardez l\'objet pour un dossier où il fera une différence.'];
+    v.className = 'verdict ' + etat[0];
+    v.innerHTML = '<b>' + etat[1] + ' · ' + t + '/10</b><p>' + etat[2] + '</p>';
+  }
+
+  /* ── enregistrement au fil de la frappe ── */
+  var timer = null;
+  function touch() {
+    var o = collect();
+    paintVerdict(o);
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(o));
+        var h = new Date();
+        $('#savestate').textContent = 'enregistré à ' +
+          String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0');
+      } catch (e) { $('#savestate').textContent = 'enregistrement impossible'; }
+    }, 400);
+  }
+  document.addEventListener('input', touch);
+  document.addEventListener('change', touch);
+
+  /* ── archive ── */
+  function readArchive() {
+    try { return JSON.parse(localStorage.getItem(ARCHIVE) || '[]'); } catch (e) { return []; }
+  }
+  function paintArchive() {
+    var a = readArchive();
+    if (!a.length) { $('#archive').innerHTML = '<p class="empty">Aucun pour le moment.</p>'; return; }
+    $('#archive').innerHTML = '<ul>' + a.map(function (o, i) {
+      var qui = [o.firstName, o.company].filter(Boolean).join(' — ') || 'Sans nom';
+      return '<li><button type="button" data-load="' + i + '">' + qui + '</button>' +
+             '<span class="when">' + (o.date || '') + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  $('#archive').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-load]'); if (!b) return;
+    var o = readArchive()[+b.dataset.load]; if (!o) return;
+    restore(o); touch(); flash('Rendez-vous rechargé.');
+  });
+
+  function flash(t) { $('#flash').textContent = t; setTimeout(function () { $('#flash').textContent = ''; }, 3000); }
+
+  $('#saveNew').addEventListener('click', function () {
+    var o = collect();
+    if (!o.firstName && !o.company) { flash('Rien à enregistrer.'); return; }
+    var a = readArchive(); a.unshift(o);
+    try { localStorage.setItem(ARCHIVE, JSON.stringify(a.slice(0, 40))); } catch (e) {}
+    localStorage.removeItem(KEY);
+    restore({ frictions: [], quotes: [] });
+    FIELDS.forEach(function (f) { var e = $('#' + f); if (e) e.value = ''; });
+    $('#time').value = '14:30';
+    $('#date').value = new Date().toISOString().slice(0, 10);
+    paintArchive(); touch(); flash('Enregistré. Grille vierge.');
+  });
+
+  /* ── compte rendu ── */
+  function summary(o) {
+    var L = [];
+    var qui = [o.firstName, o.lastName].filter(Boolean).join(' ');
+    L.push('RENDEZ-VOUS — ' + (qui || '?') + (o.role ? ', ' + o.role : '') + (o.company ? ' (' + o.company + ')' : ''));
+    L.push(o.date + (o.time ? ' ' + o.time : '') + (o.place ? ' ' + o.place : ''));
+    if (o.others) L.push('Également présents : ' + o.others);
+    if (o.trigger) L.push('\nDÉCLENCHEUR\n' + o.trigger + (o.deadline ? '\nÉchéance : ' + o.deadline : ''));
+    if (o.doNothing) L.push('S\'ils ne font rien : ' + o.doNothing);
+    var sys = (o.systems || []).concat(o.systemsOther ? o.systemsOther.split(',').map(function (s) { return s.trim(); }) : []).filter(Boolean);
+    if (sys.length) L.push('\nTERRAIN\nSystèmes : ' + sys.join(', '));
+    if (o.refSource) L.push('Référentiel faisant foi : ' + o.refSource);
+    if (o.team) L.push('Équipe data : ' + o.team);
+    if (o.frictions.length) {
+      L.push('\nFRICTIONS');
+      o.frictions.forEach(function (f) {
+        L.push('- ' + f.what + [f.who && ' / ' + f.who, f.freq && ' / ' + f.freq, f.cost && ' / ' + f.cost]
+          .filter(Boolean).join(''));
+      });
+    }
+    if (o.pilots || o.pilotState) L.push('\nIA\n' + [o.pilots, o.pilotState && 'État : ' + o.pilotState,
+      o.blockerTheirs && 'Leur lecture : ' + o.blockerTheirs, o.blockerYours && 'Ma lecture : ' + o.blockerYours]
+      .filter(Boolean).join('\n'));
+    var gouv = [o.owners && 'propriétaires ' + o.owners, o.lineage && 'lineage ' + o.lineage,
+                o.quality && 'qualité ' + o.quality].filter(Boolean);
+    if (gouv.length) L.push('\nGOUVERNANCE\n' + gouv.join(' · '));
+    if (o.decider || o.budget) L.push('\nDÉCISION\n' + [o.decider && 'Signe : ' + o.decider,
+      o.influencer && 'Influence : ' + o.influencer, o.blocker && 'Bloque : ' + o.blocker,
+      o.budget && 'Budget : ' + o.budget, o.process].filter(Boolean).join('\n'));
+    if (o.quotes.length) L.push('\nVERBATIMS\n' + o.quotes.map(function (q) { return '« ' + q + ' »'; }).join('\n'));
+    if (o.diagnosis || o.reco) L.push('\nMA LECTURE\n' + [o.unsaid, o.diagnosis, o.reco].filter(Boolean).join('\n'));
+    if (o.nextStep) L.push('\nSUITE : ' + o.nextStep + (o.nextDate ? ' — ' + o.nextDate : ''));
+    L.push('\nQualification : ' + qualify(o).total + '/10');
+    return L.join('\n');
+  }
+
+  function copy(text, ok) {
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(ok, function () { legacy(text, ok); });
+    else legacy(text, ok);
+  }
+  function legacy(text, ok) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); ok(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  $('#copySummary').addEventListener('click', function () {
+    copy(summary(collect()), function () { flash('Compte rendu copié.'); });
+  });
+
+  /* ── passage au porte-clés ── */
+  function missingFor(o) {
+    var m = [];
+    if (!o.firstName) m.push('le prénom');
+    if (!o.date) m.push('la date du rendez-vous');
+    if (!o.quotes.length) m.push('au moins une phrase de lui');
+    if (!o.frictions.filter(function (f) { return f.cost; }).length) m.push('une friction chiffrée');
+    return m;
+  }
+
+  $('#toKeychain').addEventListener('click', function () {
+    var o = collect();
+    var m = missingFor(o);
+    $('#missing').textContent = m.length
+      ? 'La page sera générique sans ' + m.join(', ') + '. Vous pouvez continuer, mais l\'effet en dépend.'
+      : '';
+    try {
+      sessionStorage.setItem('si-decouverte', JSON.stringify(o));
+      window.open('../k/nouveau.html?depuis=decouverte', '_blank');
+    } catch (e) {
+      flash('Impossible de transmettre — copiez le compte rendu.');
+    }
+  });
+
+  /* ── démarrage ── */
+  var start = null;
+  try { start = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (start) { restore(start); }
+  else { restore({ frictions: [], quotes: [] }); $('#date').value = new Date().toISOString().slice(0, 10); }
+  paintArchive();
+  touch();
+})();
+</script>
+</body>
+</html>

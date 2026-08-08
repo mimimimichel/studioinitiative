@@ -91,14 +91,44 @@ qu'on tend en main.
 
 ---
 
-## Étape 4 — Créer un dossier prospect (deux minutes, après chaque rendez-vous)
+## Étape 4 — Le rendez-vous, puis le dossier
 
-1. Ouvrez **`votre-site.com/k/nouveau.html`**. Mettez-la en favori.
-2. Remplissez le formulaire pendant que le rendez-vous est frais.
-3. **« Voir le résultat »** ouvre la page exactement telle qu'il la verra.
+Deux outils qui s'enchaînent. Mettez les deux en favori.
+
+### Pendant et juste après l'entretien — `votre-site.com/atelier/decouverte.html`
+
+La grille de découverte suit le déroulé d'un vrai entretien : le cadre, pourquoi
+maintenant, le terrain, les frictions, la maturité IA, la gouvernance, qui décide,
+ses mots, votre lecture. Tout s'enregistre au fil de la frappe sur l'appareil —
+si vous fermez l'onglet, vous retrouvez tout.
+
+Le panneau de droite note le rendez-vous sur cinq axes et vous dit **si l'objet
+vaut le coup** : un porte-clés sur mesure vous coûte du temps, autant le réserver
+aux dossiers où il fera une différence. En dessous de 5/10, une relance simple
+suffit.
+
+La section **« Ses mots »** est la plus importante. Notez les phrases telles
+qu'il les prononce : c'est ce qu'il relira, et il reconnaîtra la sienne au mot près.
+La section **« Votre lecture »** se remplit juste après, dans la voiture — elle
+nourrit l'agent conversationnel et ne s'affiche jamais à l'écran.
+
+### Puis — **« Préparer le porte-clés »**
+
+Le bouton ouvre le générateur **déjà rempli** avec vos notes : identité, date,
+verbatims, constats chiffrés, et le brief complet de l'agent rédigé à partir de
+vos réponses. Rien n'est inventé — les champs qui demandent une décision
+éditoriale restent vides exprès :
+
+- le **titre court** de chaque constat chiffré ;
+- le **travail des agents**, qui doit décrire ce que vous avez réellement produit
+  depuis le rendez-vous. N'annoncez jamais un livrable que vous n'avez pas fait.
+
+Ensuite :
+
+1. **« Voir le résultat »** ouvre la page exactement telle qu'il la verra.
    Corrigez, regardez à nouveau, autant de fois que nécessaire. Rien n'est publié.
-4. Quand c'est bon : **« Télécharger »**.
-5. Sur GitHub → dossier `k/data` → **Add file → Upload files** → glissez le
+2. Quand c'est bon : **« Télécharger »**.
+3. Sur GitHub → dossier `k/data` → **Add file → Upload files** → glissez le
    fichier → **Commit changes**.
 
 Une minute plus tard, l'adresse est vivante.
