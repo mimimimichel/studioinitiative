@@ -1,0 +1,71 @@
+{
+  "id": "DEMO",
+  "prospect": {
+    "firstName": "Bienvenue",
+    "company": "Studio Initiative"
+  },
+  "meeting": {
+    "datetime": "2026-06-01T09:00:00+02:00",
+    "line": "Ce porte-clés n'est pas encore rattaché à un dossier. Voici ce qu'il affiche quand il l'est."
+  },
+  "sinceLabel": "Depuis l'ouverture du cabinet, il s'est écoulé",
+  "sinceKicker": "Et les agents n'ont pas arrêté.",
+  "quotes": [],
+  "agents": [
+    {
+      "name": "Gouvernance",
+      "line": "Cartographie vos domaines de données, désigne les propriétaires manquants et trace la circulation réelle de l'information — pas celle du schéma d'architecture.",
+      "meta": "cartographie · lineage · conformité"
+    },
+    {
+      "name": "Qualité data",
+      "line": "Cherche les points de rupture : doubles saisies, réconciliations manuelles, référentiels concurrents. C'est presque toujours là que se cache le plafond de verre des projets IA.",
+      "meta": "contrôle · alerte · correction"
+    },
+    {
+      "name": "Pipelines",
+      "line": "Esquisse l'ontologie et les flux — sur Palantir Foundry notamment — puis génère, teste et déploie ce que le consultant a arbitré.",
+      "meta": "génération · test · déploiement"
+    },
+    {
+      "name": "Documentation",
+      "line": "Rédige le cadrage, le tient à jour au fil de la mission, et produit les livrables lisibles par un comité de direction plutôt que par un data engineer.",
+      "meta": "rédaction · mise à jour continue"
+    }
+  ],
+  "findings": [
+    {
+      "value": "1",
+      "unit": "consultant",
+      "label": "Un interlocuteur, pas une équipe",
+      "detail": "Un senior porte la mission de bout en bout. Les agents absorbent le volume, il garde l'arbitrage et la relation."
+    },
+    {
+      "value": "6",
+      "unit": "semaines",
+      "label": "Premier produit en production",
+      "detail": "L'ordre de grandeur de nos missions de démarrage, gouvernance construite chemin faisant plutôt qu'en préalable."
+    },
+    {
+      "value": "100",
+      "unit": "%",
+      "label": "Validé par un humain",
+      "detail": "Rien n'est livré sans relecture du consultant. Les agents proposent, il décide — c'est la règle du cabinet."
+    }
+  ],
+  "briefNote": "Rattaché à un dossier, cet écran affiche votre nom, la date de notre rendez-vous et le travail réellement produit depuis — pas cette page générique.",
+  "closeLead": "Studio Initiative est un cabinet de conseil en data et intelligence artificielle. Des consultants seniors, augmentés par des agents IA qui absorbent le volume du delivery.",
+  "cta": {
+    "calendarUrl": null,
+    "docUrl": null
+  },
+  "chat": {
+    "opener": "Bonjour. Je suis l'agent de Studio Initiative — cabinet de conseil en data et IA, basé à Toulouse. Posez-moi vos questions sur notre modèle, nos interventions ou la gouvernance des données.",
+    "suggestions": [
+      "C'est quoi, un consultant augmenté ?",
+      "Vous intervenez sur quoi exactement ?",
+      "Pourquoi la gouvernance des données ?"
+    ],
+    "context": "Aucun dossier prospect n'est rattaché à ce tag. Tu réponds en mode découverte : présente le cabinet, son modèle et ses interventions, et invite à prendre contact pour un cadrage. Tu n'as aucune information personnelle sur ton interlocuteur — ne fais semblant d'en avoir aucune."
+  }
+}

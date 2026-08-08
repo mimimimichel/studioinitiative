@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Studio Initiative</title>
+<meta name="theme-color" content="#060f22">
+<meta name="description" content="Accès privé Studio Initiative.">
+<link rel="icon" href="../assets/img/logo-mark-square.png" type="image/png">
+<link rel="apple-touch-icon" href="../assets/img/logo-mark-square.png">
+
+<!-- Peinture immédiate : aucun flash blanc avant le CSS externe. -->
+<style>
+  html, body { margin:0; background:#060f22; color:#f2f5f9; }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .boot-hide { opacity:0; }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/scan.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scan-mesh" aria-hidden="true"></div>
+
+<header class="scan-top">
+  <a class="scan-brand" href="/">
+    <img src="../assets/img/logo-mark.png" alt="" class="scan-brand-mark">
+    <span class="scan-brand-name">Studio Initiative</span>
+  </a>
+  <button type="button" class="skip-btn" id="skip-btn" hidden>Passer l'intro <span aria-hidden="true">↓</span></button>
+</header>
+
+<main id="scan-main" aria-live="polite">
+
+  <!-- ══════════ ACTE I — La reconnaissance ══════════ -->
+  <section class="act act-reveal" id="act-reveal">
+    <div class="reveal-inner">
+
+      <div class="tag-line" id="tag-line">
+        <span class="tag-dot" aria-hidden="true"></span>
+        <span class="tag-text" id="tag-text"></span>
+      </div>
+
+      <h1 class="hello" id="hello"><span class="hello-name" id="hello-name"></span></h1>
+
+      <p class="meeting-line" id="meeting-line"></p>
+
+      <div class="since" id="since">
+        <p class="since-label">Depuis notre rendez-vous, il s'est écoulé</p>
+        <p class="since-counter" id="since-counter" aria-live="off">
+          <span class="unit"><b data-count="d">0</b><i>jours</i></span>
+          <span class="unit"><b data-count="h">0</b><i>heures</i></span>
+          <span class="unit"><b data-count="m">0</b><i>minutes</i></span>
+        </p>
+        <p class="since-kicker" id="since-kicker">Nos agents n'ont pas arrêté.</p>
+      </div>
+
+      <div class="scroll-cue" id="scroll-cue" hidden>
+        <span>Voir ce qu'ils ont produit</span>
+        <span class="scroll-arrow" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ACTE II — Les agents rendent compte ══════════ -->
+  <section class="act act-agents" id="act-agents">
+    <div class="wrap">
+      <p class="kicker">Travaux menés depuis</p>
+      <h2 class="h2">Quatre agents, <em>sur votre dossier</em></h2>
+
+      <div class="constellation-wrap">
+        <svg class="constellation" viewBox="0 0 640 300" aria-hidden="true">
+          <g class="stars">
+            <circle cx="42" cy="46" r="1.8"/><circle cx="168" cy="22" r="1.3"/>
+            <circle cx="330" cy="38" r="1.8"/><circle cx="486" cy="20" r="1.3"/>
+            <circle cx="604" cy="62" r="1.8"/><circle cx="618" cy="214" r="1.3"/>
+            <circle cx="470" cy="284" r="1.6"/><circle cx="222" cy="290" r="1.3"/>
+            <circle cx="58" cy="256" r="1.8"/><circle cx="20" cy="150" r="1.3"/>
+            <line x1="42" y1="46" x2="168" y2="22"/><line x1="330" y1="38" x2="486" y2="20"/>
+            <line x1="604" y1="62" x2="618" y2="214"/><line x1="470" y1="284" x2="222" y2="290"/>
+            <line x1="58" y1="256" x2="20" y2="150"/>
+          </g>
+          <g class="beams" id="beams"></g>
+        </svg>
+        <div class="core" id="core">
+          <span class="core-label">Votre<br>dossier</span>
+          <span class="core-sub" id="core-sub"></span>
+        </div>
+      </div>
+
+      <ol class="agent-log" id="agent-log"></ol>
+    </div>
+  </section>
+
+  <!-- ══════════ ACTE III — Le livrable ══════════ -->
+  <section class="act act-brief" id="act-brief">
+    <div class="wrap">
+
+      <div class="brief-block" id="quotes-block">
+        <p class="kicker">Ce que vous nous avez dit</p>
+        <h2 class="h2">Vos mots, <em>pas les nôtres</em></h2>
+        <div class="quotes" id="quotes"></div>
+      </div>
+
+      <div class="brief-block">
+        <p class="kicker">Ce qu'on en a fait</p>
+        <h2 class="h2">Premier diagnostic</h2>
+        <div class="findings" id="findings"></div>
+        <p class="brief-note" id="brief-note"></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ ACTE IV — L'agent ══════════ -->
+  <section class="act act-chat" id="act-chat">
+    <div class="wrap">
+      <p class="kicker">Poursuivre</p>
+      <h2 class="h2">Des questions ? <em>L'agent a tout le contexte.</em></h2>
+      <p class="chat-intro">Il connaît votre dossier, notre méthode et nos interventions. Écrivez, ou parlez-lui.</p>
+
+      <div class="chat-panel" id="chat-panel">
+        <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Conversation avec l'agent"></div>
+
+        <div class="chat-chips" id="chat-chips"></div>
+
+        <form class="chat-form" id="chat-form" autocomplete="off">
+          <label class="sr-only" for="chat-input">Votre message</label>
+          <input type="text" id="chat-input" class="chat-input" placeholder="Posez votre question…" maxlength="600">
+          <button type="button" class="chat-mic" id="chat-mic" hidden aria-label="Parler à l'agent" title="Parler à l'agent">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-5a3.5 3.5 0 1 0-7 0v5A3.5 3.5 0 0 0 12 15Z" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 11.2a6.5 6.5 0 0 0 13 0M12 17.7V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <button type="submit" class="chat-send" id="chat-send" aria-label="Envoyer">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+
+        <div class="chat-foot">
+          <button type="button" class="chat-tts" id="chat-tts" hidden aria-pressed="false">
+            <span class="tts-dot" aria-hidden="true"></span> Lecture vocale des réponses
+          </button>
+          <p class="chat-legal">Agent IA. Conversation non enregistrée, non transmise à un tiers publicitaire. <a href="#mentions">Détail</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ACTE V — La suite ══════════ -->
+  <section class="act act-close" id="act-close">
+    <div class="wrap">
+      <h2 class="h2 close-h2">La suite vous appartient.</h2>
+      <p class="close-lead" id="close-lead"></p>
+
+      <div class="close-actions" id="close-actions"></div>
+
+      <div class="signature">
+        <img src="../assets/img/logo-mark.png" alt="" class="sig-mark">
+        <div>
+          <p class="sig-name">Michael Lozano</p>
+          <p class="sig-role">Studio Initiative — conseil data &amp; IA, Toulouse</p>
+          <p class="sig-mail"><a href="mailto:contact@studioinitiative.com">contact@studioinitiative.com</a></p>
+        </div>
+      </div>
+
+      <details class="mentions" id="mentions">
+        <summary>Comment cette page fonctionne, et ce qu'elle sait de vous</summary>
+        <div class="mentions-body">
+          <p>Ce porte-clés contient une puce NFC qui pointe vers une adresse courte propre à votre dossier. Aucun traceur publicitaire, aucun cookie tiers, aucun revendeur de données.</p>
+          <p><strong>Ce que nous savons :</strong> les éléments que vous nous avez donnés en rendez-vous, et le fait que ce tag a été scanné (date et heure). Rien d'autre — pas votre position, pas votre carnet d'adresses, pas votre identité téléphonique.</p>
+          <p><strong>La conversation avec l'agent</strong> est traitée le temps de la réponse et n'est pas conservée après la fermeture de la page. Le micro n'est activé que si vous appuyez sur le bouton, et s'arrête dès que vous relâchez le sujet.</p>
+          <p><strong>Vos droits :</strong> accès, rectification, effacement — un mot à <a href="mailto:contact@studioinitiative.com">contact@studioinitiative.com</a> suffit, et nous supprimons ce dossier et désactivons le lien sous 72 h.</p>
+          <p class="mentions-meta" id="mentions-meta"></p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<noscript>
+  <div class="wrap" style="padding:120px 0">
+    <h2 class="h2">Studio Initiative</h2>
+    <p style="color:rgba(242,245,249,.62)">Cette page a besoin de JavaScript. Écrivez-nous à <a href="mailto:contact@studioinitiative.com" style="color:#6fe3ee">contact@studioinitiative.com</a>.</p>
+  </div>
+</noscript>
+
+<script src="assets/scan.js"></script>
+</body>
+</html>

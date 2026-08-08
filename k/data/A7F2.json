@@ -1,0 +1,75 @@
+{
+  "id": "A7F2",
+  "prospect": {
+    "firstName": "Marc",
+    "lastName": "Delaunay",
+    "role": "Directeur Industriel",
+    "company": "Aerolithe"
+  },
+  "meeting": {
+    "datetime": "2026-08-04T14:30:00+02:00",
+    "place": "à Blagnac"
+  },
+  "quotes": [
+    "On a de la donnée partout, mais personne ne sait laquelle fait foi.",
+    "Mes équipes qualité ressaisissent à la main ce que l'ERP contient déjà.",
+    "J'ai deux pilotes IA qui tournent depuis un an. Aucun n'est passé en production."
+  ],
+  "agents": [
+    {
+      "name": "Gouvernance",
+      "line": "Cartographié les quatre domaines que vous avez cités — Production, Qualité, Supply, Maintenance — et identifié les trois zones où aucun propriétaire de donnée n'est désigné.",
+      "meta": "4 domaines · 3 zones sans propriétaire"
+    },
+    {
+      "name": "Qualité data",
+      "line": "Isolé le point de rupture : la double saisie entre l'ERP et le MES sur les contrôles qualité. C'est là que naissent les écarts que vos équipes passent leurs vendredis à réconcilier.",
+      "meta": "1 rupture structurante"
+    },
+    {
+      "name": "Pipelines",
+      "line": "Esquissé une première ontologie Foundry pour le périmètre Qualité : 6 objets, 3 liens, un modèle qui tient sur une page et que vos métiers peuvent lire.",
+      "meta": "6 objets · 3 liens"
+    },
+    {
+      "name": "Documentation",
+      "line": "Rédigé la note de cadrage correspondante — objectifs, périmètre, jalons, conditions de bascule en production. Neuf pages, prêtes à circuler en comité.",
+      "meta": "9 pages · prêtes à lire"
+    }
+  ],
+  "findings": [
+    {
+      "value": "≈ 340",
+      "unit": "h/an",
+      "label": "Ressaisie évitable",
+      "detail": "Estimation basse sur le seul périmètre Qualité, à partir du volume de contrôles que vous avez décrit."
+    },
+    {
+      "value": "0",
+      "unit": "",
+      "label": "Traçabilité amont",
+      "detail": "Aucun lineage sur les données qualité. C'est le plafond de verre de vos deux pilotes IA — pas le modèle."
+    },
+    {
+      "value": "6",
+      "unit": "semaines",
+      "label": "Premier produit data",
+      "detail": "Délai réaliste pour un premier cas d'usage en production sur ce périmètre, gouvernance incluse."
+    }
+  ],
+  "briefNote": "Ces ordres de grandeur viennent de ce que vous nous avez décrit mardi et de nos repères de mission. Ils sont là pour être contredits par vos chiffres réels — c'est exactement l'objet du cadrage.",
+  "closeLead": "Vos deux pilotes ne plafonnent pas sur le modèle, ils plafonnent sur la gouvernance. C'est réparable, et ça se chiffre en semaines, pas en trimestres.",
+  "cta": {
+    "calendarUrl": "https://calendly.com/studioinitiative/cadrage",
+    "docUrl": null
+  },
+  "chat": {
+    "opener": "Bonjour Marc. J'ai le contexte de votre rendez-vous de mardi et le détail de ce que les agents ont produit depuis. Demandez-moi ce que vous voulez — le chiffrage, la méthode, ce qui se passe concrètement les deux premières semaines.",
+    "suggestions": [
+      "D'où sortent les 340 heures ?",
+      "Pourquoi mes pilotes IA ne passent pas en prod ?",
+      "Concrètement, les deux premières semaines ?"
+    ],
+    "context": "Marc Delaunay, Directeur Industriel d'Aerolithe (équipementier aéronautique, ~600 personnes, région toulousaine). Rendez-vous du mardi 4 août 2026 à Blagnac.\n\nCe qu'il a exposé : données éclatées entre ERP, MES et fichiers Excel métiers ; pas de référentiel faisant foi ; double saisie entre ERP et MES sur les contrôles qualité, avec réconciliation manuelle hebdomadaire ; deux pilotes IA (maintenance prédictive et contrôle visuel) lancés il y a un an, aucun passé en production ; pression du groupe pour montrer des résultats IA sur l'exercice.\n\nCe qu'il n'a pas dit mais qui transparaît : pas de sponsor unique côté data, la DSI et les métiers se renvoient la responsabilité ; budget probablement déjà consommé par les pilotes.\n\nAnalyse Studio Initiative : le blocage n'est pas modèle, il est gouvernance — absence de lineage et de propriétaires de données. Recommandation : cadrage de 2 semaines sur le périmètre Qualité seul, puis un premier produit data en production à 6 semaines, avec la gouvernance construite chemin faisant plutôt qu'en préalable."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "studioinitiative",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site vitrine Studio Initiative + page de scan NFC (porte-clés prospect)",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0"
+  }
+}
