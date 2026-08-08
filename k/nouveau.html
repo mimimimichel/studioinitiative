@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Nouveau dossier — Studio Initiative</title>
+<link rel="icon" href="../assets/img/logo-mark-square.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#060f22; --surface:rgba(245,247,250,.05); --border:rgba(245,247,250,.12);
+    --text:#f2f5f9; --dim:rgba(242,245,249,.62); --faint:rgba(242,245,249,.38);
+    --cyan:#0eeaf6; --cyan-soft:#6fe3ee;
+    --disp:"Space Grotesk","Inter",sans-serif; --body:"Inter",-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.6}
+  a{color:var(--cyan-soft)}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:-.02em;margin:0 0 .4em}
+  .page{max-width:1180px;margin:0 auto;padding:40px 24px 120px}
+
+  header.top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  header.top img{width:26px;height:26px}
+  header.top span{font-family:var(--disp);font-weight:600}
+  h1{font-size:1.9rem;margin-top:18px}
+  .lead{color:var(--dim);max-width:640px;margin:0 0 34px}
+
+  .cols{display:grid;gap:34px;align-items:start}
+  @media (min-width:1000px){.cols{grid-template-columns:1fr 400px}}
+
+  fieldset{border:1px solid var(--border);border-radius:18px;padding:22px;margin:0 0 20px;background:var(--surface)}
+  legend{font-family:var(--disp);font-weight:600;font-size:.82rem;letter-spacing:.13em;
+         text-transform:uppercase;color:var(--cyan-soft);padding:0 10px}
+  .hint{color:var(--faint);font-size:.82rem;margin:-4px 0 16px;line-height:1.5}
+  label{display:block;font-size:.8rem;color:var(--dim);margin:0 0 6px;font-weight:500}
+  .row{display:grid;gap:14px;margin-bottom:14px}
+  @media (min-width:640px){.row.two{grid-template-columns:1fr 1fr}.row.three{grid-template-columns:1fr 1fr 2fr}}
+  input,textarea,select{
+    width:100%;background:rgba(6,15,34,.7);border:1px solid var(--border);border-radius:10px;
+    padding:11px 13px;color:var(--text);font-family:var(--body);font-size:.95rem;outline:none;
+    transition:border-color .2s
+  }
+  input:focus,textarea:focus{border-color:rgba(14,234,246,.55)}
+  textarea{resize:vertical;min-height:70px;line-height:1.55}
+  .agent-grid{border-top:1px solid var(--border);padding-top:16px;margin-top:16px}
+  .agent-grid:first-of-type{border-top:none;padding-top:0;margin-top:0}
+  .agent-title{font-family:var(--disp);font-size:.9rem;color:var(--cyan-soft);margin:0 0 10px}
+
+  .side{position:sticky;top:24px}
+  .card{border:1px solid var(--border);border-radius:18px;padding:20px;background:var(--surface);margin-bottom:16px}
+  .card h3{font-size:1rem;margin-bottom:12px}
+  .url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem;color:var(--cyan-soft);
+       word-break:break-all;background:rgba(6,15,34,.7);border:1px solid var(--border);
+       border-radius:10px;padding:11px 13px;margin-bottom:12px}
+  pre{margin:0;max-height:280px;overflow:auto;background:rgba(6,15,34,.75);border:1px solid var(--border);
+      border-radius:10px;padding:13px;font-size:.74rem;line-height:1.5;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);white-space:pre-wrap;word-break:break-word}
+  .btns{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+  button{
+    border:1px solid var(--border);background:var(--surface);color:var(--text);
+    border-radius:999px;padding:11px 19px;font-family:var(--body);font-size:.88rem;font-weight:600;
+    cursor:pointer;transition:background .2s,border-color .2s,color .2s
+  }
+  button:hover{border-color:rgba(14,234,246,.5);background:rgba(14,234,246,.1)}
+  button.primary{background:var(--cyan);color:#041019;border-color:transparent}
+  button.primary:hover{background:var(--cyan-soft);color:#041019}
+  button.mini{padding:7px 13px;font-size:.78rem;font-weight:500}
+  .ok{color:var(--cyan-soft);font-size:.82rem;min-height:1.3em;margin:10px 0 0}
+  .warn{color:#ffc9a8;font-size:.82rem;margin:10px 0 0}
+  ol.steps{color:var(--dim);font-size:.86rem;padding-left:20px;margin:0;line-height:1.75}
+  ol.steps code{background:rgba(6,15,34,.8);border:1px solid var(--border);border-radius:5px;
+                padding:1px 6px;font-size:.85em;color:var(--cyan-soft)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <img src="../assets/img/logo-mark.png" alt="">
+    <span>Studio Initiative</span>
+  </header>
+
+  <h1>Nouveau dossier prospect</h1>
+  <p class="lead">
+    Remplissez après le rendez-vous, pendant que c'est frais. Le formulaire fabrique le fichier —
+    vous n'écrivez pas une ligne de code. Vous pouvez voir le résultat exact avant de publier quoi que ce soit.
+  </p>
+
+  <div class="cols">
+
+    <!-- ══════ Formulaire ══════ -->
+    <form id="f" autocomplete="off">
+
+      <fieldset>
+        <legend>Le tag</legend>
+        <p class="hint">L'identifiant gravé dans la puce du porte-clés. Court, non devinable, jamais séquentiel.</p>
+        <div class="row two">
+          <div>
+            <label for="id">Identifiant</label>
+            <div style="display:flex;gap:8px">
+              <input id="id" name="id" maxlength="24" required>
+              <button type="button" class="mini" id="regen">Tirer</button>
+            </div>
+          </div>
+          <div>
+            <label for="domain">Votre domaine</label>
+            <input id="domain" name="domain" value="studioinitiative.com">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>La personne</legend>
+        <div class="row two">
+          <div><label for="firstName">Prénom <span style="color:var(--cyan-soft)">— s'affiche en très grand</span></label>
+            <input id="firstName" name="firstName" required></div>
+          <div><label for="lastName">Nom</label><input id="lastName" name="lastName"></div>
+        </div>
+        <div class="row two">
+          <div><label for="role">Fonction</label><input id="role" name="role" placeholder="Directeur Industriel"></div>
+          <div><label for="company">Entreprise</label><input id="company" name="company"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Le rendez-vous</legend>
+        <p class="hint">Le jour de la semaine et le compteur vivant se calculent tout seuls. N'écrivez jamais la date en toutes lettres ailleurs.</p>
+        <div class="row three">
+          <div><label for="date">Date</label><input type="date" id="date" name="date" required></div>
+          <div><label for="time">Heure</label><input type="time" id="time" name="time" value="14:30"></div>
+          <div><label for="place">Lieu <span style="color:var(--faint)">— se lit après la date</span></label>
+            <input id="place" name="place" placeholder="à Blagnac"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ses mots</legend>
+        <p class="hint">Deux ou trois phrases telles qu'il les a dites. Si vos notes ne sont pas fidèles, laissez vide — un faux verbatim se repère et ruine tout le reste.</p>
+        <div class="row"><textarea id="q1" placeholder="« On a de la donnée partout, mais personne ne sait laquelle fait foi. »"></textarea></div>
+        <div class="row"><textarea id="q2"></textarea></div>
+        <div class="row"><textarea id="q3"></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ce que les agents ont produit</legend>
+        <p class="hint">Une ligne concrète et vérifiable par agent, plus un repère chiffré. C'est le cœur de l'effet : il doit reconnaître son propre rendez-vous.</p>
+        <div id="agents"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Les trois constats</legend>
+        <p class="hint">Assumez l'ordre de grandeur — la page précise déjà qu'ils demandent confirmation.</p>
+        <div id="findings"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>La suite</legend>
+        <div class="row"><div><label for="closeLead">Phrase de clôture</label>
+          <textarea id="closeLead" placeholder="Vos deux pilotes ne plafonnent pas sur le modèle, ils plafonnent sur la gouvernance."></textarea></div></div>
+        <div class="row"><div><label for="calendarUrl">Lien de prise de rendez-vous <span style="color:var(--faint)">— vide : le bouton disparaît</span></label>
+          <input id="calendarUrl" placeholder="https://cal.com/…"></div></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>L'agent conversationnel</legend>
+        <div class="row"><div><label for="opener">Son premier message</label>
+          <textarea id="opener" placeholder="Bonjour Marc. J'ai le contexte de votre rendez-vous et le détail de ce que les agents ont produit depuis…"></textarea></div></div>
+        <div class="row three">
+          <div><label for="s1">Question suggérée 1</label><input id="s1"></div>
+          <div><label for="s2">Question 2</label><input id="s2"></div>
+          <div><label for="s3">Question 3</label><input id="s3"></div>
+        </div>
+        <div class="row"><div>
+          <label for="context">Brief privé de l'agent <span style="color:var(--cyan-soft)">— lu côté serveur uniquement, jamais affiché</span></label>
+          <p class="hint" style="margin:0 0 8px">Ce qu'il a dit, ce qu'il n'a pas dit, votre analyse, votre recommandation. C'est ce qui sépare un agent crédible d'un chatbot. Écrivez-le comme si l'intéressé pouvait le lire.</p>
+          <textarea id="context" style="min-height:150px"></textarea>
+        </div></div>
+      </fieldset>
+    </form>
+
+    <!-- ══════ Sortie ══════ -->
+    <aside class="side">
+      <div class="card">
+        <h3>Adresse du tag</h3>
+        <div class="url" id="url">—</div>
+        <div class="btns">
+          <button type="button" class="primary" id="preview">Voir le résultat</button>
+          <button type="button" id="copyUrl">Copier l'adresse</button>
+        </div>
+        <p class="ok" id="msg1"></p>
+      </div>
+
+      <div class="card">
+        <h3>Le fichier</h3>
+        <p class="hint" style="margin:0 0 10px">À déposer dans <code style="color:var(--cyan-soft)">k/data/</code> sous le nom <b id="fname">—</b></p>
+        <pre id="out">—</pre>
+        <div class="btns">
+          <button type="button" class="primary" id="copyJson">Copier</button>
+          <button type="button" id="download">Télécharger</button>
+        </div>
+        <p class="ok" id="msg2"></p>
+      </div>
+
+      <div class="card">
+        <h3>Publier</h3>
+        <ol class="steps">
+          <li>Téléchargez le fichier ci-dessus.</li>
+          <li>Sur GitHub, ouvrez le dossier <code>k/data</code>.</li>
+          <li><b>Add file → Upload files</b>, glissez le fichier, puis <b>Commit changes</b>.</li>
+          <li>Une minute plus tard, l'adresse est vivante. Gravez-la dans la puce.</li>
+        </ol>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+
+  /* — identifiant : alphabet sans caractères ambigus (ni O/0 ni I/1) — */
+  var ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function newId() {
+    var out = '', a = new Uint32Array(4);
+    (window.crypto || window.msCrypto).getRandomValues(a);
+    for (var i = 0; i < 4; i++) out += ALPHA[a[i] % ALPHA.length];
+    return out;
+  }
+
+  /* — blocs répétés — */
+  var AGENTS = [
+    ['Gouvernance',  'cartographie · lineage'],
+    ['Qualité data', 'contrôle · alerte'],
+    ['Pipelines',    'génération · déploiement'],
+    ['Documentation','rédaction · mise à jour']
+  ];
+  $('#agents').innerHTML = AGENTS.map(function (a, i) {
+    return '<div class="agent-grid">' +
+      '<p class="agent-title">Agent ' + a[0] + '</p>' +
+      '<div class="row"><textarea id="a' + i + 'line" placeholder="Ce que cet agent a produit sur son dossier…"></textarea></div>' +
+      '<div class="row"><input id="a' + i + 'meta" placeholder="Repère chiffré — ex. « ' + a[1] + ' »"></div>' +
+    '</div>';
+  }).join('');
+
+  $('#findings').innerHTML = [0, 1, 2].map(function (i) {
+    return '<div class="agent-grid">' +
+      '<div class="row three">' +
+        '<div><label>Valeur</label><input id="f' + i + 'value" placeholder="≈ 340"></div>' +
+        '<div><label>Unité</label><input id="f' + i + 'unit" placeholder="h/an"></div>' +
+        '<div><label>Titre</label><input id="f' + i + 'label" placeholder="Ressaisie évitable"></div>' +
+      '</div>' +
+      '<div class="row"><textarea id="f' + i + 'detail" placeholder="D\'où vient ce chiffre, et ce qu\'il vaut."></textarea></div>' +
+    '</div>';
+  }).join('');
+
+  /* — construction du dossier — */
+  var v = function (id) { var e = $('#' + id); return e ? e.value.trim() : ''; };
+
+  function build() {
+    var id = v('id') || 'XXXX';
+    var date = v('date') || new Date().toISOString().slice(0, 10);
+    var time = v('time') || '14:30';
+
+    // Décalage horaire local, pour que le compteur soit juste où qu'il scanne.
+    var local = new Date(date + 'T' + time + ':00');
+    var off = -local.getTimezoneOffset();
+    var pad = function (n) { return String(Math.floor(Math.abs(n))).padStart(2, '0'); };
+    var tz = (off >= 0 ? '+' : '-') + pad(off / 60) + ':' + pad(off % 60);
+
+    var d = {
+      id: id,
+      prospect: {
+        firstName: v('firstName'), lastName: v('lastName'),
+        role: v('role'), company: v('company')
+      },
+      meeting: { datetime: date + 'T' + time + ':00' + tz, place: v('place') },
+      quotes: ['q1', 'q2', 'q3'].map(v).filter(Boolean),
+      agents: AGENTS.map(function (a, i) {
+        return { name: a[0], line: v('a' + i + 'line'), meta: v('a' + i + 'meta') };
+      }).filter(function (a) { return a.line; }),
+      findings: [0, 1, 2].map(function (i) {
+        return { value: v('f' + i + 'value'), unit: v('f' + i + 'unit'),
+                 label: v('f' + i + 'label'), detail: v('f' + i + 'detail') };
+      }).filter(function (f) { return f.value || f.label; }),
+      closeLead: v('closeLead'),
+      cta: { calendarUrl: v('calendarUrl') || null, docUrl: null },
+      chat: {
+        opener: v('opener'),
+        suggestions: ['s1', 's2', 's3'].map(v).filter(Boolean),
+        context: v('context')
+      }
+    };
+    if (!d.closeLead) delete d.closeLead;
+    if (!d.chat.opener) delete d.chat.opener;
+    return d;
+  }
+
+  function refresh() {
+    var d = build();
+    var domain = v('domain').replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    $('#url').textContent = 'https://' + domain + '/k/' + d.id;
+    $('#fname').textContent = d.id + '.json';
+    $('#out').textContent = JSON.stringify(d, null, 2);
+  }
+
+  function flash(sel, text) {
+    $(sel).textContent = text;
+    setTimeout(function () { $(sel).textContent = ''; }, 2600);
+  }
+
+  function copy(text, sel) {
+    var done = function () { flash(sel, 'Copié.'); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { fallback(text, done); });
+    else fallback(text, done);
+  }
+  function fallback(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { /* rien */ }
+    document.body.removeChild(ta);
+  }
+
+  /* — actions — */
+  $('#regen').addEventListener('click', function () { $('#id').value = newId(); refresh(); });
+  $('#copyUrl').addEventListener('click', function () { copy($('#url').textContent, '#msg1'); });
+  $('#copyJson').addEventListener('click', function () { copy($('#out').textContent, '#msg2'); });
+
+  $('#download').addEventListener('click', function () {
+    var blob = new Blob([$('#out').textContent], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = build().id + '.json';
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    flash('#msg2', 'Fichier téléchargé.');
+  });
+
+  $('#preview').addEventListener('click', function () {
+    var d = build();
+    try {
+      sessionStorage.setItem('si-preview', JSON.stringify(d));
+      window.open('index.html?preview=1&t=' + encodeURIComponent(d.id), '_blank');
+    } catch (e) {
+      flash('#msg1', "Aperçu indisponible — ouvrez cette page depuis le site en ligne.");
+    }
+  });
+
+  document.addEventListener('input', refresh);
+
+  /* — valeurs de départ — */
+  $('#id').value = newId();
+  $('#date').value = new Date().toISOString().slice(0, 10);
+  refresh();
+})();
+</script>
+</body>
+</html>

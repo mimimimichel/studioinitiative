@@ -25,6 +25,15 @@
   var TAG = resolveTagId();
 
   function loadDossier() {
+    // Mode aperçu : le générateur dépose le dossier en sessionStorage pour
+    // qu'on puisse voir le résultat exact avant de publier quoi que ce soit.
+    if (/[?&]preview=1/.test(location.search)) {
+      try {
+        var raw = sessionStorage.getItem('si-preview');
+        if (raw) return Promise.resolve(JSON.parse(raw));
+      } catch (e) { /* aperçu illisible : on retombe sur le flux normal */ }
+    }
+
     var tries = TAG ? ['data/' + TAG + '.json', 'data/_demo.json'] : ['data/_demo.json'];
     return tries.reduce(function (chain, url) {
       return chain.catch(function () {
@@ -110,8 +119,10 @@
 
     at(2350, function () {
       var place = dossier.meeting.place ? ' ' + dossier.meeting.place : '';
+      // Formulation sans accord genré : le dossier ne connaît pas le genre
+      // de la personne, et « reparti(e) » se voit immédiatement.
       $('#meeting-line').textContent = dossier.meeting.line ||
-        ('Nous nous sommes vus ' + frDate(meetingDate) + place + '. Vous êtes reparti avec ce porte-clés.');
+        ('Nous nous sommes vus ' + frDate(meetingDate) + place + '. Vous avez emporté ce porte-clés.');
       $('#meeting-line').classList.add('in');
     });
 
