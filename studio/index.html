@@ -29,7 +29,9 @@ button{font-family:var(--body);cursor:pointer}
 .top img{width:26px;height:26px}
 .top .t{font-family:var(--disp);font-weight:600;font-size:1rem}
 .top .t small{display:block;font-size:.68rem;font-weight:500;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
-.topnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.topnav{margin-left:auto;display:flex;gap:4px;overflow-x:auto;white-space:nowrap;
+        scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topnav::-webkit-scrollbar{display:none}
 .topnav a{font-family:var(--disp);font-size:.8rem;font-weight:600;text-decoration:none;color:var(--dim);
           padding:6px 11px;border-radius:8px}
 .topnav a:hover{background:var(--accent-soft);color:var(--accent)}
@@ -380,10 +382,16 @@ h1{font-family:var(--disp);font-size:1.45rem;letter-spacing:-.01em}
     if (!d.sansSignaux) {
       bC._c.appendChild(el('div', 'vide', 'Tous les comptes sont documentés.'));
     } else {
+      var vides = d.comptes.filter(function (c) { return !(c.signaux || '').trim(); });
+      vides.slice(0, 8).forEach(function (c) {
+        bC._c.appendChild(ligneFiche({ id: c.id, url: c.url, nom: c.nom, entreprise: '', role: '' }, {
+          badge: c.cercle || c.statut || '',
+          detail: escap(c.secteur || '')
+        }));
+      });
       var p = el('div', 'vide');
-      p.innerHTML = 'La colonne « Signaux data / IA » est vide sur <b>' + d.sansSignaux + '</b> compte' +
-        (d.sansSignaux > 1 ? 's' : '') + '. L’Éclaireur peut les remplir un par un — ' +
-        '<a href="agents.html">ouvrir la console d’agents</a>.';
+      p.innerHTML = (vides.length > 8 ? '… et ' + (vides.length - 8) + ' autres. ' : '') +
+        'L’Éclaireur les remplit un par un — <a href="agents.html">ouvrir la console d’agents</a>.';
       bC._c.appendChild(p);
     }
     g.appendChild(bC);

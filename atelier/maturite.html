@@ -132,7 +132,7 @@ footer{margin-top:60px;font-size:.78rem;color:var(--faint);max-width:70ch;line-h
 
   <section class="resultat" id="resultat">
     <div class="res-h">
-      <canvas id="radar" width="280" height="280" aria-label="Radar des cinq axes"></canvas>
+      <canvas id="radar" width="330" height="286" aria-label="Radar des cinq axes"></canvas>
       <div class="res-txt">
         <div class="niveau" id="niveauGlobal">— <small>/ 4</small></div>
         <p id="lectureGlobale">Répondez aux questions : le radar et la lecture se construisent au fil de l'eau.</p>
@@ -395,12 +395,12 @@ footer{margin-top:60px;font-size:.78rem;color:var(--faint);max-width:70ch;line-h
     var cv = $('#radar');
     var ctx = cv.getContext('2d');
     var dpr = window.devicePixelRatio || 1;
-    var TAILLE = 280;
-    cv.width = TAILLE * dpr; cv.height = TAILLE * dpr;
-    cv.style.width = TAILLE + 'px'; cv.style.height = TAILLE + 'px';
+    var LARG = 330, HAUT = 286;
+    cv.width = LARG * dpr; cv.height = HAUT * dpr;
+    cv.style.width = LARG + 'px'; cv.style.height = HAUT + 'px';
     ctx.scale(dpr, dpr);
-    var cx = TAILLE / 2, cy = TAILLE / 2, R = 96;
-    ctx.clearRect(0, 0, TAILLE, TAILLE);
+    var cx = LARG / 2, cy = HAUT / 2 + 4, R = 96;
+    ctx.clearRect(0, 0, LARG, HAUT);
 
     var pt = function (i, r) {
       var a = -Math.PI / 2 + i * 2 * Math.PI / 5;
@@ -426,11 +426,13 @@ footer{margin-top:60px;font-size:.78rem;color:var(--faint);max-width:70ch;line-h
     /* étiquettes */
     ctx.fillStyle = 'rgba(90,106,133,.9)';
     ctx.font = '600 10px "Space Grotesk", sans-serif';
-    ctx.textAlign = 'center';
     var courts = ['Gouvernance', 'Qualité', 'Architecture', 'Usages & IA', 'Organisation'];
+    /* Alignement selon le côté, pour ne rien rogner aux bords du canevas. */
+    var aligns = ['center', 'left', 'left', 'right', 'right'];
     for (i = 0; i < 5; i++) {
-      var p3 = pt(i, R + 22);
-      ctx.fillText(courts[i], p3[0], p3[1] + 3);
+      var p3 = pt(i, R + 14);
+      ctx.textAlign = aligns[i];
+      ctx.fillText(courts[i], p3[0], p3[1] + (i === 0 ? -4 : 8));
     }
 
     /* la forme */

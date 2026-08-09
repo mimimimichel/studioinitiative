@@ -27,7 +27,9 @@ button{font-family:var(--body);cursor:pointer}
 .top img{width:26px;height:26px}
 .top .t{font-family:var(--disp);font-weight:600;font-size:1rem}
 .top .t small{display:block;font-size:.68rem;font-weight:500;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
-.topnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.topnav{margin-left:auto;display:flex;gap:4px;overflow-x:auto;white-space:nowrap;
+        scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topnav::-webkit-scrollbar{display:none}
 .topnav a{font-family:var(--disp);font-size:.8rem;font-weight:600;text-decoration:none;color:var(--dim);
           padding:6px 11px;border-radius:8px}
 .topnav a:hover{background:var(--accent-soft);color:var(--accent)}
