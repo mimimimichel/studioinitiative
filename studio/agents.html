@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Console d'agents — Studio Initiative</title>
+<link rel="icon" href="../assets/img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7fa; --card:#fff; --text:#10192c; --dim:#5a6a85; --faint:#8a97ae;
+  --line:#dde5ee; --accent:#067485; --accent-soft:rgba(6,116,133,.08);
+  --ok:#0d7a44; --alerte:#a8322f;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font-family:var(--body);cursor:pointer}
+.top{position:sticky;top:0;z-index:10;background:rgba(244,247,250,.92);backdrop-filter:blur(8px);
+     border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px 20px}
+.top img{width:26px;height:26px}
+.top .t{font-family:var(--disp);font-weight:600;font-size:1rem}
+.top .t small{display:block;font-size:.68rem;font-weight:500;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+.topnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.topnav a{font-family:var(--disp);font-size:.8rem;font-weight:600;text-decoration:none;color:var(--dim);
+          padding:6px 11px;border-radius:8px}
+.topnav a:hover{background:var(--accent-soft);color:var(--accent)}
+.topnav a.actif{background:var(--accent);color:#fff}
+.page{max-width:1240px;margin:0 auto;padding:26px 20px 90px}
+h1{font-family:var(--disp);font-size:1.45rem;letter-spacing:-.01em}
+.sous{color:var(--dim);margin-top:3px;font-size:.92rem;max-width:70ch}
+.sous b{color:var(--text)}
+.grille{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;align-items:start}
+@media(max-width:900px){.grille{grid-template-columns:1fr}}
+.agent{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.agent h2{font-family:var(--disp);font-size:1.02rem}
+.agent .quand{font-size:.78rem;color:var(--faint);margin:2px 0 10px}
+.agent p.expl{font-size:.86rem;color:var(--dim);margin-bottom:12px}
+label{display:block;font-family:var(--disp);font-size:.74rem;font-weight:600;color:var(--dim);margin:10px 0 4px}
+select,textarea,input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+  font:inherit;font-size:.88rem;background:var(--bg);color:var(--text)}
+textarea{min-height:120px;resize:vertical;line-height:1.5}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 16px;
+  font-family:var(--disp);font-weight:600;font-size:.85rem;margin-top:12px}
+.btn:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn-sec{background:var(--card);color:var(--dim);border:1px solid var(--line);border-radius:9px;
+  padding:8px 13px;font-family:var(--disp);font-weight:600;font-size:.8rem;margin-top:10px;margin-right:8px}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.sortie{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;font-size:.87rem;
+  white-space:pre-wrap;line-height:1.6;max-height:420px;overflow:auto}
+.sortie:empty{display:none}
+.etat{font-size:.8rem;margin-top:10px;min-height:1.2em}
+.etat.ok{color:var(--ok)} .etat.err{color:var(--alerte)}
+.regle{margin-top:18px;border-left:3px solid var(--accent);background:var(--accent-soft);
+  border-radius:0 10px 10px 0;padding:11px 15px;font-size:.86rem;max-width:74ch}
+.fiche-draft{margin-top:12px;border-top:1px dashed var(--line);padding-top:6px}
+.fiche-draft .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:560px){.fiche-draft .g2{grid-template-columns:1fr}}
+#porte{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:50;padding:20px}
+#porte[hidden]{display:none}
+.porte-c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:30px;max-width:420px;width:100%}
+.porte-c h2{font-family:var(--disp);font-size:1.15rem;margin-bottom:6px}
+.porte-c p{font-size:.88rem;color:var(--dim);margin-bottom:16px}
+.porte-c .btn{width:100%}
+#porteMsg{font-size:.83rem;margin-top:10px;color:var(--alerte);line-height:1.5}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div id="porte" hidden>
+  <div class="porte-c">
+    <h2>Console d'agents</h2>
+    <p>Entrez le mot de passe du cockpit (variable <code>STUDIO_PASSWORD</code> sur Vercel).</p>
+    <input type="password" id="porteInput" placeholder="Mot de passe" autocomplete="current-password">
+    <button class="btn" id="porteGo">Entrer</button>
+    <div id="porteMsg"></div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-in">
+    <img src="../assets/img/logo-mark.png" alt="">
+    <div class="t">Studio Initiative<small>plateforme</small></div>
+    <nav class="topnav">
+      <a href="./">Cockpit</a>
+      <a class="actif" href="agents.html">Agents</a>
+      <a href="../atelier/decouverte.html">Entretien</a>
+      <a href="../atelier/maturite.html">Maturité</a>
+      <a href="../k/nouveau.html">Porte-clés</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <h1>La console d'agents</h1>
+  <p class="sous">Les prompts de votre page Notion, devenus des boutons. Chaque agent lit et écrit
+  <b>dans votre Notion</b> — et aucun n'envoie jamais rien à un prospect : ils préparent, vous décidez.</p>
+
+  <div class="grille">
+
+    <section class="agent">
+      <h2>🔭 L'Éclaireur — recherche de compte</h2>
+      <div class="quand">Avant chaque prise de contact ciblée ou chaque RDV</div>
+      <p class="expl">Choisissez un compte cible : l'Éclaireur produit le brief (signaux data/IA, hypothèses
+      de douleur, angle d'approche, 3 questions) et <b>remplit lui-même la colonne « Signaux data / IA »</b>
+      de la fiche, avec le brief complet en corps de page.</p>
+      <label for="ecCompte">Compte cible</label>
+      <select id="ecCompte"><option value="">Chargement…</option></select>
+      <button class="btn" id="ecGo">Lancer l'Éclaireur</button>
+      <div class="etat" id="ecEtat"></div>
+      <div class="sortie" id="ecSortie"></div>
+    </section>
+
+    <section class="agent">
+      <h2>🪶 La Plume réseau — messages</h2>
+      <div class="quand">Sessions de prospection, mardi → jeudi</div>
+      <p class="expl">Choisissez un contact : la Plume rédige deux variantes (directe, chaleureuse) à partir
+      de sa fiche et des signaux du compte, et les pose <b>dans la fiche du contact</b>, prêtes à copier.
+      Rien n'est envoyé.</p>
+      <label for="plContact">Contact</label>
+      <select id="plContact"><option value="">Chargement…</option></select>
+      <label for="plContexte">Contexte du moment (facultatif)</label>
+      <input id="plContexte" placeholder="« on s'est croisés au meetup ANITI », « il a posté sur l'AI Act »…">
+      <button class="btn" id="plGo">Rédiger les deux variantes</button>
+      <div class="etat" id="plEtat"></div>
+      <div class="sortie" id="plSortie"></div>
+    </section>
+
+    <section class="agent">
+      <h2>📝 Le Débriefeur — après un RDV</h2>
+      <div class="quand">Dans les 24 h après chaque rendez-vous ou café</div>
+      <p class="expl">Collez vos notes en vrac : le Débriefeur en tire une fiche structurée que
+      <b>vous relisez avant qu'elle parte au CRM</b>. Ce qu'il ne sait pas, il le demande au lieu d'inventer.</p>
+      <label for="dbNotes">Vos notes, telles quelles</label>
+      <textarea id="dbNotes" placeholder="RDV avec X chez Y — il a dit que… — à recontacter pour…"></textarea>
+      <button class="btn" id="dbGo">Débriefer</button>
+      <div class="etat" id="dbEtat"></div>
+      <div class="fiche-draft" id="dbFiche" hidden>
+        <div class="g2">
+          <div><label for="dfNom">Nom</label><input id="dfNom"></div>
+          <div><label for="dfEntreprise">Entreprise</label><input id="dfEntreprise"></div>
+          <div><label for="dfRole">Rôle</label><input id="dfRole"></div>
+          <div><label for="dfStatut">Statut</label>
+            <select id="dfStatut">
+              <option>2 · Conversation tenue</option>
+              <option>3 · RDV qualifié</option>
+              <option>4 · Proposition envoyée</option>
+            </select></div>
+          <div><label for="dfAction">Prochaine action</label><input id="dfAction"></div>
+          <div><label for="dfDate">Pour le</label><input type="date" id="dfDate"></div>
+        </div>
+        <label for="dfVerbatim">Verbatim le plus fort</label>
+        <input id="dfVerbatim">
+        <label for="dfCR">Compte rendu (partira en corps de fiche)</label>
+        <textarea id="dfCR" style="min-height:160px"></textarea>
+        <div class="etat" id="dbQuestions"></div>
+        <button class="btn" id="dbSave">Valider et enregistrer dans le CRM</button>
+        <div class="etat" id="dbSaveEtat"></div>
+      </div>
+    </section>
+
+    <section class="agent">
+      <h2>🗼 La Vigie — veille du lundi</h2>
+      <div class="quand">Chaque lundi, avant la revue de pipeline</div>
+      <p class="expl">Le digest hebdomadaire : Palantir, agents IA en entreprise, AI Act & gouvernance —
+      et les deux items qui feraient les meilleurs posts. À lire ici, à copier si utile.</p>
+      <button class="btn" id="viGo">Préparer le digest</button>
+      <button class="btn-sec" id="viCopie" hidden>Copier</button>
+      <div class="etat" id="viEtat"></div>
+      <div class="sortie" id="viSortie"></div>
+    </section>
+  </div>
+
+  <div class="regle"><b>Les règles de votre page Notion s'appliquent ici, mécaniquement :</b> aucun envoi
+  automatique — les agents écrivent dans Notion ou à l'écran, jamais vers un prospect ; aucune donnée
+  confidentielle client dans les agents commerciaux ; données professionnelles publiques uniquement.
+  Avec la clé gratuite OpenRouter, l'Éclaireur et la Vigie travaillent sans recherche web et le signalent —
+  la clé Anthropic leur donne accès au web.</div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var KEY = 'si-studio-key';
+
+  function cle() { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } }
+  function demanderCle(msg) { $('#porte').hidden = false; $('#porteMsg').textContent = msg || ''; $('#porteInput').focus(); }
+  $('#porteGo').addEventListener('click', valider);
+  $('#porteInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') valider(); });
+  function valider() {
+    var v = $('#porteInput').value.trim();
+    if (!v) return;
+    try { localStorage.setItem(KEY, v); } catch (e) {}
+    $('#porte').hidden = true;
+    charger();
+  }
+
+  function api(chemin, body) {
+    return fetch(chemin, {
+      method: body ? 'POST' : 'GET',
+      headers: { 'X-Studio-Key': cle(), 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) { var e = new Error(d.message || 'Erreur ' + r.status); e.code = d.error; throw e; }
+        return d;
+      });
+    });
+  }
+
+  /* ---------- listes des comptes et contacts ---------- */
+
+  function charger() {
+    api('/api/studio/cockpit').then(function (d) {
+      var ec = $('#ecCompte');
+      ec.innerHTML = '';
+      /* Les comptes sans signaux d'abord — c'est là que l'Éclaireur sert. */
+      var tries = d.comptes.slice().sort(function (a, b) {
+        return (a.signaux ? 1 : 0) - (b.signaux ? 1 : 0) || a.nom.localeCompare(b.nom);
+      });
+      tries.forEach(function (c) {
+        var o = document.createElement('option');
+        o.value = c.id;
+        o.textContent = c.nom + (c.signaux ? ' — déjà documenté' : '') + (c.cercle ? ' · ' + c.cercle.slice(0, 9) : '');
+        ec.appendChild(o);
+      });
+      if (!tries.length) ec.innerHTML = '<option value="">Aucun compte cible dans Notion</option>';
+
+      var pl = $('#plContact');
+      pl.innerHTML = '';
+      d.contacts.slice().sort(function (a, b) { return a.nom.localeCompare(b.nom); }).forEach(function (c) {
+        var o = document.createElement('option');
+        o.value = c.id;
+        o.textContent = c.nom + (c.entreprise ? ' — ' + c.entreprise : '');
+        pl.appendChild(o);
+      });
+    }).catch(function (err) {
+      if (err.code === 'bad_password') { demanderCle('Mot de passe incorrect — réessayez.'); return; }
+      if (err.code === 'no_password') { demanderCle(err.message); return; }
+      $('#ecEtat').className = 'etat err';
+      $('#ecEtat').textContent = err.message;
+    });
+  }
+
+  /* ---------- exécution d'un agent ---------- */
+
+  function lancer(bouton, etat, corps, apres) {
+    bouton.disabled = true;
+    etat.className = 'etat';
+    etat.textContent = 'L\'agent travaille — comptez dix à trente secondes…';
+    api('/api/studio/agent', corps).then(function (d) {
+      bouton.disabled = false;
+      etat.className = 'etat ok';
+      apres(d);
+    }).catch(function (e) {
+      bouton.disabled = false;
+      etat.className = 'etat err';
+      etat.textContent = e.message;
+    });
+  }
+
+  $('#ecGo').addEventListener('click', function () {
+    var id = $('#ecCompte').value;
+    if (!id) return;
+    lancer($('#ecGo'), $('#ecEtat'), { agent: 'eclaireur', compteId: id }, function (d) {
+      $('#ecEtat').innerHTML = 'Colonne « Signaux » remplie et brief posé dans la fiche — ' +
+        '<a href="' + d.url + '" target="_blank" rel="noopener">voir dans Notion</a>.' +
+        (d.searched ? '' : ' <b>Sans recherche web</b> (clé gratuite) : à vérifier.');
+      $('#ecSortie').textContent = d.texte;
+    });
+  });
+
+  $('#plGo').addEventListener('click', function () {
+    var id = $('#plContact').value;
+    if (!id) return;
+    lancer($('#plGo'), $('#plEtat'), { agent: 'plume', contactId: id, contexte: $('#plContexte').value.trim() }, function (d) {
+      $('#plEtat').innerHTML = 'Deux variantes posées dans la fiche — ' +
+        '<a href="' + d.url + '" target="_blank" rel="noopener">voir dans Notion</a>. Rien n\'a été envoyé.';
+      $('#plSortie').textContent = d.texte;
+    });
+  });
+
+  $('#dbGo').addEventListener('click', function () {
+    lancer($('#dbGo'), $('#dbEtat'), { agent: 'debriefeur', notes: $('#dbNotes').value }, function (d) {
+      var f = d.fiche;
+      $('#dbEtat').textContent = 'Relisez, corrigez, puis enregistrez — rien n\'est encore écrit.';
+      $('#dbFiche').hidden = false;
+      $('#dfNom').value = f.nom || '';
+      $('#dfEntreprise').value = f.entreprise || '';
+      $('#dfRole').value = f.role || '';
+      if (f.statut) $('#dfStatut').value = f.statut;
+      $('#dfAction').value = f.action || '';
+      $('#dfDate').value = f.dateAction || '';
+      $('#dfVerbatim').value = f.verbatim || '';
+      $('#dfCR').value = f.compteRendu || '';
+      $('#dbQuestions').className = 'etat';
+      $('#dbQuestions').textContent = (f.questionsOuvertes && f.questionsOuvertes.length)
+        ? 'À demander encore : ' + f.questionsOuvertes.join(' · ') : '';
+    });
+  });
+
+  $('#dbSave').addEventListener('click', function () {
+    var b = $('#dbSave'), etat = $('#dbSaveEtat');
+    b.disabled = true;
+    etat.className = 'etat';
+    etat.textContent = 'Enregistrement…';
+    api('/api/studio/crm', {
+      nom: $('#dfNom').value.trim(),
+      entreprise: $('#dfEntreprise').value.trim(),
+      role: $('#dfRole').value.trim(),
+      statut: $('#dfStatut').value,
+      verbatim: $('#dfVerbatim').value.trim(),
+      action: $('#dfAction').value.trim(),
+      dateAction: $('#dfDate').value,
+      compteRendu: $('#dfCR').value
+    }).then(function (d) {
+      b.disabled = false;
+      etat.className = 'etat ok';
+      etat.innerHTML = (d.created ? 'Fiche créée' : 'Fiche mise à jour') + ' — ' +
+        '<a href="' + d.url + '" target="_blank" rel="noopener">ouvrir dans Notion</a>.';
+    }).catch(function (e) {
+      b.disabled = false;
+      etat.className = 'etat err';
+      etat.textContent = e.message;
+    });
+  });
+
+  $('#viGo').addEventListener('click', function () {
+    lancer($('#viGo'), $('#viEtat'), { agent: 'vigie' }, function (d) {
+      $('#viEtat').textContent = d.searched ? 'Digest prêt.' : 'Digest prêt — sans recherche web (clé gratuite).';
+      $('#viSortie').textContent = d.texte;
+      $('#viCopie').hidden = false;
+    });
+  });
+  $('#viCopie').addEventListener('click', function () {
+    var t = $('#viSortie').textContent;
+    if (navigator.clipboard) navigator.clipboard.writeText(t);
+    $('#viEtat').textContent = 'Copié.';
+  });
+
+  if (!cle()) demanderCle();
+  else charger();
+})();
+</script>
+</body>
+</html>

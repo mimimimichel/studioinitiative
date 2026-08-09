@@ -82,6 +82,42 @@ directement. Elle ne montre jamais d'erreur technique à un prospect.
 
 ---
 
+## Étape 2 bis — Allumer la plateforme (le cockpit et les agents)
+
+La plateforme lit et écrit **votre Notion** : le CRM, les comptes cibles.
+Rien n'est stocké ailleurs, rien n'est saisi deux fois. Deux variables à ajouter,
+toujours au même endroit (Vercel → Settings → Environment Variables) :
+
+1. **`STUDIO_PASSWORD`** — le mot de passe de votre espace privé. Choisissez-le
+   long ; c'est la seule serrure du cockpit.
+2. **`NOTION_API_KEY`** — la clé qui relie le site à votre Notion :
+   - allez sur **notion.so/my-integrations** → **New integration** ;
+   - nom « Studio Initiative », votre espace de travail, capacités lecture + écriture ;
+   - copiez la **clé secrète** (elle commence par `ntn_`) dans la variable ;
+   - dernier geste, dans Notion : ouvrez la page **🏠 OS Studio Initiative** →
+     menu **⋯** en haut à droite → **Connexions** → ajoutez votre intégration.
+     Ce geste donne accès à toutes les sous-pages d'un coup.
+
+**Redeploy**, puis ouvrez `votre-site.com/studio/` :
+
+- **Le cockpit** — la réponse à « qu'est-ce que je fais ce matin ? » : relances
+  échues, actions du jour, fiches mortes à dater en deux clics, entonnoir contre
+  les objectifs. Les KPI ne se saisissent plus : ils se calculent.
+- **La console d'agents** (`/studio/agents.html`) — l'Éclaireur remplit la colonne
+  Signaux de vos comptes cibles, la Plume pose deux variantes de message dans la
+  fiche, le Débriefeur transforme vos notes en fiche que vous validez, la Vigie
+  prépare le digest du lundi. **Aucun agent n'envoie jamais rien** : ils écrivent
+  dans Notion, vous relisez, vous envoyez.
+- **Le diagnostic de maturité** (`/atelier/maturite.html`) — 20 questions, radar,
+  lecture par axe. En rendez-vous, remplissez-le avec le prospect : c'est la porte
+  d'entrée naturelle du Diagnostic Scale-Up. Le mode cabinet l'enregistre dans le CRM.
+
+> Avec la clé gratuite OpenRouter, l'Éclaireur et la Vigie travaillent **sans
+> recherche web** et l'écrivent noir sur blanc dans leur réponse. La clé Anthropic
+> leur donne accès au web — c'est le moment où elle vaut vraiment son prix.
+
+---
+
 ## Étape 3 — Brancher votre domaine (facultatif)
 
 Vercel → **Settings** → **Domains** → saisissez `studioinitiative.com` → Vercel
@@ -157,6 +193,14 @@ Le panneau de droite note le rendez-vous sur cinq axes et vous dit **si l'objet
 vaut le coup** : un porte-clés sur mesure vous coûte du temps, autant le réserver
 aux dossiers où il fera une différence. En dessous de 5/10, une relance simple
 suffit.
+
+### À la fin de la fiche — **« Enregistrer dans le CRM »**
+
+Le bouton envoie la fiche directement dans votre base 📇 Contacts : identité,
+verbatim le plus fort, statut, et le compte rendu complet en corps de page.
+Une condition, appliquée mécaniquement : **la prochaine étape et sa date**
+(section 09) doivent être remplies — une fiche sans date est une fiche morte,
+l'outil refuse de l'écrire.
 
 ### Puis — **« Préparer le porte-clés »**
 

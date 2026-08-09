@@ -247,6 +247,13 @@
   button.act.primary{background:var(--navy);border-color:var(--navy);color:#fff}
   button.act.primary:hover{background:var(--navy-deep);color:#fff}
   .flash{font-size:.8rem;color:var(--accent);min-height:1.2em;margin:9px 0 0}
+  #crmZone{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line-strong)}
+  #crmZone label{display:block;font-size:.74rem;font-weight:600;color:var(--dim);margin:8px 0 3px}
+  #crmZone select,#crmZone input{width:100%;border:1px solid var(--line-strong);border-radius:8px;
+    padding:7px 9px;font:inherit;font-size:.85rem;background:var(--bg);color:var(--text)}
+  #crmZone .act{margin-top:10px;width:100%}
+  .crm-note{font-size:.76rem;color:var(--dim);margin-top:8px;line-height:1.5}
+  #crmMsg a{color:var(--accent)}
   .missing{font-size:.8rem;color:var(--warn);margin:9px 0 0;line-height:1.5}
   .archive{font-size:.83rem}
   .archive ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
@@ -657,9 +664,24 @@
           <h3>Ensuite</h3>
           <div class="btns">
             <button type="button" class="act primary" id="toKeychain">Préparer le porte-clés</button>
+            <button type="button" class="act" id="toCrm">Enregistrer dans le CRM</button>
             <button type="button" class="act" id="copySummary">Copier le compte rendu</button>
             <button type="button" class="act" id="copyTranscript">Copier la transcription</button>
             <button type="button" class="act" id="saveNew">Enregistrer et repartir à zéro</button>
+          </div>
+          <div id="crmZone" hidden>
+            <label for="crmStatut">Où en est ce contact ?</label>
+            <select id="crmStatut">
+              <option>2 · Conversation tenue</option>
+              <option selected>3 · RDV qualifié</option>
+              <option>4 · Proposition envoyée</option>
+            </select>
+            <label for="crmCle">Mot de passe du cockpit</label>
+            <input type="password" id="crmCle" placeholder="STUDIO_PASSWORD" autocomplete="current-password">
+            <p class="crm-note">La fiche part avec la prochaine étape et sa date (section 09) — sans elles,
+            l'enregistrement est refusé : c'est la règle n°1 du playbook.</p>
+            <button type="button" class="act primary" id="crmGo">Envoyer dans Notion</button>
+            <p class="crm-note" id="crmMsg"></p>
           </div>
           <p class="flash" id="flash"></p>
           <p class="missing" id="missing"></p>
@@ -1488,6 +1510,64 @@
       sessionStorage.setItem('si-decouverte', JSON.stringify(light));
       window.open('../k/nouveau.html?depuis=decouverte', '_blank');
     } catch (e) { flash('Impossible de transmettre — copiez le compte rendu.'); }
+  });
+
+  /* ── M2 : la fiche part toute seule dans le CRM Notion ── */
+  var CLE_STUDIO = 'si-studio-key';
+
+  $('#toCrm').addEventListener('click', function () {
+    var z = $('#crmZone');
+    z.hidden = !z.hidden;
+    if (!z.hidden) {
+      try { $('#crmCle').value = localStorage.getItem(CLE_STUDIO) || ''; } catch (e) {}
+      // La règle n°1, montrée avant l'échec : l'action et sa date viennent de la section 09.
+      var o = collect();
+      $('#crmMsg').textContent = (!o.nextStep || !o.nextDate)
+        ? 'Remplissez d\'abord « Prochaine étape convenue » et sa date, dans la section 09.' : '';
+    }
+  });
+
+  $('#crmGo').addEventListener('click', function () {
+    var o = collect();
+    var msg = $('#crmMsg');
+    var cle = $('#crmCle').value.trim();
+    if (!cle) { msg.textContent = 'Il faut le mot de passe du cockpit (variable STUDIO_PASSWORD sur Vercel).'; return; }
+    try { localStorage.setItem(CLE_STUDIO, cle); } catch (e) {}
+
+    var frictionsTxt = o.frictions.map(function (f) {
+      return [f.what, f.cost && '≈ ' + f.cost, f.who, f.freq].filter(Boolean).join(' · ');
+    }).join(' | ');
+
+    var bouton = $('#crmGo');
+    bouton.disabled = true;
+    msg.textContent = 'Envoi…';
+
+    fetch('/api/studio/crm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Studio-Key': cle },
+      body: JSON.stringify({
+        nom: [o.firstName, o.lastName].filter(Boolean).join(' '),
+        entreprise: o.company,
+        role: o.role,
+        statut: $('#crmStatut').value,
+        verbatim: o.quotes[0] || frictionsTxt.slice(0, 300),
+        action: o.nextStep,
+        dateAction: o.nextDate,
+        compteRendu: summary(o)
+      })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.message || 'Erreur ' + r.status);
+        return d;
+      });
+    }).then(function (d) {
+      bouton.disabled = false;
+      msg.innerHTML = (d.created ? 'Fiche créée dans le CRM. ' : 'Fiche mise à jour. ') +
+        '<a href="' + d.url + '" target="_blank" rel="noopener">Ouvrir dans Notion</a>';
+    }).catch(function (e) {
+      bouton.disabled = false;
+      msg.textContent = e.message;
+    });
   });
 
   /* ── bascule de mode ── */

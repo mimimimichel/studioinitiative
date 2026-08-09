@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Diagnostic de maturité data & IA — Studio Initiative</title>
+<link rel="icon" href="../assets/img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7fa; --card:#fff; --text:#10192c; --dim:#5a6a85; --faint:#8a97ae;
+  --line:#dde5ee; --line-strong:#c9d4e2; --accent:#067485; --accent-soft:rgba(6,116,133,.08);
+  --n0:#a8322f; --n1:#b3591a; --n2:#9a7a08; --n3:#4f7a1c; --n4:#0d7a44;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15.5px;line-height:1.6;
+     -webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font-family:var(--body);cursor:pointer}
+
+.top{position:sticky;top:0;z-index:10;background:rgba(244,247,250,.92);backdrop-filter:blur(8px);
+     border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 20px}
+.top img{width:26px;height:26px}
+.top .t{font-family:var(--disp);font-weight:600;font-size:.98rem}
+.top .t small{display:block;font-size:.66rem;font-weight:500;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+.top .etape{margin-left:auto;font-family:var(--disp);font-size:.78rem;color:var(--dim);font-variant-numeric:tabular-nums}
+
+.page{max-width:1080px;margin:0 auto;padding:30px 20px 90px}
+h1{font-family:var(--disp);font-size:clamp(1.4rem,3.6vw,1.9rem);letter-spacing:-.012em;line-height:1.15}
+.lede{color:var(--dim);margin-top:8px;max-width:64ch}
+.lede b{color:var(--text)}
+
+.ident{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:22px}
+@media(max-width:700px){.ident{grid-template-columns:1fr}}
+label{display:block;font-family:var(--disp);font-size:.74rem;font-weight:600;color:var(--dim);margin-bottom:4px}
+input,textarea{width:100%;border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;
+  font:inherit;font-size:.9rem;background:var(--card);color:var(--text)}
+
+.axe{margin-top:36px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.axe-h{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.axe-h h2{font-family:var(--disp);font-size:1.08rem}
+.axe-h .why{font-size:.82rem;color:var(--faint)}
+.axe-score{margin-left:auto;font-family:var(--disp);font-weight:600;font-size:.9rem;color:var(--accent);font-variant-numeric:tabular-nums}
+
+.q{padding:18px 22px;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:none}
+.q-t{font-weight:600;margin-bottom:3px}
+.q-anc{font-size:.8rem;color:var(--faint);margin-bottom:11px}
+.q-anc b{color:var(--dim);font-weight:600}
+.echelle{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+@media(max-width:560px){.echelle{grid-template-columns:repeat(5,1fr);gap:4px}}
+.cran{border:1px solid var(--line-strong);background:var(--bg);border-radius:9px;padding:8px 4px;
+  text-align:center;font-family:var(--disp);font-size:.78rem;font-weight:600;color:var(--dim)}
+.cran small{display:block;font-weight:500;font-size:.66rem;color:var(--faint);margin-top:1px}
+.cran:hover{border-color:var(--accent);color:var(--accent)}
+.cran[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.cran[aria-pressed="true"] small{color:rgba(255,255,255,.75)}
+.cran:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.resultat{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px}
+.res-h{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.res-h canvas{flex:0 0 auto}
+.res-txt{flex:1;min-width:260px}
+.res-txt .niveau{font-family:var(--disp);font-size:1.5rem;font-weight:600;letter-spacing:-.01em}
+.res-txt .niveau small{font-size:.95rem;color:var(--faint);font-weight:500}
+.res-txt p{color:var(--dim);font-size:.92rem;margin-top:8px;max-width:56ch}
+.res-axes{margin-top:22px;display:grid;gap:12px}
+.res-axe{display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:start;font-size:.9rem}
+@media(max-width:640px){.res-axe{grid-template-columns:1fr}}
+.res-axe .nom{font-family:var(--disp);font-weight:600}
+.res-axe .nom b{color:var(--accent);font-variant-numeric:tabular-nums}
+.res-axe .lecture{color:var(--dim)}
+.incomplet{margin-top:14px;font-size:.85rem;color:var(--n1)}
+
+.suites{margin-top:22px;padding-top:18px;border-top:1px dashed var(--line);display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 16px;
+  font-family:var(--disp);font-weight:600;font-size:.85rem}
+.btn:hover{filter:brightness(1.08)}
+.btn-sec{background:var(--card);color:var(--dim);border:1px solid var(--line-strong);border-radius:9px;
+  padding:9px 14px;font-family:var(--disp);font-weight:600;font-size:.82rem}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.flash{width:100%;font-size:.82rem;color:var(--accent);min-height:1.1em}
+
+details.cabinet{margin-top:16px;font-size:.88rem}
+details.cabinet summary{cursor:pointer;color:var(--faint);font-size:.82rem}
+details.cabinet .in{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:640px}
+@media(max-width:640px){details.cabinet .in{grid-template-columns:1fr}}
+details.cabinet .full{grid-column:1/-1}
+.cab-etat{font-size:.82rem;margin-top:4px;grid-column:1/-1}
+.cab-etat.ok{color:var(--n4)} .cab-etat.err{color:var(--n0)}
+
+footer{margin-top:60px;font-size:.78rem;color:var(--faint);max-width:70ch;line-height:1.6}
+
+@media print{
+  .top,.suites,details.cabinet,footer,.noprint{display:none!important}
+  body{background:#fff;font-size:12px}
+  .axe,.resultat{border:none;break-inside:avoid}
+  .q{padding:8px 0}
+  .page{padding:0}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <img src="../assets/img/logo-mark.png" alt="">
+    <div class="t">Studio Initiative<small>diagnostic</small></div>
+    <div class="etape" id="progress">0 / 20</div>
+  </div>
+</header>
+
+<main class="page">
+  <h1>Où en est votre maturité data & IA ?</h1>
+  <p class="lede">Vingt questions, dix minutes, cinq axes. À chaque question, choisissez le cran qui décrit
+  <b>votre réalité d'aujourd'hui</b> — pas la cible, pas le projet en cours. Le diagnostic n'a de valeur
+  que s'il est honnête, et personne d'autre que vous ne voit vos réponses.</p>
+
+  <div class="ident noprint">
+    <div><label for="idNom">Votre nom (facultatif)</label><input id="idNom" autocomplete="name"></div>
+    <div><label for="idEntreprise">Entreprise</label><input id="idEntreprise" autocomplete="organization"></div>
+    <div><label for="idRole">Votre rôle</label><input id="idRole" autocomplete="organization-title"></div>
+  </div>
+
+  <div id="axes"></div>
+
+  <section class="resultat" id="resultat">
+    <div class="res-h">
+      <canvas id="radar" width="280" height="280" aria-label="Radar des cinq axes"></canvas>
+      <div class="res-txt">
+        <div class="niveau" id="niveauGlobal">— <small>/ 4</small></div>
+        <p id="lectureGlobale">Répondez aux questions : le radar et la lecture se construisent au fil de l'eau.</p>
+      </div>
+    </div>
+    <div class="res-axes" id="resAxes"></div>
+    <div class="incomplet" id="incomplet"></div>
+
+    <div class="suites noprint">
+      <button class="btn" id="imprimer">Imprimer / PDF</button>
+      <button class="btn-sec" id="copier">Copier la synthèse</button>
+      <a class="btn-sec" id="envoyer" href="#" style="text-decoration:none">Envoyer à Studio Initiative</a>
+      <button class="btn-sec" id="reinit">Tout effacer</button>
+      <span class="flash" id="flash"></span>
+    </div>
+
+    <details class="cabinet noprint">
+      <summary>Mode cabinet — enregistrer ce diagnostic dans le CRM</summary>
+      <div class="in">
+        <div><label for="cabAction">Prochaine action</label><input id="cabAction" placeholder="Proposer le Diagnostic Scale-Up"></div>
+        <div><label for="cabDate">Pour le</label><input type="date" id="cabDate"></div>
+        <div class="full"><label for="cabCle">Mot de passe du cockpit</label><input type="password" id="cabCle"></div>
+        <div class="full"><button class="btn" id="cabGo">Enregistrer dans le CRM</button></div>
+        <div class="cab-etat" id="cabEtat"></div>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    Diagnostic proposé par Studio Initiative — cabinet data & IA, Toulouse. Vos réponses restent dans votre
+    navigateur : rien n'est transmis tant que vous ne cliquez pas sur « Envoyer ». Ce diagnostic est un
+    instantané déclaratif ; le Diagnostic Scale-Up (5 jours, sur site) le confronte au terrain.
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var KEY = 'si-maturite-courant';
+
+  /* ════════════════════════════════════════════════════════════
+     Le référentiel — 5 axes × 4 questions.
+     Chaque question donne ses deux ancres : à quoi ressemblent 0 et 4.
+     ════════════════════════════════════════════════════════════ */
+  var CRANS = ['0', '1', '2', '3', '4'];
+  var CRANS_NOMS = ['inexistant', 'artisanal', 'défini', 'piloté', 'industrialisé'];
+
+  var AXES = [
+    { id: 'gouv', nom: 'Gouvernance des données',
+      why: 'Le socle sans lequel les projets IA plafonnent au pilote.',
+      questions: [
+        { t: 'Chaque donnée critique a-t-elle un propriétaire désigné ?',
+          a0: 'personne ne répond de rien', a4: 'des propriétaires nommés, qui arbitrent réellement' },
+        { t: 'Savez-vous dire d\'où vient un chiffre, de bout en bout ?',
+          a0: 'il faut une enquête à chaque question', a4: 'la traçabilité se consulte, elle ne se reconstitue pas' },
+        { t: 'Un même indicateur a-t-il la même définition partout ?',
+          a0: 'chaque service a la sienne', a4: 'un référentiel partagé, appliqué dans les outils' },
+        { t: 'RGPD, AI Act : subis ou anticipés ?',
+          a0: 'on verra quand ça arrivera', a4: 'les obligations sont cartographiées et outillées' }
+      ],
+      lectures: [
+        'La gouvernance repose sur des personnes, pas sur un système : chaque départ ou réorganisation remet tout à zéro.',
+        'Des règles existent mais ne vivent pas dans les outils — elles s\'appliquent quand quelqu\'un y pense.',
+        'Le socle est là. L\'enjeu est de l\'outiller pour qu\'il tienne sans effort, notamment face à l\'AI Act.'
+      ] },
+    { id: 'qual', nom: 'Qualité des données',
+      why: 'Le critère n°1 de confiance des utilisateurs — et des modèles.',
+      questions: [
+        { t: 'La qualité est-elle mesurée — complétude, fraîcheur, exactitude ?',
+          a0: 'aucune mesure', a4: 'des indicateurs suivis, avec des seuils' },
+        { t: 'Une donnée fausse est-elle détectée avant qu\'un utilisateur s\'en plaigne ?',
+          a0: 'c\'est l\'utilisateur qui alerte', a4: 'des contrôles automatiques la bloquent en amont' },
+        { t: 'Les corrections se font-elles à la source ?',
+          a0: 'chacun corrige dans son fichier', a4: 'la source est corrigée, tout le monde en profite' },
+        { t: 'Deux services sortent-ils le même chiffre ?',
+          a0: 'jamais du premier coup', a4: 'le chiffre est unique, sa source aussi' }
+      ],
+      lectures: [
+        'La confiance dans les chiffres est faible : chaque décision commence par un débat sur la donnée elle-même.',
+        'La qualité est corrigée plus qu\'elle n\'est prévenue — le coût est réel mais invisible, dilué dans les équipes.',
+        'La qualité est un processus, plus un combat. Reste à l\'étendre aux nouveaux flux, IA comprise.'
+      ] },
+    { id: 'archi', nom: 'Architecture & plateformes',
+      why: 'Ce qui sépare la démo qui impressionne du produit qui tourne.',
+      questions: [
+        { t: 'Les données sont-elles accessibles hors des applications sources ?',
+          a0: 'prisonnières de chaque outil', a4: 'une plateforme d\'accès unifiée' },
+        { t: 'Les flux sont-ils automatisés, ou ressaisis ?',
+          a0: 'des exports Excel et des copier-coller', a4: 'des pipelines supervisés, sans intervention' },
+        { t: 'Vos cas d\'usage passent-ils du pilote à la production ?',
+          a0: 'les pilotes s\'accumulent, rien ne sort', a4: 'un chemin d\'industrialisation existe et sert' },
+        { t: 'Un nouvel arrivant comprend-il le système sans archéologie ?',
+          a0: 'le savoir est dans trois têtes', a4: 'la documentation vit avec le système' }
+      ],
+      lectures: [
+        'L\'architecture contraint tout le reste : chaque nouveau besoin coûte le prix du premier.',
+        'Les briques existent mais le passage en production reste un exploit ponctuel, pas une routine.',
+        'La plateforme porte. Le levier est maintenant la vitesse : réduire le temps entre l\'idée et la production.'
+      ] },
+    { id: 'ia', nom: 'Usages & IA',
+      why: '88 % des grandes entreprises utilisent l\'IA — 34 % vont jusqu\'au bout.',
+      questions: [
+        { t: 'Les décisions s\'appuient-elles sur les données ?',
+          a0: 'l\'intuition tranche', a4: 'les données sont dans la salle à chaque arbitrage' },
+        { t: 'Vos cas d\'usage IA en sont où ?',
+          a0: 'des démos et des slides', a4: 'en production, avec des utilisateurs' },
+        { t: 'Les gains de l\'IA sont-ils mesurés ?',
+          a0: 'promis, jamais mesurés', a4: 'mesurés contre une base de référence' },
+        { t: 'Savez-vous ce que vos équipes font avec l\'IA générative ?',
+          a0: 'aucune idée, chacun bricole', a4: 'un cadre clair : outils validés, usages tracés' }
+      ],
+      lectures: [
+        'L\'IA est un sujet de conversation, pas encore un outil de production — et l\'usage sauvage existe déjà, sans cadre.',
+        'Des pilotes prometteurs, mais le passage à l\'échelle bute sur le socle : données, gouvernance, industrialisation.',
+        'L\'IA produit déjà. L\'enjeu devient la mesure des gains et la conformité AI Act de ce qui tourne.'
+      ] },
+    { id: 'orga', nom: 'Organisation & compétences',
+      why: 'La technologie ne compense jamais une organisation absente.',
+      questions: [
+        { t: 'Les rôles data sont-ils dédiés, ou « en plus du reste » ?',
+          a0: 'la data est le soir et le week-end', a4: 'des rôles clairs, staffés, outillés' },
+        { t: 'Le sujet data a-t-il un sponsor au COMEX ?',
+          a0: 'personne ne le porte', a4: 'un sponsor actif, qui arbitre et finance' },
+        { t: 'Les demandes data sont-elles priorisées par la valeur ?',
+          a0: 'premier arrivé, premier servi', a4: 'un portefeuille arbitré sur la valeur' },
+        { t: 'Les métiers se servent-ils seuls ?',
+          a0: 'tout passe par une équipe centrale saturée', a4: 'le libre-service est réel, encadré' }
+      ],
+      lectures: [
+        'Tout repose sur quelques individus héroïques : l\'organisation n\'a pas encore décidé que la data était son sujet.',
+        'L\'organisation suit la technologie avec un temps de retard — les compétences existent, la structure manque.',
+        'L\'organisation porte le sujet. Le risque restant est la dépendance aux personnes clés : documentez, transmettez.'
+      ] }
+  ];
+
+  var NIVEAUX = [
+    { seuil: 0, nom: 'Fragile', lecture: 'Le socle manque : chaque projet data ou IA repart de zéro, et les résultats dépendent des personnes plus que du système. La bonne nouvelle : à ce stade, les premiers gains sont rapides et très visibles.' },
+    { seuil: 1, nom: 'Émergent', lecture: 'Des briques existent, portées par quelques personnes convaincues. Le passage du pilote à la production est le point de blocage typique de ce niveau — c\'est précisément là que la plupart des démarches s\'arrêtent.' },
+    { seuil: 2, nom: 'Structuré', lecture: 'Le système existe et produit. Les gains suivants viennent de l\'industrialisation : automatiser ce qui est encore manuel, outiller la gouvernance, mesurer ce qui est encore déclaratif.' },
+    { seuil: 3, nom: 'Industrialisé', lecture: 'Le socle porte. À ce niveau, le levier n\'est plus la construction mais la vitesse et l\'extension : nouveaux domaines, agents IA sur les workflows répétitifs, conformité outillée.' }
+  ];
+
+  /* ════════════════ état ════════════════ */
+  var reponses = {}; // 'gouv-0' → 0..4
+
+  function sauver() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({
+        reponses: reponses,
+        nom: $('#idNom').value, entreprise: $('#idEntreprise').value, role: $('#idRole').value
+      }));
+    } catch (e) { /* mode privé */ }
+  }
+
+  /* ════════════════ construction ════════════════ */
+  var zone = $('#axes');
+  AXES.forEach(function (axe, ai) {
+    var sec = document.createElement('section');
+    sec.className = 'axe';
+    var h = document.createElement('div');
+    h.className = 'axe-h';
+    h.innerHTML = '<h2>' + (ai + 1) + ' · ' + axe.nom + '</h2><span class="why">' + axe.why + '</span>' +
+      '<span class="axe-score" id="score-' + axe.id + '">—</span>';
+    sec.appendChild(h);
+
+    axe.questions.forEach(function (q, qi) {
+      var cle = axe.id + '-' + qi;
+      var d = document.createElement('div');
+      d.className = 'q';
+      var t = document.createElement('div'); t.className = 'q-t'; t.textContent = q.t;
+      var anc = document.createElement('div'); anc.className = 'q-anc';
+      anc.innerHTML = '<b>0</b> — ' + q.a0 + ' &nbsp;·&nbsp; <b>4</b> — ' + q.a4;
+      var e = document.createElement('div'); e.className = 'echelle';
+      CRANS.forEach(function (c, ci) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'cran';
+        b.setAttribute('aria-pressed', 'false');
+        b.innerHTML = c + '<small>' + CRANS_NOMS[ci] + '</small>';
+        b.addEventListener('click', function () {
+          reponses[cle] = ci;
+          $$('.cran', e).forEach(function (x, xi) { x.setAttribute('aria-pressed', String(xi === ci)); });
+          recalculer(); sauver();
+        });
+        e.appendChild(b);
+      });
+      d.appendChild(t); d.appendChild(anc); d.appendChild(e);
+      sec.appendChild(d);
+      d.dataset.cle = cle;
+    });
+    zone.appendChild(sec);
+  });
+
+  ['idNom', 'idEntreprise', 'idRole'].forEach(function (id) {
+    $('#' + id).addEventListener('input', sauver);
+  });
+
+  /* ════════════════ calcul & rendu ════════════════ */
+  function scoresAxes() {
+    return AXES.map(function (axe) {
+      var vals = axe.questions.map(function (_, qi) { return reponses[axe.id + '-' + qi]; })
+        .filter(function (v) { return v !== undefined; });
+      return {
+        axe: axe,
+        n: vals.length,
+        score: vals.length ? vals.reduce(function (a, b) { return a + b; }, 0) / vals.length : null
+      };
+    });
+  }
+
+  function recalculer() {
+    var s = scoresAxes();
+    var repondu = Object.keys(reponses).length;
+    $('#progress').textContent = repondu + ' / 20';
+
+    s.forEach(function (x) {
+      $('#score-' + x.axe.id).textContent = x.score === null ? '—' : x.score.toFixed(1) + ' / 4';
+    });
+
+    var complets = s.filter(function (x) { return x.n === 4; });
+    var global = complets.length === 5
+      ? s.reduce(function (a, x) { return a + x.score; }, 0) / 5 : null;
+
+    if (global !== null) {
+      var niveau = global >= 3 ? NIVEAUX[3] : global >= 2 ? NIVEAUX[2] : global >= 1 ? NIVEAUX[1] : NIVEAUX[0];
+      $('#niveauGlobal').innerHTML = global.toFixed(1) + ' <small>/ 4 — ' + niveau.nom + '</small>';
+      $('#lectureGlobale').textContent = niveau.lecture;
+    } else {
+      $('#niveauGlobal').innerHTML = '— <small>/ 4</small>';
+      $('#lectureGlobale').textContent = repondu
+        ? 'Continuez — la lecture globale apparaît quand les cinq axes sont complets.'
+        : 'Répondez aux questions : le radar et la lecture se construisent au fil de l\'eau.';
+    }
+
+    var ra = $('#resAxes');
+    ra.innerHTML = '';
+    s.forEach(function (x) {
+      if (x.score === null) return;
+      var tier = x.score >= 3 ? 2 : x.score >= 1.5 ? 1 : 0;
+      var d = document.createElement('div');
+      d.className = 'res-axe';
+      d.innerHTML = '<div class="nom">' + x.axe.nom + ' <b>' + x.score.toFixed(1) + '</b></div>' +
+        '<div class="lecture">' + x.axe.lectures[tier] + '</div>';
+      ra.appendChild(d);
+    });
+
+    var manque = s.filter(function (x) { return x.n < 4; });
+    $('#incomplet').textContent = (repondu && manque.length)
+      ? 'Axes incomplets : ' + manque.map(function (x) { return x.axe.nom; }).join(', ') + '.'
+      : '';
+
+    radar(s);
+    majMailto(s, global);
+  }
+
+  /* Radar canvas — cinq branches, tracé progressif. */
+  function radar(s) {
+    var cv = $('#radar');
+    var ctx = cv.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var TAILLE = 280;
+    cv.width = TAILLE * dpr; cv.height = TAILLE * dpr;
+    cv.style.width = TAILLE + 'px'; cv.style.height = TAILLE + 'px';
+    ctx.scale(dpr, dpr);
+    var cx = TAILLE / 2, cy = TAILLE / 2, R = 96;
+    ctx.clearRect(0, 0, TAILLE, TAILLE);
+
+    var pt = function (i, r) {
+      var a = -Math.PI / 2 + i * 2 * Math.PI / 5;
+      return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+    };
+
+    /* toiles de fond */
+    ctx.strokeStyle = 'rgba(90,106,133,.25)';
+    ctx.lineWidth = 1;
+    for (var ring = 1; ring <= 4; ring++) {
+      ctx.beginPath();
+      for (var i = 0; i <= 5; i++) {
+        var p = pt(i % 5, R * ring / 4);
+        i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]);
+      }
+      ctx.stroke();
+    }
+    for (i = 0; i < 5; i++) {
+      var p2 = pt(i, R);
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p2[0], p2[1]); ctx.stroke();
+    }
+
+    /* étiquettes */
+    ctx.fillStyle = 'rgba(90,106,133,.9)';
+    ctx.font = '600 10px "Space Grotesk", sans-serif';
+    ctx.textAlign = 'center';
+    var courts = ['Gouvernance', 'Qualité', 'Architecture', 'Usages & IA', 'Organisation'];
+    for (i = 0; i < 5; i++) {
+      var p3 = pt(i, R + 22);
+      ctx.fillText(courts[i], p3[0], p3[1] + 3);
+    }
+
+    /* la forme */
+    var vals = s.map(function (x) { return x.score === null ? 0 : x.score; });
+    if (vals.some(function (v) { return v > 0; })) {
+      ctx.beginPath();
+      for (i = 0; i <= 5; i++) {
+        var p4 = pt(i % 5, R * vals[i % 5] / 4);
+        i ? ctx.lineTo(p4[0], p4[1]) : ctx.moveTo(p4[0], p4[1]);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(6,116,133,.16)';
+      ctx.fill();
+      ctx.strokeStyle = '#067485';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      for (i = 0; i < 5; i++) {
+        var p5 = pt(i, R * vals[i] / 4);
+        ctx.beginPath(); ctx.arc(p5[0], p5[1], 3, 0, 7); ctx.fillStyle = '#067485'; ctx.fill();
+      }
+    }
+  }
+
+  /* ════════════════ synthèse & suites ════════════════ */
+  function synthese() {
+    var s = scoresAxes();
+    var L = ['DIAGNOSTIC DE MATURITÉ DATA & IA — Studio Initiative'];
+    var qui = [$('#idNom').value, $('#idRole').value, $('#idEntreprise').value].filter(Boolean).join(' · ');
+    if (qui) L.push(qui);
+    L.push(new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }));
+    L.push('');
+    s.forEach(function (x) {
+      L.push(x.axe.nom + ' : ' + (x.score === null ? 'non évalué' : x.score.toFixed(1) + ' / 4'));
+      if (x.score !== null) {
+        var tier = x.score >= 3 ? 2 : x.score >= 1.5 ? 1 : 0;
+        L.push('  ' + x.axe.lectures[tier]);
+      }
+    });
+    var complets = s.filter(function (x) { return x.n === 4; });
+    if (complets.length === 5) {
+      var g = s.reduce(function (a, x) { return a + x.score; }, 0) / 5;
+      var n = g >= 3 ? NIVEAUX[3] : g >= 2 ? NIVEAUX[2] : g >= 1 ? NIVEAUX[1] : NIVEAUX[0];
+      L.push('');
+      L.push('GLOBAL : ' + g.toFixed(1) + ' / 4 — ' + n.nom);
+      L.push(n.lecture);
+    }
+    return L.join('\n');
+  }
+
+  function majMailto(s, global) {
+    var sujet = 'Diagnostic maturité data & IA' +
+      ($('#idEntreprise').value ? ' — ' + $('#idEntreprise').value : '');
+    $('#envoyer').href = 'mailto:contact@studioinitiative.com?subject=' +
+      encodeURIComponent(sujet) + '&body=' + encodeURIComponent(synthese() +
+      '\n\n(Envoyé depuis le diagnostic en ligne — Michael, on en parle ?)');
+  }
+
+  $('#imprimer').addEventListener('click', function () { window.print(); });
+  $('#copier').addEventListener('click', function () {
+    var t = synthese();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(t).then(function () { flash('Synthèse copiée.'); });
+    }
+  });
+  $('#reinit').addEventListener('click', function () {
+    if (!confirm('Effacer toutes les réponses ?')) return;
+    reponses = {};
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    $$('.cran').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    recalculer();
+  });
+  function flash(t) { $('#flash').textContent = t; setTimeout(function () { $('#flash').textContent = ''; }, 2600); }
+
+  /* Mode cabinet — le diagnostic part dans le CRM comme compte rendu. */
+  $('#cabGo').addEventListener('click', function () {
+    var etat = $('#cabEtat');
+    var cle = $('#cabCle').value.trim();
+    try { if (!cle) { $('#cabCle').value = cle = localStorage.getItem('si-studio-key') || ''; } } catch (e) {}
+    if (!cle) { etat.className = 'cab-etat err'; etat.textContent = 'Il faut le mot de passe du cockpit.'; return; }
+    try { localStorage.setItem('si-studio-key', cle); } catch (e) {}
+    etat.className = 'cab-etat'; etat.textContent = 'Enregistrement…';
+    fetch('/api/studio/crm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Studio-Key': cle },
+      body: JSON.stringify({
+        nom: $('#idNom').value.trim() || ('Diagnostic ' + ($('#idEntreprise').value.trim() || 'sans nom')),
+        entreprise: $('#idEntreprise').value.trim(),
+        role: $('#idRole').value.trim(),
+        statut: '3 · RDV qualifié',
+        action: $('#cabAction').value.trim(),
+        dateAction: $('#cabDate').value,
+        compteRendu: synthese()
+      })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.message || 'Erreur ' + r.status);
+        return d;
+      });
+    }).then(function (d) {
+      etat.className = 'cab-etat ok';
+      etat.innerHTML = (d.created ? 'Fiche créée' : 'Fiche mise à jour') +
+        ' — <a href="' + d.url + '" target="_blank" rel="noopener">ouvrir dans Notion</a>.';
+    }).catch(function (e) {
+      etat.className = 'cab-etat err'; etat.textContent = e.message;
+    });
+  });
+
+  /* ════════════════ reprise ════════════════ */
+  var memo = null;
+  try { memo = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (memo) {
+    reponses = memo.reponses || {};
+    $('#idNom').value = memo.nom || '';
+    $('#idEntreprise').value = memo.entreprise || '';
+    $('#idRole').value = memo.role || '';
+    $$('.q').forEach(function (d) {
+      var v = reponses[d.dataset.cle];
+      if (v !== undefined) {
+        $$('.cran', d).forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === v)); });
+      }
+    });
+  }
+  recalculer();
+})();
+</script>
+</body>
+</html>
