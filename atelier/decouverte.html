@@ -304,7 +304,8 @@
           <span class="stepno">1</span>
           <div>
             <b>Il vous rappelle quoi demander</b>
-            <p>Sept questions à poser, dans l'ordre d'un vrai entretien. Vous lisez, vous cochez.</p>
+            <p>Sept temps d'entretien, chacun avec ses questions prêtes à poser — dans l'ordre
+            d'une vraie conversation : le factuel d'abord, l'intention ensuite, la décision à la fin.</p>
           </div>
         </li>
         <li>
@@ -717,23 +718,17 @@
      La trame : ce que l'outil fait dire, et ce qu'il guette
      ════════════════════════════════════════════════════════════ */
   var TRAME = [
-    { id: '02', titre: 'Pourquoi maintenant',
-      why: "Un besoin sans échéance ne se transforme presque jamais. C'est la question la plus prédictive de l'entretien.",
-      notes: 'trigger',
-      questions: [
-        "Qu'est-ce qui fait que vous regardez ce sujet maintenant, et pas il y a six mois ?",
-        "Il y a une échéance derrière ?",
-        "Si rien ne bouge d'ici là, il se passe quoi ?"
-      ],
-      lex: /pourquoi maintenant|éch[ée]ance|deadline|urgen|comit[ée]|audit|r[ée]glementaire|fin d'ann[ée]e|avant (la fin|le|l')|pression|direction (g[ée]n[ée]rale|groupe)/i },
-
+    /* L'ordre suit une vraie conversation, pas un formulaire : du factuel
+       facile d'abord (le terrain met en confiance et fait parler), les
+       frictions qui en découlent, et seulement alors la question d'intention
+       — « pourquoi maintenant » se mérite. */
     { id: '03', titre: 'Le terrain',
-      why: "Les systèmes cités et l'état du référentiel. C'est de là que sortira la cartographie affichée sur sa page.",
+      why: "L'ouverture la plus sûre : du factuel, facile à raconter. Les systèmes cités sortiront sur sa page — et les frictions sortent toutes seules de cette question.",
       notes: 'terrainNotes',
       questions: [
+        "Pour situer : la data chez vous aujourd'hui, c'est qui, c'est quoi ?",
         "Quand vous avez besoin du chiffre juste, vous le cherchez où ?",
-        "Et si deux systèmes ne sont pas d'accord, lequel gagne ?",
-        "Qui, chez vous, sait construire une donnée de bout en bout ?"
+        "Et si deux systèmes ne sont pas d'accord, lequel gagne ?"
       ],
       // « mes » a été retiré : la possessive française (« mes équipes ») cochait
       // la section à tort. « tableau » exclut « tableau de bord », qui n'a rien
@@ -750,6 +745,17 @@
       ],
       lex: /ressais|[àa] la main|manuel|doublon|r[ée]concil|perd(re|ons|u)|chronophage|fastidieux|galère|erreur|retap|copier[- ]coller|ça coince|probl[èe]me/i },
 
+    { id: '02', titre: 'Pourquoi maintenant',
+      why: "La question la plus prédictive de l'entretien — posée maintenant que la douleur est sur la table, pas avant. Un besoin sans échéance ne se transforme presque jamais.",
+      notes: 'trigger',
+      questions: [
+        "Qu'est-ce qui fait que vous regardez ce sujet maintenant, et pas il y a six mois ?",
+        "Il y a une échéance derrière ?",
+        "Si rien ne bouge d'ici là, il se passe quoi ?",
+        "Et si c'est réglé dans un an — ça change quoi, concrètement ?"
+      ],
+      lex: /pourquoi maintenant|éch[ée]ance|deadline|urgen|comit[ée]|audit|r[ée]glementaire|fin d'ann[ée]e|rentr[ée]e|avant (la fin|le|l')|pression|direction (g[ée]n[ée]rale|groupe)/i },
+
     { id: '05', titre: "Où en est l'IA",
       why: "Des pilotes bloqués sont votre meilleur point d'entrée : le blocage est presque toujours en amont du modèle.",
       notes: 'pilots',
@@ -758,7 +764,7 @@
         "À votre avis, qu'est-ce qui les empêche de passer en production ?",
         "Qui les porte en interne ?"
       ],
-      lex: /\bia\b|intelligence artificielle|\bpoc\b|pilote|preuve de concept|mod[èe]le|machine learning|pr[ée]dicti|algorithme|llm|copilot/i },
+      lex: /\bia\b|intelligence artificielle|\bpoc\b|pilote|preuve de concept|mod[èe]le|machine learning|pr[ée]dicti|algorithme|llm|copilote?|chat ?gpt|\bgpt\b|g[ée]n[ée]rative|mistral|\bagents? (ia|intelligents?)\b/i },
 
     { id: '06', titre: 'Gouvernance',
       why: "Le socle que vous vendez. Trois « non » ici valent une mission — mais il faut les entendre dire, pas les supposer.",
@@ -768,7 +774,7 @@
         "Vous sauriez dire d'où vient un chiffre, de bout en bout ?",
         "Comment vous savez qu'une donnée est fausse — avant que quelqu'un s'en plaigne ?"
       ],
-      lex: /gouvernance|propri[ée]taire|data owner|steward|qualit[ée] (des )?donn[ée]es|lineage|tra[çc]abilit[ée]|rgpd|ai act|conformit[ée]|catalogue|dictionnaire/i },
+      lex: /gouvernance|propri[ée]taire|data owner|steward|qualit[ée] (des )?donn[ée]es|lineage|tra[çc]abilit[ée]|rgpd|ai act|conformit[ée]|catalogue|dictionnaire|\bmdm\b|master data|donn[ée]es? de r[ée]f[ée]rence/i },
 
     { id: '07', titre: 'Qui décide',
       why: "Un interlocuteur convaincu qui ne décide pas, et sans accès à qui décide, c'est un dossier qui dort.",
@@ -776,9 +782,10 @@
       questions: [
         "Sur un sujet comme celui-là, qui signe ?",
         "Il y a une enveloppe, ou il faut la créer ?",
+        "Vous regardez d'autres pistes en parallèle — un cabinet, une ESN déjà en place ?",
         "Qu'est-ce qui pourrait faire capoter le projet en interne ?"
       ],
-      lex: /budget|enveloppe|d[ée]cide|d[ée]cision|\bdsi\b|\bdaf\b|\bcodir\b|comex|valid|signature|signer|appel d'offres|achat|arbitr/i },
+      lex: /budget|enveloppe|d[ée]cide|d[ée]cision|\bdsi\b|\bdaf\b|\bcodir\b|comex|valid|signature|signer|appel d'offres|achat|arbitr|sponsor|\besn\b|cabinet|prestataire|consultant/i },
 
     { id: '09', titre: 'La suite',
       why: "Ne quittez jamais la pièce sans une date. C'est le cinquième axe de la qualification.",
@@ -788,7 +795,7 @@
         "On la cale quand ?",
         "Qui d'autre devrait être dans la boucle ?"
       ],
-      lex: /prochaine [ée]tape|on se revoit|on se rappelle|atelier|proposition|revenir vers|recontact|planifi|caler|agenda/i }
+      lex: /prochaine [ée]tape|on se revoit|on se rappelle|atelier|proposition|\bdevis\b|revenir vers|recontact|planifi|caler|agenda/i }
   ];
 
   /* ════════════════════════════════════════════════════════════
