@@ -121,31 +121,82 @@ export const W = {
   checkbox: (v) => ({ checkbox: !!v })
 };
 
-/* Découpe un texte long en blocs paragraphe pour le corps d'une page.
-   L'API refuse les rich_text de plus de 2000 caractères. */
-export function toBlocks(text) {
-  const blocks = [];
-  for (const para of String(text).split(/\n{2,}/)) {
-    const clean = para.trim();
-    if (!clean) continue;
-    if (/^#{1,3}\s/.test(clean)) {
-      const level = clean.match(/^#+/)[0].length;
-      blocks.push({
-        object: 'block',
-        type: `heading_${level}`,
-        [`heading_${level}`]: { rich_text: [{ text: { content: clean.replace(/^#+\s*/, '').slice(0, 1990) } }] }
-      });
-      continue;
-    }
-    for (let i = 0; i < clean.length; i += 1900) {
-      blocks.push({
-        object: 'block',
-        type: 'paragraph',
-        paragraph: { rich_text: [{ text: { content: clean.slice(i, i + 1900) } }] }
-      });
+/* Convertit le Markdown simple que produisent nos outils en vrais blocs
+   Notion : titres, listes à puces, citations, séparateurs, gras. Sans ça,
+   un compte rendu arrive en un seul pavé indifférencié — illisible dès la
+   deuxième relecture, alors que c'est justement là qu'on y revient.
+   L'API refuse les rich_text au-delà de 2000 caractères : on coupe. */
+
+function inline(texte) {
+  const morceaux = [];
+  const re = /\*\*([^*]+)\*\*/g;
+  let curseur = 0;
+  let m;
+  while ((m = re.exec(texte)) !== null) {
+    if (m.index > curseur) morceaux.push({ contenu: texte.slice(curseur, m.index), gras: false });
+    morceaux.push({ contenu: m[1], gras: true });
+    curseur = m.index + m[0].length;
+  }
+  if (curseur < texte.length) morceaux.push({ contenu: texte.slice(curseur), gras: false });
+
+  const richText = [];
+  for (const morceau of morceaux) {
+    if (!morceau.contenu) continue;
+    for (let i = 0; i < morceau.contenu.length; i += 1900) {
+      const bout = { type: 'text', text: { content: morceau.contenu.slice(i, i + 1900) } };
+      if (morceau.gras) bout.annotations = { bold: true };
+      richText.push(bout);
     }
   }
-  return blocks.slice(0, 90);
+  return richText.length ? richText : [{ type: 'text', text: { content: ' ' } }];
+}
+
+const bloc = (type, contenu) => ({ object: 'block', type, [type]: { rich_text: inline(contenu) } });
+
+export function toBlocks(text) {
+  const blocks = [];
+  let paragraphe = [];
+
+  const viderParagraphe = () => {
+    const contenu = paragraphe.join('\n').trim();
+    paragraphe = [];
+    if (!contenu) return;
+    // Un paragraphe très long doit être coupé en plusieurs blocs, pas en
+    // plusieurs fragments de texte dans un seul bloc.
+    for (let i = 0; i < contenu.length; i += 1800) {
+      blocks.push(bloc('paragraph', contenu.slice(i, i + 1800)));
+    }
+  };
+
+  for (const brute of String(text).replace(/\r/g, '').split('\n')) {
+    const ligne = brute.trim();
+    if (!ligne) { viderParagraphe(); continue; }
+
+    let m;
+    if ((m = /^(#{1,3})\s+(.+)$/.exec(ligne))) {
+      viderParagraphe();
+      const niveau = m[1].length;
+      blocks.push(bloc(`heading_${niveau}`, m[2].slice(0, 1900)));
+    } else if (/^(-{3,}|\*{3,}|_{3,})$/.test(ligne)) {
+      viderParagraphe();
+      blocks.push({ object: 'block', type: 'divider', divider: {} });
+    } else if ((m = /^[-*•]\s+(.+)$/.exec(ligne))) {
+      viderParagraphe();
+      blocks.push(bloc('bulleted_list_item', m[1].slice(0, 1900)));
+    } else if ((m = /^\d+[.)]\s+(.+)$/.exec(ligne))) {
+      viderParagraphe();
+      blocks.push(bloc('numbered_list_item', m[1].slice(0, 1900)));
+    } else if ((m = /^>\s?(.*)$/.exec(ligne))) {
+      viderParagraphe();
+      blocks.push(bloc('quote', m[1].slice(0, 1900)));
+    } else {
+      paragraphe.push(ligne);
+    }
+  }
+  viderParagraphe();
+
+  // L'API n'accepte que 100 enfants par requête.
+  return blocks.slice(0, 100);
 }
 
 /* ------------------------------------------------------------------ */
@@ -156,6 +207,13 @@ export function todayParis() {
   return new Intl.DateTimeFormat('fr-CA', {
     timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit'
   }).format(new Date()); // fr-CA → AAAA-MM-JJ
+}
+
+/* Pour ce qui s'affiche : « 11 août 2026 » se relit, « 2026-08-11 » se déchiffre. */
+export function dateLisible() {
+  return new Intl.DateTimeFormat('fr-FR', {
+    timeZone: 'Europe/Paris', day: 'numeric', month: 'long', year: 'numeric'
+  }).format(new Date());
 }
 
 /* ------------------------------------------------------------------ */

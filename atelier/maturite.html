@@ -457,29 +457,67 @@ footer{margin-top:60px;font-size:.78rem;color:var(--faint);max-width:70ch;line-h
   }
 
   /* ════════════════ synthèse & suites ════════════════ */
+  /* Même règle que le compte rendu d'entretien : du Markdown simple, qui se
+     lit tel quel dans un mail et arrive structuré dans Notion. */
   function synthese() {
     var s = scoresAxes();
-    var L = ['DIAGNOSTIC DE MATURITÉ DATA & IA — Studio Initiative'];
-    var qui = [$('#idNom').value, $('#idRole').value, $('#idEntreprise').value].filter(Boolean).join(' · ');
+    var L = [];
+    var qui = [$('#idNom').value.trim(), $('#idRole').value.trim()].filter(Boolean).join(', ');
+    var ent = $('#idEntreprise').value.trim();
+
+    L.push('# Diagnostic de maturité data & IA');
+    if (ent) L.push('**' + ent + '**');
     if (qui) L.push(qui);
-    L.push(new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }));
-    L.push('');
-    s.forEach(function (x) {
-      L.push(x.axe.nom + ' : ' + (x.score === null ? 'non évalué' : x.score.toFixed(1) + ' / 4'));
-      if (x.score !== null) {
-        var tier = x.score >= 3 ? 2 : x.score >= 1.5 ? 1 : 0;
-        L.push('  ' + x.axe.lectures[tier]);
-      }
-    });
+    L.push('Réalisé le ' + new Date().toLocaleDateString('fr-FR',
+      { day: 'numeric', month: 'long', year: 'numeric' }) + '.');
+
     var complets = s.filter(function (x) { return x.n === 4; });
     if (complets.length === 5) {
       var g = s.reduce(function (a, x) { return a + x.score; }, 0) / 5;
       var n = g >= 3 ? NIVEAUX[3] : g >= 2 ? NIVEAUX[2] : g >= 1 ? NIVEAUX[1] : NIVEAUX[0];
       L.push('');
-      L.push('GLOBAL : ' + g.toFixed(1) + ' / 4 — ' + n.nom);
+      L.push('**Niveau global : ' + g.toFixed(1) + ' / 4 — ' + n.nom + '**');
       L.push(n.lecture);
+    } else {
+      L.push('');
+      L.push('*Diagnostic partiel : ' + complets.length + ' axe' +
+        (complets.length > 1 ? 's' : '') + ' sur 5 complété' +
+        (complets.length > 1 ? 's' : '') + '.*');
     }
-    return L.join('\n');
+
+    L.push('');
+    L.push('## Les cinq axes');
+    s.forEach(function (x) {
+      if (x.score === null) {
+        L.push('- **' + x.axe.nom + '** — non évalué');
+        return;
+      }
+      var tier = x.score >= 3 ? 2 : x.score >= 1.5 ? 1 : 0;
+      L.push('- **' + x.axe.nom + ' — ' + x.score.toFixed(1) + ' / 4** : ' + x.axe.lectures[tier]);
+    });
+
+    /* Le détail question par question : c'est lui qui rend le diagnostic
+       discutable en rendez-vous, au lieu d'un score à croire sur parole. */
+    var basses = [];
+    AXES.forEach(function (axe) {
+      axe.questions.forEach(function (q, qi) {
+        var v = reponses[axe.id + '-' + qi];
+        if (v !== undefined && v <= 1) basses.push('- ' + q.t + ' *(' + CRANS_NOMS[v] + ')*');
+      });
+    });
+    if (basses.length) {
+      L.push('');
+      L.push('## Les points les plus bas');
+      L.push('Ce sont eux qui plafonnent le reste.');
+      basses.slice(0, 8).forEach(function (b) { L.push(b); });
+    }
+
+    L.push('');
+    L.push('---');
+    L.push('*Diagnostic déclaratif établi par Studio Initiative. Le Diagnostic ' +
+      'Scale-Up le confronte au terrain sur cinq jours.*');
+
+    return L.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 
   function majMailto(s, global) {
@@ -524,7 +562,7 @@ footer{margin-top:60px;font-size:.78rem;color:var(--faint);max-width:70ch;line-h
         statut: '3 · RDV qualifié',
         action: $('#cabAction').value.trim(),
         dateAction: $('#cabDate').value,
-        compteRendu: synthese()
+        compteRendu: synthese().replace(/^#\s.*\n?/, '')
       })
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (d) {

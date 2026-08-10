@@ -8,7 +8,7 @@
  * pas d'enregistrement.
  */
 
-import { requireAuth, notion, queryAll, DB, P, W, toBlocks, todayParis } from '../_lib/studio.js';
+import { requireAuth, notion, queryAll, DB, P, W, toBlocks, dateLisible } from '../_lib/studio.js';
 
 const STATUTS = new Set([
   '0 · À contacter', '1 · Contact envoyé', '2 · Conversation tenue',
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
         {
           object: 'block',
           type: 'heading_2',
-          heading_2: { rich_text: [{ text: { content: `Compte rendu — ${todayParis()}` } }] }
+          heading_2: { rich_text: [{ text: { content: `Compte rendu — ${dateLisible()}` } }] }
         },
         ...toBlocks(String(body.compteRendu))
       ];

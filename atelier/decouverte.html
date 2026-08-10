@@ -1333,6 +1333,15 @@
       return { what: g('what'), who: g('who'), freq: g('freq'), cost: g('cost'), workaround: g('workaround') };
     }).filter(function (f) { return f.what || f.cost; });
     o.quotes = $$('#quotes [data-q]').map(function (t) { return t.value.trim(); }).filter(Boolean);
+    // Les listes déroulantes stockent un code ('oui', 'bloques'…) : on garde
+    // aussi le libellé affiché, seul lisible dans un compte rendu.
+    o.labels = {};
+    FIELDS.forEach(function (id) {
+      var e = $('#' + id);
+      if (e && e.tagName === 'SELECT' && e.selectedIndex > 0) {
+        o.labels[id] = e.options[e.selectedIndex].text.trim();
+      }
+    });
     o.transcript = transcript;
     o.asked = asked;
     o.hits = hits;
@@ -1443,39 +1452,153 @@
     paintArchive(); paintSection(); touch(); flash('Enregistré. Fiche vierge.');
   });
 
+  /* ── Le compte rendu ──────────────────────────────────────────────
+     Un seul texte sert trois destinations : le presse-papier, le corps de
+     la fiche Notion, et la relecture avant le porte-clés. Il est donc écrit
+     en Markdown simple — lisible tel quel, et converti en vrais blocs
+     (titres, listes, citations) à l'arrivée dans Notion. Avant, tout
+     arrivait en un seul pavé de majuscules : illisible dès la deuxième
+     relecture. */
+
+  var MOIS_FR = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
+                 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  var JOURS_FR = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+
+  function dateFr(iso) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || '')) return iso || '';
+    var d = new Date(iso + 'T12:00:00');
+    if (isNaN(d.getTime())) return iso;
+    return JOURS_FR[d.getDay()] + ' ' + (d.getDate() === 1 ? '1er' : d.getDate()) +
+           ' ' + MOIS_FR[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function heureFr(hhmm) {
+    var m = /^(\d{1,2}):(\d{2})$/.exec(hhmm || '');
+    if (!m) return hhmm || '';
+    return m[2] === '00' ? m[1] + ' h' : m[1] + ' h ' + m[2];
+  }
+  function champ(label, valeur) {
+    var v = (valeur || '').trim();
+    if (!v) return '';
+    return '**' + label + ' :** ' + v;
+  }
+
   function summary(o) {
     var L = [];
-    var qui = [o.firstName, o.lastName].filter(Boolean).join(' ');
-    L.push('RENDEZ-VOUS — ' + (qui || '?') + (o.role ? ', ' + o.role : '') + (o.company ? ' (' + o.company + ')' : ''));
-    L.push(o.date + (o.time ? ' ' + o.time : '') + (o.place ? ' ' + o.place : ''));
-    if (o.others) L.push('Également présents : ' + o.others);
-    if (o.trigger) L.push('\nDÉCLENCHEUR\n' + o.trigger + (o.deadline ? '\nÉchéance : ' + o.deadline : ''));
-    if (o.doNothing) L.push("S'ils ne font rien : " + o.doNothing);
-    var sys = (o.systems || []).concat(o.systemsOther ? o.systemsOther.split(',').map(function (s) { return s.trim(); }) : []).filter(Boolean);
-    if (sys.length) L.push('\nTERRAIN\nSystèmes : ' + sys.join(', '));
-    if (o.refSource) L.push('Référentiel faisant foi : ' + o.refSource);
-    if (o.team) L.push('Équipe data : ' + o.team);
-    if (o.terrainNotes) L.push(o.terrainNotes);
-    if (o.frictions.length) {
-      L.push('\nFRICTIONS');
-      o.frictions.forEach(function (f) {
-        L.push('- ' + f.what + [f.who && ' / ' + f.who, f.freq && ' / ' + f.freq, f.cost && ' / ' + f.cost].filter(Boolean).join(''));
-      });
+    var q = qualify(o);
+    var verdict = q.total >= 8 ? 'porte-clés justifié'
+                : q.total >= 5 ? 'à requalifier'
+                : 'pas encore mûr';
+
+    /* Le libellé de la liste déroulante dit ce que le code ne dit pas :
+       « Existe et est fléché » plutôt que « oui ». */
+    function liste(label, id) { return champ(label, (o.labels && o.labels[id]) || o[id]); }
+
+    function bloc(titre, morceaux) {
+      var utiles = morceaux.filter(function (m) { return m && String(m).trim(); });
+      if (!utiles.length) return;
+      L.push('');
+      L.push('## ' + titre);
+      utiles.forEach(function (m) { L.push(String(m).trim()); });
     }
-    if (o.frictionNotes) L.push(o.frictionNotes);
-    if (o.pilots || o.pilotState) L.push('\nIA\n' + [o.pilots, o.pilotState && 'État : ' + o.pilotState,
-      o.blockerTheirs && 'Leur lecture : ' + o.blockerTheirs, o.blockerYours && 'Ma lecture : ' + o.blockerYours].filter(Boolean).join('\n'));
-    var gouv = [o.owners && 'propriétaires ' + o.owners, o.lineage && 'lineage ' + o.lineage,
-                o.quality && 'qualité ' + o.quality].filter(Boolean);
-    if (gouv.length || o.gouvNotes) L.push('\nGOUVERNANCE\n' + [gouv.join(' · '), o.gouvNotes].filter(Boolean).join('\n'));
-    if (o.decider || o.budget) L.push('\nDÉCISION\n' + [o.decider && 'Signe : ' + o.decider,
-      o.influencer && 'Influence : ' + o.influencer, o.blocker && 'Bloque : ' + o.blocker,
-      o.budget && 'Budget : ' + o.budget, o.process].filter(Boolean).join('\n'));
-    if (o.quotes.length) L.push('\nVERBATIMS\n' + o.quotes.map(function (q) { return '« ' + q + ' »'; }).join('\n'));
-    if (o.diagnosis || o.reco) L.push('\nMA LECTURE\n' + [o.unsaid, o.diagnosis, o.reco].filter(Boolean).join('\n'));
-    if (o.nextStep) L.push('\nSUITE : ' + o.nextStep + (o.nextDate ? ' — ' + o.nextDate : ''));
-    L.push('\nQualification : ' + qualify(o).total + '/10');
-    return L.join('\n');
+
+    /* — en-tête — */
+    var qui = [o.firstName, o.lastName].filter(Boolean).join(' ');
+    L.push('# ' + (qui || 'Rendez-vous'));
+    var identite = [o.role, o.company].filter(Boolean).join(' — ');
+    if (identite) L.push('**' + identite + '**');
+
+    var quand = [];
+    if (o.date) quand.push('Rendez-vous du ' + dateFr(o.date));
+    if (o.time) quand.push('à ' + heureFr(o.time));
+    var ligneQuand = quand.join(' ');
+    if (o.place) ligneQuand += (ligneQuand ? ', ' : '') + o.place;
+    if (ligneQuand) L.push(ligneQuand + '.');
+    if (o.others) L.push('Également présents : ' + o.others + '.');
+    if (o.origin) L.push('Origine du contact : ' + o.origin + '.');
+
+    /* — la note, en tête : c'est elle qui décide de la suite — */
+    L.push('');
+    L.push('**Qualification : ' + q.total + ' / 10 — ' + verdict + '**');
+    q.detail.forEach(function (d) {
+      L.push('- ' + (d.s === 2 ? '✓' : d.s === 1 ? '~' : '✗') + ' ' + d.label +
+             (d.s === 2 ? '' : d.s === 1 ? ' — partiel' : ' — manquant'));
+    });
+
+    bloc('Pourquoi maintenant', [
+      o.trigger,
+      champ('Échéance', o.deadline),
+      liste('Solidité du déclencheur', 'triggerStrength'),
+      champ("S'ils ne font rien", o.doNothing)
+    ]);
+
+    var sys = (o.systems || [])
+      .concat(o.systemsOther ? o.systemsOther.split(',').map(function (s) { return s.trim(); }) : [])
+      .filter(Boolean);
+    bloc('Le terrain', [
+      champ('Systèmes cités', sys.join(', ')),
+      liste('Référentiel faisant foi', 'refSource'),
+      champ('Équipe data', o.team),
+      champ('Hébergement', o.hosting),
+      o.terrainNotes
+    ]);
+
+    var frictions = o.frictions.map(function (f) {
+      if (!f.what && !f.cost) return '';
+      var detail = [f.who, f.freq].filter(Boolean).join(', ');
+      return '- ' + (f.what || 'Friction non décrite') +
+             (detail ? ' — ' + detail : '') +
+             (f.cost ? ' — **' + f.cost + '**' : '') +
+             (f.workaround ? ' *(contournement : ' + f.workaround + ')*' : '');
+    }).filter(Boolean);
+    bloc('Les frictions', frictions.concat([o.frictionNotes]));
+
+    bloc("Où en est l'IA", [
+      o.pilots,
+      liste('Où ils en sont', 'pilotState'),
+      champ('Leur lecture du blocage', o.blockerTheirs),
+      champ('Ma lecture du blocage', o.blockerYours)
+    ]);
+
+    bloc('Gouvernance', [
+      liste('Propriétaires désignés', 'owners'),
+      liste('Traçabilité de bout en bout', 'lineage'),
+      liste('Qualité mesurée', 'quality'),
+      champ('Conformité', o.compliance),
+      champ('Incident marquant', o.incident),
+      o.gouvNotes
+    ]);
+
+    bloc('Qui décide', [
+      champ('Signe', o.decider),
+      champ('Influence', o.influencer),
+      champ('Bloque', o.blocker),
+      liste('Accès au décideur', 'sponsorAccess'),
+      liste('Budget', 'budget'),
+      champ('Autres cabinets en lice', o.competition),
+      o.process
+    ]);
+
+    if (o.quotes.length) {
+      L.push('');
+      L.push('## Ses mots');
+      o.quotes.forEach(function (t) { L.push('> « ' + t.replace(/^[«"]\s*|\s*[»"]$/g, '') + ' »'); });
+    }
+
+    bloc('Ma lecture', [
+      champ("Ce qu'il n'a pas dit", o.unsaid),
+      o.diagnosis,
+      o.reco
+    ]);
+
+    if (o.nextStep) {
+      L.push('');
+      L.push('## La suite');
+      L.push('**' + o.nextStep + '**' + (o.nextDate ? ' — engagée pour le ' + dateFr(o.nextDate) : ''));
+      if (!o.nextDate) L.push('*Sans date, cette étape n’existe pas encore.*');
+    }
+
+    /* Deux lignes vides consécutives ne servent à rien à l'arrivée. */
+    return L.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 
   function copy(text, ok) {
@@ -1560,7 +1683,8 @@
         verbatim: o.quotes[0] || frictionsTxt.slice(0, 300),
         action: o.nextStep,
         dateAction: o.nextDate,
-        compteRendu: summary(o)
+        // Le nom est déjà le titre de la fiche Notion : le H1 ferait doublon.
+        compteRendu: summary(o).replace(/^#\s.*\n?/, '')
       })
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (d) {

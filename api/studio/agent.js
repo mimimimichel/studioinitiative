@@ -21,7 +21,7 @@
  * le dit — le champ `searched` de la réponse l'indique au cockpit.
  */
 
-import { requireAuth, notion, queryAll, DB, P, W, toBlocks, llm, parseJson, todayParis } from '../_lib/studio.js';
+import { requireAuth, notion, queryAll, DB, P, W, toBlocks, llm, parseJson, todayParis, dateLisible } from '../_lib/studio.js';
 
 export const config = { maxDuration: 60 };
 
@@ -78,7 +78,7 @@ Termine IMPÉRATIVEMENT par une ligne commençant par "SIGNAUX:" suivie d'un ré
   await notion(`blocks/${body.compteId}/children`, 'PATCH', {
     children: [
       { object: 'block', type: 'heading_2',
-        heading_2: { rich_text: [{ text: { content: `Brief Éclaireur — ${todayParis()}` } }] } },
+        heading_2: { rich_text: [{ text: { content: `Brief Éclaireur — ${dateLisible()}` } }] } },
       ...toBlocks(brief + avertissement)
     ]
   });
@@ -136,7 +136,7 @@ Produis EXACTEMENT deux variantes, précédées de "— Variante directe —" et
   await notion(`blocks/${body.contactId}/children`, 'PATCH', {
     children: [
       { object: 'block', type: 'heading_2',
-        heading_2: { rich_text: [{ text: { content: `Messages proposés (Plume) — ${todayParis()}` } }] } },
+        heading_2: { rich_text: [{ text: { content: `Messages proposés (Plume) — ${dateLisible()}` } }] } },
       ...toBlocks(out.text + '\n\nRien n\'a été envoyé : relire, personnaliser, puis copier dans LinkedIn ou le mail.')
     ]
   });
