@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cockpit — Studio Initiative</title>
-<link rel="icon" href="../assets/img/logo-mark.png">
+<link rel="icon" href="/assets/img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -115,7 +115,7 @@ h1{font-family:var(--disp);font-size:1.45rem;letter-spacing:-.01em}
 
 <div id="porte" hidden>
   <div class="porte-c">
-    <img src="../assets/img/logo-mark.png" alt="">
+    <img src="/assets/img/logo-mark.png" alt="">
     <h2>Le cockpit</h2>
     <p>Espace privé de pilotage — entrez le mot de passe défini dans Vercel (variable <code>STUDIO_PASSWORD</code>).</p>
     <input type="password" id="porteInput" placeholder="Mot de passe" autocomplete="current-password">
@@ -126,14 +126,14 @@ h1{font-family:var(--disp);font-size:1.45rem;letter-spacing:-.01em}
 
 <header class="top">
   <div class="top-in">
-    <img src="../assets/img/logo-mark.png" alt="">
+    <img src="/assets/img/logo-mark.png" alt="">
     <div class="t">Studio Initiative<small>plateforme</small></div>
     <nav class="topnav">
-      <a class="actif" href="./">Cockpit</a>
-      <a href="agents.html">Agents</a>
-      <a href="../atelier/decouverte.html">Entretien</a>
-      <a href="../atelier/maturite.html">Maturité</a>
-      <a href="../k/nouveau.html">Porte-clés</a>
+      <a class="actif" href="/studio/">Cockpit</a>
+      <a href="/studio/agents.html">Agents</a>
+      <a href="/atelier/decouverte.html" target="_blank" rel="noopener">Entretien</a>
+      <a href="/atelier/maturite.html" target="_blank" rel="noopener">Maturité</a>
+      <a href="/k/nouveau.html" target="_blank" rel="noopener">Porte-clés</a>
     </nav>
   </div>
 </header>
@@ -391,7 +391,7 @@ h1{font-family:var(--disp);font-size:1.45rem;letter-spacing:-.01em}
       });
       var p = el('div', 'vide');
       p.innerHTML = (vides.length > 8 ? '… et ' + (vides.length - 8) + ' autres. ' : '') +
-        'L’Éclaireur les remplit un par un — <a href="agents.html">ouvrir la console d’agents</a>.';
+        'L’Éclaireur les remplit un par un — <a href="/studio/agents.html">ouvrir la console d’agents</a>.';
       bC._c.appendChild(p);
     }
     g.appendChild(bC);
