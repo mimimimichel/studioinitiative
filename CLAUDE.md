@@ -30,6 +30,9 @@ d'ici le lit et l'écrit, il ne le remplace pas.
 | `api/` | Fonctions serverless Vercel |
 | `api/_lib/studio.js` | Socle commun : accès Notion, conversion Markdown → blocs, appel LLM |
 | `DEMARRAGE.md` | Le guide de mise en ligne, sans terminal |
+| `LIVRAISON-AGENTS.md` | Comment les agents sont livrés chez un client |
+| `.claude/skills/` | Les agents exécutables en session Claude Code |
+| `.claude/carnets/` | La mémoire durable de chaque agent |
 
 ## Les bases Notion
 
@@ -49,8 +52,11 @@ Page racine : **🏠 OS Studio Initiative** — tout le playbook en descend.
 2. **Aucun envoi automatique.** Les agents rédigent et déposent dans Notion.
    C'est Michael qui relit et qui envoie. Toujours.
 3. **Aucune donnée client confidentielle** dans les agents commerciaux :
-   données professionnelles publiques uniquement. Les agents de mission, eux,
-   vivent dans l'environnement du client.
+   données professionnelles publiques uniquement. Pour les agents de mission,
+   la distinction porte sur l'exécution, pas sur les fichiers : **leurs
+   instructions vivent ici** (c'est l'actif du cabinet, et sa sauvegarde),
+   **leur exécution sur du contenu client se fait chez le client**. Voir
+   `LIVRAISON-AGENTS.md`.
 4. **Aucune fiche CRM sans prochaine action datée.** C'est la discipline n°1 du
    playbook, et le code la fait respecter : l'API refuse d'enregistrer sans.
 5. **Ne jamais annoncer un livrable qui n'a pas été produit.** Sur la page du
