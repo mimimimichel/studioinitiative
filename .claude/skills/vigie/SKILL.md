@@ -39,3 +39,12 @@ directeurs de programmes data de grands comptes industriels français.
 
 Rends le digest dans la conversation. Ne l'écris dans Notion que si Michael le
 demande — sinon il encombre l'espace chaque lundi.
+
+## Le carnet — ta mémoire entre les semaines
+
+**Avant de commencer**, lis `.claude/carnets/vigie.md` : ce qui a déjà été
+couvert (ne resservez pas un item sans dire ce qui a bougé), les sources qui
+portent, le bruit déjà identifié, les échéances à surveiller.
+
+**Après le digest**, ajoutes-y les items couverts et ce que tu as appris sur les
+sources. C'est ce qui empêche la veille de tourner en rond de semaine en semaine.

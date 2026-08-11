@@ -66,3 +66,14 @@ Signale à Michael, hors du document :
 
 Livre le document en Markdown dans la conversation, et propose de l'écrire
 dans la fiche Notion du contact. **Tu n'envoies rien au client.**
+
+## Le carnet — ce qui se signe et ce qui se perd
+
+**Avant d'écrire**, lis `.claude/carnets/proposition.md` : formulations qui ont
+porté, objections déjà reçues après lecture, dérapages de périmètre passés,
+clauses à ne jamais oublier.
+
+**Après la proposition**, note ce qui est utile à la suivante. Et quand Michael
+te dit l'issue — signée, perdue, sans réponse — inscris-la : c'est la seule
+façon d'apprendre ce qui marche vraiment. Aucune donnée confidentielle client
+dans ce fichier.
