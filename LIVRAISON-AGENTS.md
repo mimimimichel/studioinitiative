@@ -23,14 +23,32 @@ logs. Ce que j'apporte, c'est ce que les agents savent faire. »*
 
 ### 1. AIP sur Foundry — quand le client est déjà chez Palantir
 
-C'est votre terrain, et vous le connaissez mieux que quiconque : l'agent vit
-dans la plateforme, sur l'ontologie, sous les permissions existantes. Rien à
-négocier côté sécurité, puisque rien ne sort.
+L'agent vit dans la plateforme, sur l'ontologie, sous les permissions
+existantes. Rien à négocier côté sécurité, puisque rien ne sort. Sur un compte
+Foundry, c'est la réponse la plus courte : vous ne vendez pas « de l'IA en
+plus », vous vendez de l'automatisation dans la plateforme qu'ils ont déjà
+payée et déjà auditée.
 
-**C'est la voie qui rend votre positionnement cohérent** : vous ne vendez pas
-« de l'IA en plus », vous vendez de l'automatisation dans la plateforme qu'ils
-ont déjà payée et déjà auditée. Sur un compte Foundry, c'est la réponse, et
-c'est la plus courte.
+> **Point d'honnêteté, à tenir en tête avant d'en parler.** Foundry et AIP ne
+> sont pas la même compétence. Les 80+ data products et les quinze ans, c'est
+> **Foundry** : l'ontologie, les pipelines, l'industrialisation, la mise en
+> production. **AIP est la couche au-dessus, plus récente, et elle est encore
+> en cours d'acquisition.** Ne laissez pas la conversation glisser de l'une à
+> l'autre sans le dire : un client Foundry a des architectes qui verront la
+> différence en trois questions, et une approximation coûte plus cher que
+> l'aveu.
+>
+> Ce qu'on peut dire sans rien forcer : *« ce qui fait qu'un cas d'usage passe
+> en production, ce n'est pas l'outil — c'est le socle de données, la
+> gouvernance et le delivery. C'est ce que j'ai fait 80 fois. La couche AIP
+> évolue tous les trimestres ; le reste, non. »* C'est vrai, c'est vérifiable,
+> et c'est ce qui vous distingue d'un intégrateur qui connaît le produit sans
+> avoir jamais livré.
+>
+> Tant que la maîtrise n'est pas là, **les voies 2 et 3 permettent de livrer le
+> S5 sans AIP** — y compris chez un client Foundry, sur un workflow qui ne
+> touche pas à la plateforme. Le pilote se vend sur le workflow automatisé, pas
+> sur la technologie employée.
 
 ### 2. Le point d'accès du client — la voie la plus fréquente hors Foundry
 
@@ -71,7 +89,8 @@ en réserve : le sortir trop tôt fait peur au lieu de rassurer.
 
 | Ce que le client a déjà | La voie |
 |---|---|
-| Foundry | **1 — AIP.** Pas de débat. |
+| Foundry, et le workflow vit dans la plateforme | **1 — AIP** (voir la réserve ci-dessus) |
+| Foundry, mais le workflow est à côté | **2 ou 3** — inutile de passer par AIP pour ça |
 | Azure OpenAI, Mistral ou Bedrock sous contrat | **2 — leur point d'accès.** |
 | Ni l'un ni l'autre, mais une DSI coopérative | **3 — un poste fourni.** |
 | Classifié, hors ligne | **4 — auto-hébergé.** |
