@@ -33,13 +33,40 @@ En français, une page maximum, dans cet ordre :
    persona, pas du vendeur.
 4. **Angle d'approche** — laquelle des trois preuves du cabinet résonne avec
    ces signaux, et pourquoi celle-là.
-5. **Trois questions à poser en rendez-vous** — ouvertes, spécifiques à cette
+5. **La bonne porte** — qui viser, et si le contact déjà en fiche est le bon
+   (voir la section dédiée plus bas : c'est le point le plus souvent faux).
+6. **Trois questions à poser en rendez-vous** — ouvertes, spécifiques à cette
    entreprise. Une question qui marcherait pour n'importe qui ne sert à rien.
 
 **Cherche sur le web systématiquement, et cite tes sources** avec leur date.
 Si tu ne trouves aucun signal data/IA, écris-le franchement : un signal faible
 honnête vaut mieux qu'une hypothèse fabriquée qui se fera démonter en rendez-vous.
 Distingue toujours ce que tu as lu de ce que tu supposes.
+
+## La bonne porte — la rubrique qui décide de tout
+
+**Attention : beaucoup de fiches de la base portent encore des contacts hérités
+d'une recherche de mission** — des DRH, des recruteurs, des responsables de
+staffing. Ce sont les bonnes personnes pour décrocher un poste, et les
+mauvaises pour vendre un diagnostic. Ne les reprends jamais sans les
+questionner.
+
+Ajoute donc systématiquement une rubrique **« La bonne porte »** :
+
+- **Le persona à viser** chez ce compte, parmi ceux du playbook : CDO / Head of
+  Data, Directeur de programme data, DSI, Direction métier, ou ESN / Business
+  manager quand le compte relève de la sous-traitance.
+- **Une ou deux personnes nommées** avec leur fonction exacte, et le lien
+  public si tu l'as. Cherche les intitulés qui trahissent le pouvoir de
+  décision sur la donnée, pas ceux qui trahissent un recrutement en cours.
+- **Le contact déjà en fiche est-il le bon ?** Dis-le franchement. S'il s'agit
+  d'un profil RH, recrutement ou staffing, écris-le noir sur blanc : *« contact
+  actuel = mauvaise porte, hérité de la recherche de mission »*. Michael doit
+  le voir avant d'écrire à quelqu'un.
+
+Une offre d'emploi data reste un excellent **signal** — elle dit qu'il y a un
+budget et un manque. Mais celui qui la publie n'est presque jamais celui qui
+achète.
 
 ## Ce que tu écris dans Notion
 
